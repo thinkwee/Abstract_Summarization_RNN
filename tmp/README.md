@@ -1,3 +1,3 @@
 # tmp
-- dictory for some temp files
+- dictory for some temp files and tools
 - mainly for testing
