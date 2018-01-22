@@ -3,8 +3,9 @@ from w2v import w2v
 import logging
 import logging.config
 import string
-import numpy
+import numpy as np
 import pickle
+from seq2seq import seq2seqmodel
 
 LOG_FILE = './log/main.log'
 handler = logging.FileHandler(LOG_FILE, mode='w')  # 实例化handler
@@ -26,59 +27,85 @@ def build_embed_matrix():
     # data_name
     # num_train_steps
     # skip_steps
-    modelheadline = w2v(18500, 128, 32, 64, 1.0, 1, 'traintext.zip', 17000, 100)
-    modelheadline.build_graph()
-    return modelheadline.train()
+    w2vmodel = w2v(18500, 128, 32, 64, 1.0, 1, 'traintext.zip', 17000, 100)
+    w2vmodel.build_graph()
+    return w2vmodel.train()
 
 
-def save_embed_matrix(embed_matrix_headline, one_hot_dictionary_headline):
-    output = open('./save/embed_matrix_headline.pkl', 'wb')
-    pickle.dump(embed_matrix_headline, output)
+def save_embed_matrix(embed_matrix, one_hot_dictionary):
+    output = open('./save/embed_matrix.pkl', 'wb')
+    pickle.dump(embed_matrix, output)
     output.close()
-    output = open('./save/one_hot_dictionary_headline.pkl', 'wb')
-    pickle.dump(one_hot_dictionary_headline, output)
+    output = open('./save/one_hot_dictionary.pkl', 'wb')
+    pickle.dump(one_hot_dictionary, output)
     output.close()
 
 
 def load_embed_matrix():
-    pkl_file = open('./save/embed_matrix_headline.pkl', 'rb')
-    embed_matrix_headline = pickle.load(pkl_file)
+    pkl_file = open('./save/embed_matrix.pkl', 'rb')
+    embed_matrix = pickle.load(pkl_file)
     pkl_file.close()
-    pkl_file = open('./save/one_hot_dictionary_headline.pkl', 'rb')
-    one_hot_dictionary_headline = pickle.load(pkl_file)
+    pkl_file = open('./save/one_hot_dictionary.pkl', 'rb')
+    one_hot_dictionary = pickle.load(pkl_file)
     pkl_file.close()
-    return embed_matrix_headline, one_hot_dictionary_headline
+    return embed_matrix, one_hot_dictionary
 
 
-def test(embed_matrix_headline, one_hot_dictionary_headline):
-    sentence = "the british economy is poised for strong growth into 2005 raising the possibility of an interest rate " \
-               "hike early in the new year according to a study published monday "
-    words = []
-    strip = string.whitespace + string.punctuation + string.digits + "\"'"
-    for word in sentence.split():
-        word = word.strip(strip)
-        words.append(word)
-    print(words)
+def get_batch(batch_size, vocab_size, iterator):
+    while True:
+        input_batch = []
+        target_batch = []
+        for index in range(batch_size):
+            input_batch_single, target_batch_single = next(iterator)
+            input_batch.append(input_batch_single)
+            target_batch.append(target_batch_single)
+        yield input_batch, target_batch
 
-    onehotindex = [one_hot_dictionary_headline[word] if word in one_hot_dictionary_headline else 0 for word in words]
 
-    print(onehotindex)
+def one_hot_generate(one_hot_dictionary):
+    file_article = open('./data/article.txt', 'rb')
+    sentence_article = bytes.decode(file_article.readline())
+    file_headline = open('./data/headline.txt', 'rb')
+    sentence_headline = bytes.decode(file_headline.readline())
 
-    with tf.name_scope("embed"):
-        embed = tf.nn.embedding_lookup(embed_matrix_headline, onehotindex, name='embed')
+    while sentence_article and sentence_headline:
+        words_article = []
+        words_headline = []
+        strip = string.whitespace + string.punctuation + "\"'"
+        for word in sentence_article.split():
+            word = word.strip(strip)
+            words_article.append(word)
+        for word in sentence_headline.split():
+            word = word.strip(strip)
+            words_headline.append(word)
+        one_hot_headline = np.zeros([25], dtype=int)
+        one_hot_article = np.zeros([70], dtype=int)
 
-    with tf.Session() as sess:
-        embed = sess.run(embed)
-        for i in range(len(words)):
-            for j in range(128):
-                logger.debug("%f", embed[i][j])
+        for index, word in enumerate(words_headline):
+            one_hot_headline[index] = one_hot_dictionary[word] if word in one_hot_dictionary else 0
+
+        for index, word in enumerate(words_article):
+            one_hot_article[index] = one_hot_dictionary[word] if word in one_hot_dictionary else 0
+
+        # print(one_hot_article)
+
+        yield one_hot_article, one_hot_headline
+        sentence_article = bytes.decode(file_article.readline())
+        sentence_headline = bytes.decode(file_headline.readline())
+
+    file_headline.close()
+    file_article.close()
 
 
 def main():
-    # embed_matrix_headline, one_hot_dictionary_headline = build_embed_matrix()
-    # save_embed_matrix(embed_matrix_headline, one_hot_dictionary_headline)
-    embed_matrix_headline, one_hot_dictionary_headline = load_embed_matrix()
-    test(embed_matrix_headline, one_hot_dictionary_headline)
+    # embed_matrix, one_hot_dictionary = build_embed_matrix()
+    # save_embed_matrix(embed_matrix, one_hot_dictionary)
+    embed_matrix, one_hot_dictionary = load_embed_matrix()
+    seq2seq_basic_rnn_without_attention = seq2seqmodel(18500, 128, 128, 128, 32)
+    single_generate = one_hot_generate(one_hot_dictionary)
+    batches = get_batch(32, 18500, single_generate)
+    seq2seq_basic_rnn_without_attention._build_graph()
+    seq2seq_basic_rnn_without_attention._train(220, batches, 10, embed_matrix)
 
 
 if __name__ == '__main__':
