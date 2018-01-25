@@ -43,7 +43,8 @@ class seq2seqmodel:
          In seq2seq model we just need the encoder's final state as the initial state of decoder.On the contrary we just use output of the
         decoder to predict the output word """
         with tf.variable_scope('encoder', reuse=tf.AUTO_REUSE):
-            encoder_cell = tf.nn.rnn_cell.BasicRNNCell(num_units=self.encoder_hidden_units)
+            encoder_cell = tf.nn.rnn_cell.LSTMCell(num_units=self.encoder_hidden_units, name='encoder_cell')
+
             self.encoder_output, self.encoder_final_state = tf.nn.dynamic_rnn(
                 cell=encoder_cell,
                 inputs=self.encoder_inputs_embedded,
@@ -51,17 +52,17 @@ class seq2seqmodel:
                 sequence_length=self.encoder_length,
                 time_major=False
             )
-        with tf.variable_scope('decoder_train', reuse=tf.AUTO_REUSE):
-            decoder_cell = tf.nn.rnn_cell.BasicRNNCell(num_units=self.decoder_hidden_units)
+        with tf.variable_scope('decoder', reuse=tf.AUTO_REUSE):
+            decoder_cell = tf.nn.rnn_cell.LSTMCell(num_units=self.decoder_hidden_units, name='decoder_cell')
+
             self.decoder_outputs_train, _ = tf.nn.dynamic_rnn(
                 cell=decoder_cell,
                 inputs=self.decoder_inputs_embedded,
                 initial_state=self.encoder_final_state,
                 dtype=tf.float32,
                 sequence_length=self.decoder_length,
-                time_major=False
-            )
-        with tf.variable_scope('decoder_test', reuse=tf.AUTO_REUSE):
+                time_major=False)
+
             start_tokens = 0
             end_tokens = 0
 
@@ -73,9 +74,9 @@ class seq2seqmodel:
             decoder = s2s.BasicDecoder(
                 decoder_cell, helper, self.encoder_final_state)
             # Dynamic decoding
-            outputs, _, _ = s2s.dynamic_decode(
+            decoder_infer_outputs, _, _ = s2s.dynamic_decode(
                 decoder, maximum_iterations=25)
-            self.decoder_prediction = outputs.sample_id
+            self.decoder_prediction = decoder_infer_outputs.sample_id
 
     def _create_loss(self):
         """use linear layer to project the output of decoder to predict the ouput word"""
@@ -105,7 +106,7 @@ class seq2seqmodel:
         print("seq2seq graph built")
 
     def _train(self, epoch, num_train_steps, batches, skip_steps):
-        saver = tf.train.Saver(tf.trainable_variables(), max_to_keep=5)
+        saver = tf.train.Saver(tf.trainable_variables(), max_to_keep=3)
         with tf.Session() as sess:
             sess.run(tf.global_variables_initializer())
             self.total_loss = 0.0
@@ -127,11 +128,11 @@ class seq2seqmodel:
                     self.total_loss += loss_batch
                     writer.add_summary(summary, global_step=index)
                     if (index + 1) % skip_steps == 0:
-                        logger.debug('seq2seq average loss at epoch {} step {} : {:5.1f}'.format(i, index + 1,
+                        logger.debug('seq2seq average loss at epoch {} step {} : {:8.6f}'.format(i, index + 1,
                                                                                                  self.total_loss / skip_steps))
                         self.total_loss = 0.0
-            saver.save(sess, MODEL_FILE + 'model.ckpt', global_step=num_train_steps)
-            logger.debug("seq2seq trained,model saved")
+                saver.save(sess, MODEL_FILE + 'model.ckpt', global_step=i * 220 + num_train_steps)
+                logger.debug("seq2seq trained,model saved at epoch {} step {}".format(i, num_train_steps))
 
     def _test(self, num_train_steps, batches, one_hot_dictionary_index):
         saver = tf.train.Saver(tf.trainable_variables(), max_to_keep=5)

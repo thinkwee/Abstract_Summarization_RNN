@@ -132,11 +132,11 @@ def main():
     seq2seq_basic_rnn_without_attention._build_graph()
     logger.debug("seq2seq model built")
 
-    single_generate = one_hot_generate(one_hot_dictionary, 20)
+    single_generate = one_hot_generate(one_hot_dictionary, 100)
     batches = get_batch(32, single_generate)
     logger.debug("batch generated")
 
-    seq2seq_basic_rnn_without_attention._train(20, 220, batches, 10)
+    seq2seq_basic_rnn_without_attention._train(100, 220, batches, 20)
     logger.debug("seq2seq model trained")
 
 
