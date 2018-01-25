@@ -16,3 +16,6 @@ attention based summarization on tensorflow using blstm seq2seq model
 # progress
 - finish word embedding matrix
 - add basic_rnn seq2seq model
+- add test unit
+- add save module
+- add lstm seq2seq model
