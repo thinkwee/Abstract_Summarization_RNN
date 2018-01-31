@@ -1,33 +1,51 @@
-import tensorflow as tf
 from w2v import w2v
-import logging
 import logging.config
 import string
 import numpy as np
 import pickle
 from seq2seq import seq2seqmodel
 
+"""Log Configuration"""
 LOG_FILE = './log/train.log'
 handler = logging.FileHandler(LOG_FILE, mode='w')  # 实例化handler
-# fmt = '%(asctime)s - %(filename)s:%(lineno)s - %(name)s - %(message)s'
-# formatter = logging.Formatter(fmt)  # 实例化formatter
-# handler.setFormatter(formatter)  # 为handler添加formatter
+fmt = '%(asctime)s - %(filename)s:%(lineno)s - %(name)s - %(message)s'
+formatter = logging.Formatter(fmt)  # 实例化formatter
+handler.setFormatter(formatter)  # 为handler添加formatter
 logger = logging.getLogger('trainlogger')  # 获取名为tst的logger
 logger.addHandler(handler)  # 为logger添加handler
 logger.setLevel(logging.DEBUG)
 
+"""Hyper Parameters"""
+VOVAB_SIZE = 18500
+EMBED_SIZE = 128
+ENCODER_HIDEEN_UNITS = 128
+DECODER_HIDDEN_UNITS = 128
+BATCH_SIZE = 32
+ENCODER_LAYERS = 1
+EPOCH = 10
+NUM_TRAIN_STEPS = 220
+SKIP_STEPS = 20
+LEARNING_RATE = 0.1
+
+"""Hyper Parameters(Word2Vec)"""
+NUM_SAMPLED = 64
+LEARNING_RATE_W2V = 1.0
+SKIP_WINDOWS = 1
+DATA_NAME_W2V = 'traintext.zip'
+NUM_TRAIN_STEPS_W2V = 17000
+SKIP_STEPS_W2V = 100
+
 
 def build_embed_matrix():
-    # vocab_size
-    # embed_size
-    # batch_size
-    # num_sampled
-    # learning_rate
-    # skip_windows
-    # data_name
-    # num_train_steps
-    # skip_steps
-    w2vmodel = w2v(18500, 128, 32, 64, 1.0, 1, 'traintext.zip', 17000, 100)
+    w2vmodel = w2v(vocab_size=VOVAB_SIZE,
+                   embed_size=EMBED_SIZE,
+                   batch_size=BATCH_SIZE,
+                   num_sampled=NUM_SAMPLED,
+                   learning_rate=LEARNING_RATE_W2V,
+                   skip_windows=SKIP_WINDOWS,
+                   data_name=DATA_NAME_W2V,
+                   num_train_steps=NUM_TRAIN_STEPS_W2V,
+                   skip_steps=SKIP_STEPS_W2V)
     w2vmodel.build_graph()
     return w2vmodel.train()
 
@@ -68,6 +86,7 @@ def get_batch(batch_size, iterator):
         for index in range(batch_size):
             encoder_input_batch_single, decoder_input_batch_single, target_batch_single, encoder_length_single, decoder_length_single = next(
                 iterator)
+
             encoder_batch.append(encoder_input_batch_single)
             decoder_batch.append(decoder_input_batch_single)
             target_batch.append(target_batch_single)
@@ -99,17 +118,17 @@ def one_hot_generate(one_hot_dictionary, epoch):
                 words_headline.append(word)
                 count_headline += 1
             one_hot_article = np.zeros([70], dtype=int)
-            one_hot_headline_input = np.zeros([26], dtype=int)
-            one_hot_headline_target = np.zeros([26], dtype=int)
+            one_hot_headline_input = np.zeros([30], dtype=int)
+            one_hot_headline_target = np.zeros([30], dtype=int)
 
             for index, word in enumerate(words_article):
                 one_hot_article[index] = one_hot_dictionary[word] if word in one_hot_dictionary else 0
 
-            one_hot_headline_input[0] = 0
+            one_hot_headline_input[0] = 18498
+            one_hot_headline_target[0] = 18498
             for index, word in enumerate(words_headline):
                 one_hot_headline_input[index + 1] = one_hot_dictionary[word] if word in one_hot_dictionary else 0
-                one_hot_headline_target[index] = one_hot_dictionary[word] if word in one_hot_dictionary else 0
-
+                one_hot_headline_target[index + 1] = one_hot_dictionary[word] if word in one_hot_dictionary else 0
             yield one_hot_article, one_hot_headline_input, one_hot_headline_target, count_article, count_headline
             sentence_article = bytes.decode(file_article.readline())
             sentence_headline = bytes.decode(file_headline.readline())
@@ -128,15 +147,29 @@ def main():
     embed_matrix, one_hot_dictionary, one_hot_dictionary_index = load_embed_matrix()
     logger.debug("w2v restored")
 
-    seq2seq_basic_rnn_without_attention = seq2seqmodel(18500, 128, 128, 128, 32, embed_matrix)
-    seq2seq_basic_rnn_without_attention._build_graph()
+    seq2seq_blstm_without_attention = seq2seqmodel(vocab_size=VOVAB_SIZE,
+                                                   embed_size=EMBED_SIZE,
+                                                   encoder_hidden_units=ENCODER_HIDEEN_UNITS,
+                                                   decoder_hidden_units=DECODER_HIDDEN_UNITS,
+                                                   batch_size=BATCH_SIZE,
+                                                   embed_matrix_init=embed_matrix,
+                                                   encoder_layers=ENCODER_LAYERS,
+                                                   learning_rate=LEARNING_RATE
+                                                   )
+    seq2seq_blstm_without_attention._build_graph()
     logger.debug("seq2seq model built")
 
-    single_generate = one_hot_generate(one_hot_dictionary, 100)
-    batches = get_batch(32, single_generate)
+    single_generate = one_hot_generate(one_hot_dictionary=one_hot_dictionary,
+                                       epoch=EPOCH)
+
+    batches = get_batch(batch_size=BATCH_SIZE,
+                        iterator=single_generate)
     logger.debug("batch generated")
 
-    seq2seq_basic_rnn_without_attention._train(100, 220, batches, 20)
+    seq2seq_blstm_without_attention._train(epoch=EPOCH,
+                                           num_train_steps=NUM_TRAIN_STEPS,
+                                           batches=batches,
+                                           skip_steps=SKIP_STEPS)
     logger.debug("seq2seq model trained")
 
 

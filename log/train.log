@@ -1,4 +1,4 @@
-w2v restored
-seq2seq model built
-batch generated
-seq2seq model trained
+2018-01-31 19:06:50,449 - train.py:148 - trainlogger - w2v restored
+2018-01-31 19:06:51,343 - train.py:160 - trainlogger - seq2seq model built
+2018-01-31 19:06:51,343 - train.py:167 - trainlogger - batch generated
+2018-01-31 20:26:22,080 - train.py:173 - trainlogger - seq2seq model trained
