@@ -1,3 +1,6 @@
 # tmp
-- dictory for some temp files and tools
-- mainly for testing
+- dictory for some test code
+- include:
+    - simple function test
+    - redundant code
+    - older code version that may be reused

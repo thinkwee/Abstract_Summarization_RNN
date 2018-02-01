@@ -19,3 +19,8 @@ attention based summarization on tensorflow using blstm seq2seq model
 - add test unit
 - add save module
 - add lstm seq2seq model
+- add blstm seq2seq model
+
+# usage
+- still in developing
+- it may make some extra dir like:graph(for tensorboard),log(for recording processing and loss),model(save the seq2seq mode),save(save the w2v embed matrix),processed(for pca evaluate on w2v)
