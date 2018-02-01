@@ -38,14 +38,12 @@ class seq2seqmodel:
 
     def _create_embedding(self):
         self.embeddings_trainable = tf.Variable(initial_value=self.embed_matrix_init, name='word_embedding_train')
-        # self.encoder_inputs = tf.unstack(self.encoder_inputs)
-        # self.encoder_inputs_embedded = [tf.nn.embedding_lookup(self.embeddings_trainable, x) for x in
-        #                                 self.encoder_inputs]
         self.encoder_inputs_embedded = tf.nn.embedding_lookup(self.embeddings_trainable, self.encoder_inputs)
         self.decoder_inputs_embedded = tf.nn.embedding_lookup(self.embeddings_trainable, self.decoder_inputs)
 
     def _create_cell(self):
 
+        # multi layer blstm encoder
         for layer_i in range(self.encoder_layers):
             with tf.variable_scope('encoder%i' % layer_i, reuse=tf.AUTO_REUSE):
                 cell_fw = rnn.LSTMCell(
@@ -63,26 +61,13 @@ class seq2seqmodel:
                     dtype=tf.float32)
         self.encoder_final_state_c = tf.concat(
             (self.encoder_final_state[0].c, self.encoder_final_state[1].c), 1)
-
         self.encoder_final_state_h = tf.concat(
             (self.encoder_final_state[0].h, self.encoder_final_state[1].h), 1)
-
         self.encoder_final_state = contrib.rnn.LSTMStateTuple(
             c=self.encoder_final_state_c,
             h=self.encoder_final_state_h)
-        print(self.encoder_final_state)
 
-        # with tf.variable_scope('encoder', reuse=tf.AUTO_REUSE):
-        #     encoder_cell = tf.nn.rnn_cell.LSTMCell(num_units=self.encoder_hidden_units, name='encoder_cell')
-        #
-        #     self.encoder_output, self.encoder_final_state = tf.nn.dynamic_rnn(
-        #         cell=encoder_cell,
-        #         inputs=self.encoder_inputs_embedded,
-        #         dtype=tf.float32,
-        #         time_major=False
-        #     )
-        # print(self.encoder_final_state)
-
+        # Basic Lstm Decoder for train and infer
         with tf.variable_scope('decoder', reuse=tf.AUTO_REUSE):
             self.decoder_cell = tf.nn.rnn_cell.LSTMCell(num_units=self.decoder_hidden_units,
                                                         name='decoder_cell',
@@ -114,58 +99,13 @@ class seq2seqmodel:
                                                                  maximum_iterations=20
                                                                  )
 
-        #
-        #     self.decoder_outputs_train, _ = tf.nn.dynamic_rnn(
-        #         cell=decoder_cell,
-        #         inputs=self.decoder_inputs_embedded,
-        #         initial_state=self.encoder_final_state,
-        #         dtype=tf.float32,
-        #         sequence_length=self.decoder_length,
-        #         time_major=False)
-        #
-        #     start_tokens = 0
-        #     end_tokens = 0
-        #
-            # # Helper
-            # helper = s2s.GreedyEmbeddingHelper(
-            #     self.embeddings_trainable,
-            #     tf.fill([self.batch_size], start_tokens), end_tokens)
-            # # Decoder
-            # decoder = s2s.BasicDecoder(
-            #     decoder_cell, helper, self.encoder_final_state)
-            # # Dynamic decoding
-            # decoder_infer_outputs, _, _ = s2s.dynamic_decode(
-            #     decoder, maximum_iterations=25)
-            # self.decoder_prediction = decoder_infer_outputs.sample_id
-
     def _create_loss(self):
-        """use linear layer to project the output of decoder to predict the ouput word"""
         with tf.name_scope("loss"):
-            # self.decoder_logits_test = tf.contrib.layers.linear(self.decoder_outputs_test, self.vocab_size)
-            # self.decoder_prediction = tf.argmax(self.decoder_logits_test, 2)
-
-            # self.targets = tf.reshape(self.decoder_targets, [-1])
-            # self.logits_flat = tf.reshape(self.decoder_train_logits.rnn_output, [-1, self.vocab_size])
-
             self.targets = self.decoder_targets
             self.targets = tf.one_hot(self.targets, depth=self.vocab_size, dtype=tf.float32)
             self.logits_flat = self.decoder_train_logits.rnn_output
-
-            # self.logits_flat = tf.argmax(self.logits_flat, 0)
-
-            # self.stepwise_cross_entropy = tf.nn.softmax_cross_entropy_with_logits_v2(
-            #     labels=tf.one_hot(self.decoder_targets,
-            #                       depth=self.vocab_size,
-            #                       dtype=tf.float32),
-            #     logits=self.model_outputs,
-            # )
-            # self.loss = tf.reduce_mean(self.stepwise_cross_entropy)
-
-            # self.loss = tf.losses.sparse_softmax_cross_entropy(self.targets, self.logits_flat)
-
             self.loss = tf.losses.softmax_cross_entropy(onehot_labels=self.targets,
                                                         logits=self.logits_flat)
-
             self.optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate).minimize(self.loss)
 
     def _create_summaries(self):
@@ -230,8 +170,6 @@ class seq2seqmodel:
                         self.encoder_inputs: encoder_inputs,
                         self.decoder_inputs: decoder_inputs
                     }
-                    # print("article:")
-                    # print(encoder_inputs[0])
 
                     print("infer headline: ")
                     prediction = sess.run(self.decoder_infer_logits, feed_dict=feed_dict)
