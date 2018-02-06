@@ -194,14 +194,14 @@ class seq2seqmodel:
                         }
 
                         for test_index in range(self.batch_size):
-                            print("group %d\n" % (test_index + 1))
+                            print("- group %d\n" % (test_index + 1))
 
-                            print("infer headline: ")
+                            print(" - infer headline: ")
                             prediction = sess.run(self.decoder_infer_logits, feed_dict=feed_dict)
                             prediction = prediction.sample_id
                             # prediction = prediction[2]
                             answer = [one_hot[i] for i in prediction[test_index]]
-                            output = ""
+                            output = "   "
                             for i in answer:
                                 if i != "UNK":
                                     output += i
@@ -216,11 +216,11 @@ class seq2seqmodel:
                             # answer = [one_hot[i] for i in logits_flat[test_index]]
                             # print(answer)
 
-                            print("targets")
+                            print(" - targets")
                             targets = sess.run(self.decoder_targets, feed_dict=feed_dict)
                             # targets = targets[2]
                             answer = [one_hot[i] for i in targets[test_index]]
-                            output = ""
+                            output = "   "
                             for i in answer:
                                 if i != "UNK":
                                     output += i
