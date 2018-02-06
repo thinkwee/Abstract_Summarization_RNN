@@ -29,7 +29,7 @@ SKIP_STEPS = 40
 LEARNING_RATE = 0.001
 
 """Hyper Parameters(Seq2seq infer)"""
-BATCH_SIZE_INFER = 10
+BATCH_SIZE_INFER = 128
 EPOCH_INFER = 1
 NUM_TRAIN_STEPS_INFER = 1
 
@@ -158,6 +158,7 @@ def one_hot_generate(one_hot_dictionary, epoch):
 
 
 def train(embed_matrix, one_hot_dictionary):
+    print("train mode")
     seq2seq_blstm_train = seq2seqmodel(vocab_size=VOVAB_SIZE,
                                        embed_size=EMBED_SIZE,
                                        encoder_hidden_units=ENCODER_HIDEEN_UNITS,
@@ -184,6 +185,7 @@ def train(embed_matrix, one_hot_dictionary):
 
 
 def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index):
+    print("test mode")
     seq2seq_blstm_infer = seq2seqmodel(vocab_size=VOVAB_SIZE,
                                        embed_size=EMBED_SIZE,
                                        encoder_hidden_units=ENCODER_HIDEEN_UNITS,

@@ -99,7 +99,6 @@ class seq2seqmodel:
             # tf.losses.softmax_cross_entropy
             self.loss = tf.losses.sparse_softmax_cross_entropy(labels=self.targets,
                                                                logits=self.logits_flat)
-            print(self.loss)
             self.optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate).minimize(self.loss)
 
     def _create_summaries(self):
@@ -193,20 +192,23 @@ class seq2seqmodel:
                             self.decoder_inputs: decoder_inputs
                         }
 
-                        for test_index in range(self.batch_size):
-                            print("- group %d\n" % (test_index + 1))
+                        file = open("./infer/output.txt", "w")
 
-                            print(" - infer headline: ")
+                        for test_index in range(self.batch_size):
+                            file.write("- group %d\n" % (test_index + 1))
+
+                            file.write("     - infer headline: \n")
                             prediction = sess.run(self.decoder_infer_logits, feed_dict=feed_dict)
                             prediction = prediction.sample_id
                             # prediction = prediction[2]
                             answer = [one_hot[i] for i in prediction[test_index]]
-                            output = "   "
+                            output = "        "
                             for i in answer:
                                 if i != "UNK":
                                     output += i
                                     output += " "
-                            print(output)
+                            file.write(output)
+                            file.write("\n")
 
                             # print("logits_flat")
                             # logits_flat = sess.run(self.decoder_train_logits, feed_dict=feed_dict)
@@ -216,17 +218,21 @@ class seq2seqmodel:
                             # answer = [one_hot[i] for i in logits_flat[test_index]]
                             # print(answer)
 
-                            print(" - targets")
+                            file.write("     - targets: \n")
                             targets = sess.run(self.decoder_targets, feed_dict=feed_dict)
                             # targets = targets[2]
                             answer = [one_hot[i] for i in targets[test_index]]
-                            output = "   "
+                            output = "        "
                             for i in answer:
                                 if i != "UNK":
                                     output += i
                                     output += " "
-                            print(output)
-                            print("\n")
+                            file.write(output)
+                            file.write("\n")
+                            print("output %d finished" % test_index)
+
+                        file.close()
+                        print("infer file updated")
                 else:
                     print("model restored failed")
                     pass
