@@ -20,6 +20,7 @@ attention based summarization on tensorflow using blstm seq2seq model
 - add save module
 - add lstm seq2seq model
 - add blstm seq2seq model
+- fix infer problem
 
 # usage
 - still in developing

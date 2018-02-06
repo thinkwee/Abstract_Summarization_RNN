@@ -93,7 +93,7 @@ def process_data(vocab_size, batch_size, skip_window, data_name):
     index_words = convert_words_to_index(words, dictionary)
     del words  # to save memory
     single_gen = generate_sample(index_words, skip_window)
-    return get_batch(single_gen, batch_size),dictionary,index_dictionary
+    return get_batch(single_gen, batch_size), dictionary, index_dictionary
 
 
 def get_index_vocab(vocab_size, data_name):
