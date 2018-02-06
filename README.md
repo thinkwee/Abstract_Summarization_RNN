@@ -28,26 +28,19 @@ attention based summarization on tensorflow using blstm seq2seq model
 
 # current effect
 - group 1
-
- - infer headline:
-   report british economy poised for strong growth and possibly an interest rate hike hold for release until 103104 190100 est
- - targets
-   report british economy poised for strong growth and possibly an interest rate hike hold for release until 103104 190100 est
-
-
+     - infer headline:
+        report british economy poised for strong growth and possibly an interest rate hike hold for release until 103104 190100 est
+     - targets:
+        report british economy poised for strong growth and possibly an interest rate hike hold for release until 103104 190100 est
 - group 2
-
- - infer headline:
-   israel would not allow arafat to be buried at palestinian leadership
- - targets
-   israel would not allow arafat to be buried in jerusalem but affirms pledge to allow him to return to west bank if he recovers
-
-
+     - infer headline:
+        israel would not allow arafat to be buried at palestinian leadership
+     - targets:
+        israel would not allow arafat to be buried in jerusalem but affirms pledge to allow him to return to west bank if he recovers
 - group 3
-
- - infer headline:
-   and bank and gambling next year whether to hunt for anthrax
- - targets
-   leading union declares royal dutchshell enemy of the people in africas largest oil producer
+     - infer headline:
+        and bank and gambling next year whether to hunt for anthrax
+     - targets:
+        leading union declares royal dutchshell enemy of the people in africas largest oil producer
 
 - more test output can been seen under "./infer/output.txt"
