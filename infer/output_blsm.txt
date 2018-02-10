@@ -1,0 +1,640 @@
+- group 1
+     - infer headline: 
+        report british economy poised for strong growth and possibly an interest rate hike hold for release until 103104 190100 est 
+     - targets: 
+         report british economy poised for strong growth and possibly an interest rate hike hold for release until 103104 190100 est 
+- group 2
+     - infer headline: 
+        israel would not allow arafat to be buried at palestinian leadership 
+     - targets: 
+         israel would not allow arafat to be buried in jerusalem but affirms pledge to allow him to return to west bank if he recovers 
+- group 3
+     - infer headline: 
+        and bank and gambling next year whether to hunt for anthrax 
+     - targets: 
+         leading union declares royal dutchshell enemy of the people in africas largest oil producer 
+- group 4
+     - infer headline: 
+        government darfur rebels to be free to fight hivaids 
+     - targets: 
+         sudanese government says it accepts rebel political demands on darfur 
+- group 5
+     - infer headline: 
+        un workers meet afghan president yearn for police on last australian army 
+     - targets: 
+         video shows kidnapped foreign election workers militants demand un withdrawal from afghanistan 
+- group 6
+     - infer headline: 
+        ballot for tickets to lions matches opens 
+     - targets: 
+         ballot for tickets to lions matches opens 
+- group 7
+     - infer headline: 
+        oil prices dips to close in october 
+     - targets: 
+         protesters hope to fend off retail store near ruins in mexico 
+- group 8
+     - infer headline: 
+        missing 377 tons just a tiny fraction of munitions stashed across iraq 
+     - targets: 
+         missing 377 tons just a tiny fraction of munitions stashed across iraq 
+- group 9
+     - infer headline: 
+        a look at some top leader in annual santa port 
+     - targets: 
+         a look at some top weapons sites in iraq 
+- group 10
+     - infer headline: 
+        dollar higher against yen in tokyo 
+     - targets: 
+         dollar lower against yen in tokyo 
+- group 11
+     - infer headline: 
+        new museum remembers victims of cambodias killing fields 
+     - targets: 
+         new museum remembers victims of cambodias killing fields 
+- group 12
+     - infer headline: 
+        calls for first time in two decades visitors see taj mahal by moonlight 
+     - targets: 
+         dozens of house challengers hope second time is the charm 
+- group 13
+     - infer headline: 
+        yanukovych leads ukrainian elections for his first time 
+     - targets: 
+         yanukovych leads ukrainian presidential race with more than 20 percent of precincts counted 
+- group 14
+     - infer headline: 
+        france back in the middle east fray gets another chance to burnish its image 
+     - targets: 
+         france back in the middle east fray gets another chance to burnish its image 
+- group 15
+     - infer headline: 
+        novak topples nalbandian for first indoors title 
+     - targets: 
+         novak topples nalbandian for first indoors title 
+- group 16
+     - infer headline: 
+        calls general strike to win vietnam masters 
+     - targets: 
+         barcelona and valencia get another shot at italians 
+- group 17
+     - infer headline: 
+        democrats need to be sleeper in number of the da vinci code 
+     - targets: 
+         democrats need to gain seven seats for outright senate majority 
+- group 18
+     - infer headline: 
+        one killed in black hawk helicopter crash in texas 
+     - targets: 
+         rioters burn down five discos after nightclub client killed 
+- group 19
+     - infer headline: 
+        union calls for former president bush wins second term 
+     - targets: 
+         spokane bishop warns that diocese could face bankruptcy from sex abuse cases 
+- group 20
+     - infer headline: 
+        three prisoners among suspected of terror threat 
+     - targets: 
+         four hostages freed by rebels in colombia 
+- group 21
+     - infer headline: 
+        un agency appeals for funds to international international experience 
+     - targets: 
+         un court to rule on milosevic appeal to defend himself 
+- group 22
+     - infer headline: 
+        car and european soccer reports 
+     - targets: 
+         aftershocks rattle northern japan 
+- group 23
+     - infer headline: 
+        arafats condition improving but futher tests needed say palestinian officials 
+     - targets: 
+         arafats condition improving but futher tests needed say palestinian officials 
+- group 24
+     - infer headline: 
+        fresh us troops arrive in iraq on eve of expected showdown with guerrillas 
+     - targets: 
+         fresh us troops arrive in iraq on eve of expected showdown with guerrillas 
+- group 25
+     - infer headline: 
+        soccer official says doesnt has be have to the end to the way 
+     - targets: 
+         making maggies house a home alaskas only elephant will have her own treadmill 
+- group 26
+     - infer headline: 
+        gold opens higher in hong kong 
+     - targets: 
+         gold opens higher in hong kong 
+- group 27
+     - infer headline: 
+        new zealand again again 
+     - targets: 
+         new zealand names unchanged squad for australian test series 
+- group 28
+     - infer headline: 
+        campaign polls suggest high voter turnout close race 
+     - targets: 
+         campaign polls suggest high voter turnout close race 
+- group 29
+     - infer headline: 
+        iraq prime minister warns time running out for peaceful settlement in fallujah 
+     - targets: 
+         iraq prime minister warns time running out for peaceful settlement in fallujah blast kills 15 in tikrit 
+- group 30
+     - infer headline: 
+        soccer stars to star on hollywood walk of fame 
+     - targets: 
+         guatemalan artist marco augusto quiroa dies 
+- group 31
+     - infer headline: 
+        crude vaults above us52 ahead of us election nigeria 
+     - targets: 
+         crude vaults above us52 ahead of us election nigeria strike 
+- group 32
+     - infer headline: 
+        share prices advance at midday 
+     - targets: 
+         tokyo stocks lower midday us dollar up against yen 
+- group 33
+     - infer headline: 
+        silvas workers party handed defeats in key brazilian cities 
+     - targets: 
+         silvas workers party handed defeats in key brazilian cities 
+- group 34
+     - infer headline: 
+        report hundreds and dolphins die after beaching on two australian islands 
+     - targets: 
+         report hundreds pay respect to late hong kong gangster under watchful eye of police 
+- group 35
+     - infer headline: 
+        unions oil unions open for oil unit to develop oil giant declare shell 
+     - targets: 
+         unions call strike targeting oil exports in africas oil giant declare shell the enemy 
+- group 36
+     - infer headline: 
+        tabare vazquez wins uruguayan presidential vote bringing the left to power open 
+     - targets: 
+         tabare vazquez wins uruguayan presidential vote bringing the left to power for the first time in countrys history 
+- group 37
+     - infer headline: 
+        bush kerry target battleground states in first time since 1970 black 
+     - targets: 
+         bush kerry target battleground states in campaigns last hours 
+- group 38
+     - infer headline: 
+        trade fair elections for election victory 
+     - targets: 
+         on eve of us election china accuses bush of trying to rule over the whole world 
+- group 39
+     - infer headline: 
+        large blast heard near japanese base in southern iraq 
+     - targets: 
+         large blast heard near japanese base in southern iraq 
+- group 40
+     - infer headline: 
+        rebels attack mountainous village in nepal no casualties reported 
+     - targets: 
+         rebels attack mountainous village in nepal no casualties reported 
+- group 41
+     - infer headline: 
+        former east germany says more than two more than 12 percent of precincts counted 
+     - targets: 
+         former official us stopped sharing secrets with australia due to concerns about soviet leaks hold for release until 110104 000000 est 
+- group 42
+     - infer headline: 
+        china to stop chinese company says it has a a week 
+     - targets: 
+         china says tighter controls needed to rein in investment curb inflation 
+- group 43
+     - infer headline: 
+        residents final five executives arrested for alleged smuggling 
+     - targets: 
+         residents say martial law imposed on chinese town after deadly rioting 
+- group 44
+     - infer headline: 
+        prime minister calls for president for support of top election 
+     - targets: 
+         prime minister comes under fire for backing bush in us presidential election 
+- group 45
+     - infer headline: 
+        yanukovych leads ukrainian presidential race with more than 20 percent of precincts counted 
+     - targets: 
+         yanukovych leads ukrainian presidential race with more than 60 percent of precincts counted 
+- group 46
+     - infer headline: 
+        un envoy meets with foreign minister to revive democracy mission 
+     - targets: 
+         tamil tiger rebels return to sri lanka after european tour ahead of talks with japanese envoy 
+- group 47
+     - infer headline: 
+        king and queen lead at norway and vietnam 
+     - targets: 
+         king queen of norway visit vietnam 
+- group 48
+     - infer headline: 
+        candidates backed by venezuelas president hugo chavez win all but two of 23 governorships in regional elections 
+     - targets: 
+         candidates backed by venezuelas president hugo chavez win all but two of 23 governorships in regional elections 
+- group 49
+     - infer headline: 
+        japan and philippines reach rebels in japan 
+     - targets: 
+         thai king advises gentle approach to southern violence 
+- group 50
+     - infer headline: 
+        south african skipper chief meets with visit 
+     - targets: 
+         south korean navy fires warning shots to ward off north korean patrol boats 
+- group 51
+     - infer headline: 
+        germany holds off on second round at china 
+     - targets: 
+         makybe diva back for historic attempt in melbourne cup 
+- group 52
+     - infer headline: 
+        south african skipper chief criticizes south shots for visit 
+     - targets: 
+         south korean navy fires warning shots to ward off north korean patrol boats 
+- group 53
+     - infer headline: 
+        australian miner increases size of a nightly experience 
+     - targets: 
+         australian guantanamo detainee on brink of insanity he tells father in letter 
+- group 54
+     - infer headline: 
+        russian president says dominican republic will be next flashpoint for extremism 
+     - targets: 
+         venezuelas chavez vows to plow ahead with revolution after his candidates win all but two of 23 governorships in elections 
+- group 55
+     - infer headline: 
+        japan south korea sign for free trade talks with asean 
+     - targets: 
+         japan south korea hold free trade talks amid protests 
+- group 56
+     - infer headline: 
+        stocks lower at close in tokyo 
+     - targets: 
+         stocks lower at close in tokyo 
+- group 57
+     - infer headline: 
+        one killed two injured as president and israeli embassies were injured 
+     - targets: 
+         roadside bomb in ramadi kills one marine injures four others 
+- group 58
+     - infer headline: 
+        air france flight to diverted two killed in eastern congo 
+     - targets: 
+         canadian embassy in sri lanka reopens after anthrax scare 
+- group 59
+     - infer headline: 
+        brother of australian serial killer says he was a psychopath from a young age 
+     - targets: 
+         brother of australian serial killer says he was a psychopath from a young age 
+- group 60
+     - infer headline: 
+        prime minister pakistan for indian india with india 
+     - targets: 
+         pakistani prime minister leaves for visits to nepal bhutan bangladesh 
+- group 61
+     - infer headline: 
+        former us president bush to honor schwarzenegger 
+     - targets: 
+         former us president bush to honor schwarzenegger 
+- group 62
+     - infer headline: 
+        sothebys auctions work of hong kong graffiti painter 
+     - targets: 
+         sothebys auctions work of hong kong graffiti painter 
+- group 63
+     - infer headline: 
+        gold opens down 
+     - targets: 
+         gold markets up 
+- group 64
+     - infer headline: 
+        stocks down in mexico city 
+     - targets: 
+         explosions heard in baghdad 
+- group 65
+     - infer headline: 
+        litter droppers reach native son 
+     - targets: 
+         litter droppers face fines in britain 
+- group 66
+     - infer headline: 
+        former pm premier to victory over muslim election 
+     - targets: 
+         anwar says southern thailand could be next flashpoint for extremism in asia 
+- group 67
+     - infer headline: 
+        zimbabwe president wont get psychological exam of accusers family 
+     - targets: 
+         zimbabwe state prosecutors plan to appeal opposition leaders treason acquittal 
+- group 68
+     - infer headline: 
+        police arrest man sentenced to life in prison 
+     - targets: 
+         britons sentenced to death life imprisonment on drug charges in thailand 
+- group 69
+     - infer headline: 
+        indias coach wright says india not to be fined with tv 
+     - targets: 
+         indias coach wright says injured skipper ganguly not to stay with squad 
+- group 70
+     - infer headline: 
+        north korea calls on us and iraqi unit 
+     - targets: 
+         fresh us troops arrive in iraq on eve of expected showdown in fallujah 
+- group 71
+     - infer headline: 
+        gold closes higher in hong kong 
+     - targets: 
+         gold closes higher in hong kong 
+- group 72
+     - infer headline: 
+        sudanese president calls on rebels in ukraines elections 
+     - targets: 
+         sudanese vice president and southern rebel leader to meet dec 11 
+- group 73
+     - infer headline: 
+        un rwanda not optimistic about democracy 
+     - targets: 
+         rwanda send dozens of additional troops to darfur 
+- group 74
+     - infer headline: 
+        putin pushes for presidential election 
+     - targets: 
+         putin pushes for un convention on fighting nuclear terrorism 
+- group 75
+     - infer headline: 
+        credit card companies hit by high cost of balance transfers 
+     - targets: 
+         credit card companies hit by high cost of balance transfers 
+- group 76
+     - infer headline: 
+        prime minister arrives in france for elections 
+     - targets: 
+         pakistan prime minister arrives in nepal 
+- group 77
+     - infer headline: 
+        computer services company getronics bids euro338 million for dutch peer 
+     - targets: 
+         computer services company getronics bids euro338 million for dutch peer 
+- group 78
+     - infer headline: 
+        greek deputy pm says sunnis want first time in two decades 
+     - targets: 
+         bulgarian customs seize 85 tons of banned substance 
+- group 79
+     - infer headline: 
+        iraqi freelance cameraman reported killed in ramadi 
+     - targets: 
+         iraqi freelance cameraman reported killed in ramadi 
+- group 80
+     - infer headline: 
+        african union chief says mars tax appeal to save water 
+     - targets: 
+         african bishops break from western seminaries in growing anglican split over homosexuality 
+- group 81
+     - infer headline: 
+        australian bank to be fined for next year 
+     - targets: 
+         reports chinas biggest petroleum company to seek compensation from yukos 
+- group 82
+     - infer headline: 
+        world health organization on brink of insanity he tells father for his lawyer 
+     - targets: 
+         world health organization sets flu vaccine summit meeting to deal with pandemic threat 
+- group 83
+     - infer headline: 
+        officials find stress families of 3 dissidents arrested 
+     - targets: 
+         report spain to disperse madrid bombing suspects to prevent islamic radicals from recruiting behind bars 
+- group 84
+     - infer headline: 
+        china coach steps down to turn stingy soon 
+     - targets: 
+         coach wright implores india to play for pride 
+- group 85
+     - infer headline: 
+        un workers meet afghan president yearn for last week 
+     - targets: 
+         philippine emergency meeting on afghanistan hostage crisis accidentally broadcast by radio 
+- group 86
+     - infer headline: 
+        explosion goes but not in old who died 
+     - targets: 
+         explosion goes off in outdoor market in tel aviv 
+- group 87
+     - infer headline: 
+        dave jones fired as manager of relegated wolves 
+     - targets: 
+         dave jones fired as manager of relegated wolves 
+- group 88
+     - infer headline: 
+        seven killed as train clash in iraq 
+     - targets: 
+         pakistan army compensates relatives of tribesmen slain in hunt for militants 
+- group 89
+     - infer headline: 
+        asian markets close mostly higher 
+     - targets: 
+         asian stock markets close generally higher 
+- group 90
+     - infer headline: 
+        kpn sales rise but not doubles at season 
+     - targets: 
+         kpn sales fall but profit doubles in third quarter 
+- group 91
+     - infer headline: 
+        man arrested in hunter slayings of opposition officials 
+     - targets: 
+         police nab napping robber in western japan 
+- group 92
+     - infer headline: 
+        pakistans musharraf says peace talks peace talks 
+     - targets: 
+         pakistans senate approves bill for musharraf to stay as army chief 
+- group 93
+     - infer headline: 
+        krispy kreme doughnuts wants krispy kream ice cream stand 
+     - targets: 
+         krispy kreme doughnuts wants krispy kream ice cream stand to drop name 
+- group 94
+     - infer headline: 
+        turmoil wins confidence plead innocent to new jury killing three 
+     - targets: 
+         disgraced greek sprinter wants to clear his name in court 
+- group 95
+     - infer headline: 
+        los angeles proposes cracking down on freewheeling venice beach vendors 
+     - targets: 
+         los angeles proposes cracking down on freewheeling venice beach vendors 
+- group 96
+     - infer headline: 
+        us troops clash with us attack on samarra 
+     - targets: 
+         clashes between rebels and us forces leave at least two dead in ramadi 
+- group 97
+     - infer headline: 
+        pope offers renewed prayers for presidential election 
+     - targets: 
+         pope offers special prayer for victims of terrorism 
+- group 98
+     - infer headline: 
+        jordans olympic champion says africa could be growing 28 percent 
+     - targets: 
+         jordans population stands at nearly 53 million growing 28 percent from 1994 
+- group 99
+     - infer headline: 
+        new zealand posts record fourth straight fed 
+     - targets: 
+         nymex opens dublin trading floor in challenge to brent futures dealer ipe 
+- group 100
+     - infer headline: 
+        gazprom reappoints head of oil company may be next year 
+     - targets: 
+         gazprom reappoints head of oil company it is set to absorb 
+- group 101
+     - infer headline: 
+        toyota profit in final day of champions 
+     - targets: 
+         toyota profit jumps in fiscal first half as sales grow worldwide 
+- group 102
+     - infer headline: 
+        indias coach wright implores india 
+     - targets: 
+         hameed dropped for india match 
+- group 103
+     - infer headline: 
+        chinese indonesian police chief found in prague 
+     - targets: 
+         chinese jewelry stolen from british museum 
+- group 104
+     - infer headline: 
+        security forces stormed one injured as governor near afghan border 
+     - targets: 
+         coalition troops exchange fire with insurgents after coming under mortar attack 
+- group 105
+     - infer headline: 
+        on news groups welcome sri lanka on track economic issues 
+     - targets: 
+         resolving african issues crucial for global stability prosperity koizumi 
+- group 106
+     - infer headline: 
+        four bahrainis plead innocent to terror charges released until next appearance 
+     - targets: 
+         four bahrainis plead innocent to terror charges released until next appearance 
+- group 107
+     - infer headline: 
+        soccer stars to return to name two and plants 
+     - targets: 
+         former england striker says he was attacked by rugby stars 
+- group 108
+     - infer headline: 
+        
+     - targets: 
+         switzerland sweeps the board at annual cheese olympics 
+- group 109
+     - infer headline: 
+        top of her elections chief now back to keep him in january elections 
+     - targets: 
+         bangalore promises better infrastructure for software firms 
+- group 110
+     - infer headline: 
+        hong kong leader rules out referendum on direct elections 
+     - targets: 
+         hong kong leader rules out referendum on direct elections 
+- group 111
+     - infer headline: 
+        top official calls for president to investigate election 
+     - targets: 
+         osce envoy says he regrets lack of opposition parties in uzbek elections 
+- group 112
+     - infer headline: 
+        president leaders claims for election appeal 
+     - targets: 
+         president of kyrgyzstan visits to greece to boost bilateral ties 
+- group 113
+     - infer headline: 
+        government wont seek off on political crisis 
+     - targets: 
+         tutsi parties will temporarily back interim burundi constitution 
+- group 114
+     - infer headline: 
+        iraq elections will not a major january 
+     - targets: 
+         iraq elections will go ahead in january australian foreign minister 
+- group 115
+     - infer headline: 
+        australian director philippe de broca 
+     - targets: 
+         iocs rogge expresses confidence in beijings frugal olympics 
+- group 116
+     - infer headline: 
+        with spain says hes not to be forgotten john angry at uzbek 
+     - targets: 
+         dna tests to determine whether foundations skull is that of mozart 
+- group 117
+     - infer headline: 
+        east opposition wont seek new army chief 
+     - targets: 
+         israels labor party warns it will vote against budget 
+- group 118
+     - infer headline: 
+        paris masters agassi 
+     - targets: 
+         paris masters agassi and nalbandian pull out 
+- group 119
+     - infer headline: 
+        chinese indonesian troops found dead in nablus 
+     - targets: 
+         chinese government says seven killed in rioting 42 injured 
+- group 120
+     - infer headline: 
+        police arrest five suspected man in smuggling day of british tourists 
+     - targets: 
+         police searching for man who brutally abused three horses 
+- group 121
+     - infer headline: 
+        finlands kone to split into two wickets 
+     - targets: 
+         finlands kone to split into two companies 
+- group 122
+     - infer headline: 
+        gunmen kill kurdish truck driver in iraq 
+     - targets: 
+         gunmen kill deputy governor of baghdad 
+- group 123
+     - infer headline: 
+        swiss president makes first official visit 
+     - targets: 
+         swiss president makes official visit to prague 
+- group 124
+     - infer headline: 
+        borgwarner takes over german automotive supplier beru 
+     - targets: 
+         borgwarner takes over german automotive supplier beru 
+- group 125
+     - infer headline: 
+        china swiss international international chief to develop nuclear fission hydrogen dies 
+     - targets: 
+         british nurses heading to us adding pressure at home 
+- group 126
+     - infer headline: 
+        report search firefighters found in japan for seven hours 
+     - targets: 
+         report one killed in mass protest over dam in western china 
+- group 127
+     - infer headline: 
+        un agency agrees how to police iranian enrichment freeze but no longer direct 
+     - targets: 
+         un nuclear agency says computers that track atomic activities are badly outdated 
+- group 128
+     - infer headline: 
+        un envoy calls for ukrainian elections 
+     - targets: 
+         foreign observers say ukraine elections did not meet european standards 

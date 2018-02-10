@@ -19,17 +19,18 @@ logger.setLevel(logging.DEBUG)
 """Hyper Parameters(Seq2Seq train)"""
 VOVAB_SIZE = 20000
 EMBED_SIZE = 128
-ENCODER_HIDEEN_UNITS = 256
-DECODER_HIDDEN_UNITS = 512
-BATCH_SIZE = 16
+ENCODER_HIDEEN_UNITS = 128
+DECODER_HIDDEN_UNITS = 256
+BATCH_SIZE = 32
 ENCODER_LAYERS = 1
-EPOCH = 40
-NUM_TRAIN_STEPS = 440
-SKIP_STEPS = 40
+EPOCH = 30
+NUM_TRAIN_STEPS = 205
+SKIP_STEPS = 10
 LEARNING_RATE = 0.001
+KEEP_PROB = 0.5
 
 """Hyper Parameters(Seq2seq infer)"""
-BATCH_SIZE_INFER = 128
+BATCH_SIZE_INFER = 3
 EPOCH_INFER = 1
 NUM_TRAIN_STEPS_INFER = 1
 
@@ -56,17 +57,17 @@ def build_embed_matrix():
     return w2vmodel.train()
 
 
-def RunPaperMyRougeHtml(system_path, model_path, modelpattern, systempattern, config_file_path=None,
-                        perlpath=r'/usr/local/lib/x86_64-linux-gnu/perl/5.22.1/bin/perl', system_idstr=['None']):
-    r = Rouge155()
-    r.system_dir = system_path
-    r.config_file = config_file_path
-    r.model_dir = model_path
-    r.system_filename_pattern = systempattern
-    r.model_filename_pattern = modelpattern
-    output = r.evaluate(system_id=system_idstr, conf_path=config_file_path, PerlPath=perlpath)
-    print(output)
-    return output
+# def RunPaperMyRougeHtml(system_path, model_path, modelpattern, systempattern, config_file_path=None,
+#                         perlpath=r'/usr/local/lib/x86_64-linux-gnu/perl/5.22.1/bin/perl', system_idstr=['None']):
+#     r = Rouge155()
+#     r.system_dir = system_path
+#     r.config_file = config_file_path
+#     r.model_dir = model_path
+#     r.system_filename_pattern = systempattern
+#     r.model_filename_pattern = modelpattern
+#     output = r.evaluate(system_id=system_idstr, conf_path=config_file_path, PerlPath=perlpath)
+#     print(output)
+#     return output
 
 
 def save_embed_matrix(embed_matrix, one_hot_dictionary, one_hot_dictionary_index):
@@ -115,11 +116,16 @@ def get_batch(batch_size, iterator):
         yield encoder_batch, decoder_batch, target_batch, encoder_length_batch, decoder_length_batch
 
 
-def one_hot_generate(one_hot_dictionary, epoch):
+def one_hot_generate(one_hot_dictionary, epoch, is_train):
     for i in range(epoch):
-        file_article = open('./data/article.txt', 'rb')
+        if is_train:
+            file_headline = open('./data/headline_train.txt', 'rb')
+            file_article = open('./data/article_train.txt', 'rb')
+        else:
+            file_headline = open('./data/headline_infer.txt', 'rb')
+            file_article = open('./data/article_infer.txt', 'rb')
+
         sentence_article = bytes.decode(file_article.readline())
-        file_headline = open('./data/headline.txt', 'rb')
         sentence_headline = bytes.decode(file_headline.readline())
 
         while sentence_article and sentence_headline:
@@ -159,54 +165,58 @@ def one_hot_generate(one_hot_dictionary, epoch):
 
 def train(embed_matrix, one_hot_dictionary):
     print("train mode")
-    seq2seq_blstm_train = seq2seqmodel(vocab_size=VOVAB_SIZE,
-                                       embed_size=EMBED_SIZE,
-                                       encoder_hidden_units=ENCODER_HIDEEN_UNITS,
-                                       decoder_hidden_units=DECODER_HIDDEN_UNITS,
-                                       batch_size=BATCH_SIZE,
-                                       embed_matrix_init=embed_matrix,
-                                       encoder_layers=ENCODER_LAYERS,
-                                       learning_rate=LEARNING_RATE,
-                                       is_train=1
-                                       )
+    seq2seq_bgru_train = seq2seqmodel(vocab_size=VOVAB_SIZE,
+                                      embed_size=EMBED_SIZE,
+                                      encoder_hidden_units=ENCODER_HIDEEN_UNITS,
+                                      decoder_hidden_units=DECODER_HIDDEN_UNITS,
+                                      batch_size=BATCH_SIZE,
+                                      embed_matrix_init=embed_matrix,
+                                      encoder_layers=ENCODER_LAYERS,
+                                      learning_rate=LEARNING_RATE,
+                                      is_train=1,
+                                      keep_prob=KEEP_PROB
+                                      )
 
     single_generate = one_hot_generate(one_hot_dictionary=one_hot_dictionary,
-                                       epoch=EPOCH)
+                                       epoch=EPOCH,
+                                       is_train=1)
 
     batches = get_batch(batch_size=BATCH_SIZE,
                         iterator=single_generate)
     logger.debug("batch generated")
 
-    seq2seq_blstm_train._run(epoch=EPOCH,
-                             num_train_steps=NUM_TRAIN_STEPS,
-                             batches=batches,
-                             skip_steps=SKIP_STEPS)
+    seq2seq_bgru_train._run(epoch=EPOCH,
+                            num_train_steps=NUM_TRAIN_STEPS,
+                            batches=batches,
+                            skip_steps=SKIP_STEPS)
     logger.debug("seq2seq model trained")
 
 
 def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index):
     print("test mode")
-    seq2seq_blstm_infer = seq2seqmodel(vocab_size=VOVAB_SIZE,
-                                       embed_size=EMBED_SIZE,
-                                       encoder_hidden_units=ENCODER_HIDEEN_UNITS,
-                                       decoder_hidden_units=DECODER_HIDDEN_UNITS,
-                                       encoder_layers=ENCODER_LAYERS,
-                                       batch_size=BATCH_SIZE_INFER,
-                                       learning_rate=LEARNING_RATE,
-                                       embed_matrix_init=embed_matrix,
-                                       is_train=0)
+    seq2seq_bgru_infer = seq2seqmodel(vocab_size=VOVAB_SIZE,
+                                      embed_size=EMBED_SIZE,
+                                      encoder_hidden_units=ENCODER_HIDEEN_UNITS,
+                                      decoder_hidden_units=DECODER_HIDDEN_UNITS,
+                                      encoder_layers=ENCODER_LAYERS,
+                                      batch_size=BATCH_SIZE_INFER,
+                                      learning_rate=LEARNING_RATE,
+                                      embed_matrix_init=embed_matrix,
+                                      keep_prob=KEEP_PROB,
+                                      is_train=0)
 
     single_generate = one_hot_generate(one_hot_dictionary,
-                                       epoch=EPOCH_INFER)
+                                       epoch=EPOCH_INFER,
+                                       is_train=1)
     batches = get_batch(batch_size=BATCH_SIZE_INFER,
                         iterator=single_generate)
     logger.debug("batch generated")
 
-    seq2seq_blstm_infer._run(epoch=EPOCH_INFER,
-                             num_train_steps=NUM_TRAIN_STEPS_INFER,
-                             batches=batches,
-                             one_hot=one_hot_dictionary_index,
-                             skip_steps=1)
+    seq2seq_bgru_infer._run(epoch=EPOCH_INFER,
+                            num_train_steps=NUM_TRAIN_STEPS_INFER,
+                            batches=batches,
+                            one_hot=one_hot_dictionary_index,
+                            skip_steps=1)
     logger.debug("seq2seq model tested")
 
 

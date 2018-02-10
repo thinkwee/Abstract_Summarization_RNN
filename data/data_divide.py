@@ -4,6 +4,12 @@ file_article = open('./article.txt', 'rb')
 sentence_article = bytes.decode(file_article.readline())
 file_headline = open('./headline.txt', 'rb')
 sentence_headline = bytes.decode(file_headline.readline())
+
+file_article_infer = open('./article_infer.txt', 'w')
+file_headline_infer = open('./headline_infer.txt', 'w')
+file_article_train = open('./article_train.txt', 'w')
+file_headline_train = open('./headline_train.txt', 'w')
+
 sentence_count = 0
 max_article = 0
 max_headline = 0
@@ -12,10 +18,15 @@ total_headline = 0
 
 while sentence_article and sentence_headline:
     sentence_count = sentence_count + 1
+    if sentence_count > 6560:
+        file_article_infer.writelines(sentence_article)
+        file_headline_infer.writelines(sentence_headline)
+    else:
+        file_article_train.writelines(sentence_article)
+        file_headline_train.writelines(sentence_headline)
+
     words_article = []
     words_headline = []
-    sentence_article = bytes.decode(file_article.readline())
-    sentence_headline = bytes.decode(file_headline.readline())
     strip = string.whitespace + string.punctuation + "\"'"
     for word in sentence_article.split():
         word = word.strip(strip)
@@ -29,9 +40,11 @@ while sentence_article and sentence_headline:
         max_article = len(words_article)
     total_article += len(words_article)
     total_headline += len(words_headline)
+    sentence_article = bytes.decode(file_article.readline())
+    sentence_headline = bytes.decode(file_headline.readline())
 
 print(sentence_count)
 print(max_headline)
 print(max_article)
-print(total_article/sentence_count)
-print(total_headline/sentence_count)
+print(total_article / sentence_count)
+print(total_headline / sentence_count)
