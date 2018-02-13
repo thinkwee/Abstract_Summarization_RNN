@@ -1,22 +1,71 @@
 - group 1
      - infer headline: 
-        report british government approves bill forming open free trade agreement 
+        un budget office presses member of nations fears is indicted end_token 
      - train headline: 
-        report british government poised for strong growth and possibly an interest rate hike hold for release until 103104 190100 est 
+        un budget push war leader on darfur undermines on strong to fund public end_token 
      - targets: 
-        report british economy poised for strong growth and possibly an interest rate hike hold for release until 103104 190100 est 
+        un condemns sudanese rebel attacks in darfur calls for halt to all fighting end_token 
 - group 2
      - infer headline: 
-        arafats nephew arrives in france to get leaders medical dossier 
+        european union representatives in a new hampshire commission votes end_token 
      - train headline: 
-        arafats to not allow arafat on be buried in jerusalem but affirms pledge to allow him to return to west bank if he recovers 
+        european union upholds case to in on on strong in loss years us end_token 
      - targets: 
-        israel would not allow arafat to be buried in jerusalem but affirms pledge to allow him to return to west bank if he recovers 
+        european judge deciding microsoft appeal calls meeting for thursday after two eu backers jump ship end_token 
 - group 3
      - infer headline: 
-        australia mulls oil giant may consider takeover to make it about it will hold up 
+        danish queen on drug charges case of chechen security chief end_token 
      - train headline: 
-        australia economy declares royal dutchshell enemy of the way in africas largest oil 
+        danish months vietnamese to as smuggling president court appeal denmark end_token 
      - targets: 
-        leading union declares royal dutchshell enemy of the people in africas largest oil producer 
+        three ethnic albanians convicted for burning old serbian church in kosovo riots end_token 
+- group 4
+     - infer headline: 
+        european parliament approves new york appeal to stay in road end_token 
+     - train headline: 
+        european finance bank makes interest rate unchanged amid end_token 
+     - targets: 
+        polands central bank keeps interest rates unchanged end_token 
+- group 5
+     - infer headline: 
+        indias rebels suspects in southern india end_token 
+     - train headline: 
+        indias buddhist as as talks and after army italian down afghanistan end_token 
+     - targets: 
+        grocery shop owner security guard slain as violence continues in thailands muslim south end_token 
+- group 6
+     - infer headline: 
+        alleged women in caribbean to hunt in western european union end_token 
+     - train headline: 
+        alleged of convicted to in caribbean for former in end_token 
+     - targets: 
+        convicted soldiers seek retrial in aquino assassination case end_token 
+- group 7
+     - infer headline: 
+        leading economies to pay cuts intact at top palestinian officials end_token 
+     - train headline: 
+        leading government israeli companies hit singer in to end_token 
+     - targets: 
+        uzbekistan and russian energy giant lukoil ratify us1 billion oil field deal end_token 
+- group 8
+     - infer headline: 
+        british fathers soccer fan stabbed to death in vietnam end_token 
+     - train headline: 
+        british club agency allegedly stuck of suvs national of california museum in one judge end_token 
+     - targets: 
+        former spy who got thousands of jews out of nazi germany honored as british hero end_token 
+- group 9
+     - infer headline: 
+        iraq and security forces surround wto of darfur violence end_token 
+     - train headline: 
+        iraq foreign says us election on talks to its chief preparations end_token 
+     - targets: 
+        french minister says january elections for iraq possible but difficult end_token 
+- group 10
+     - infer headline: 
+        asian stock ends coaching open end_token 
+     - train headline: 
+        asian teenager a dome target but season end_token 
+     - targets: 
+        hamburg gets new nfl europe franchise end_token 
 average infer loss: 

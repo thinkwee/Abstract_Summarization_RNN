@@ -8,7 +8,7 @@ import numpy as np
 
 class seq2seqmodel:
     def __init__(self, vocab_size, embed_size, encoder_hidden_units, decoder_hidden_units, batch_size,
-                 embed_matrix_init, encoder_layers, learning_rate, is_train, keep_prob):
+                 embed_matrix_init, encoder_layers, learning_rate, is_train, keep_prob, core):
         self.vocab_size = vocab_size
         self.embed_size = embed_size
         self.encoder_hidden_units = encoder_hidden_units
@@ -19,6 +19,7 @@ class seq2seqmodel:
         self.learning_rate = learning_rate
         self.is_train = is_train
         self.keep_prob = keep_prob
+        self.core = core
         self.global_step = tf.Variable(0, dtype=tf.int32, trainable=False, name='global_step')
         self.MODEL_FILE = './model/'
 
@@ -36,38 +37,38 @@ class seq2seqmodel:
 
     def _create_seq2seq(self):
 
-        # multi layer bgru encoder with dropout wrapper
-        with tf.variable_scope('encoder', reuse=tf.AUTO_REUSE):
-            inputs = self.encoder_inputs_embedded
+        if self.core == "blstm":
+            # multi layer blstm encoder
             for layer_i in range(self.encoder_layers):
-                with tf.variable_scope(None, default_name="bidirectional-rnn-%i" % layer_i):
-                    cell_fw = tf.nn.rnn_cell.GRUCell(
+                with tf.variable_scope('encoder%i' % layer_i, reuse=tf.AUTO_REUSE):
+                    cell_fw = rnn.LSTMCell(
                         num_units=self.encoder_hidden_units,
-                        kernel_initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=133),
-                        bias_initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=18))
-                    cell_bw = tf.nn.rnn_cell.GRUCell(
+                        initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=114),
+                        state_is_tuple=True)
+                    cell_bw = rnn.LSTMCell(
                         num_units=self.encoder_hidden_units,
-                        kernel_initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=114),
-                        bias_initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=107))
-                    # if self.is_train:
-                    #     cell_fw = tf.nn.rnn_cell.DropoutWrapper(cell_fw, output_keep_prob=self.keep_prob)
-                    #     cell_bw = tf.nn.rnn_cell.DropoutWrapper(cell_bw, output_keep_prob=self.keep_prob)
-
-                    (output, self.encoder_final_state) = tf.nn.bidirectional_dynamic_rnn(
+                        initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=133),
+                        state_is_tuple=True)
+                    (self.encoder_inputs_embedded, self.encoder_final_state) = tf.nn.bidirectional_dynamic_rnn(
                         cell_fw=cell_fw,
                         cell_bw=cell_bw,
-                        inputs=inputs,
+                        inputs=self.encoder_inputs_embedded,
                         dtype=tf.float32)
-                    # inputs = tf.concat(output, 2)
-            self.encoder_final_state = tf.concat(self.encoder_final_state, 1)
+            self.encoder_final_state_c = tf.concat(
+                (self.encoder_final_state[0].c, self.encoder_final_state[1].c), 1)
+            self.encoder_final_state_h = tf.concat(
+                (self.encoder_final_state[0].h, self.encoder_final_state[1].h), 1)
+            self.encoder_final_state = contrib.rnn.LSTMStateTuple(
+                c=self.encoder_final_state_c,
+                h=self.encoder_final_state_h)
 
-        # Basic gru Decoder for train and infer
-        with tf.variable_scope('decoder', reuse=tf.AUTO_REUSE):
-            self.decoder_cell = tf.nn.rnn_cell.GRUCell(num_units=self.decoder_hidden_units,
-                                                       name='decoder_cell')
-            self.fc_layer = tf.layers.Dense(self.vocab_size, name='dense_layer')
+            # Basic Lstm Decoder for train and infer
+            with tf.variable_scope('decoder', reuse=tf.AUTO_REUSE):
+                self.decoder_cell = tf.nn.rnn_cell.LSTMCell(num_units=self.decoder_hidden_units,
+                                                            name='decoder_cell',
+                                                            state_is_tuple=True)
+                self.fc_layer = tf.layers.Dense(self.vocab_size, name='dense_layer')
 
-            with tf.variable_scope('decoder_train', reuse=tf.AUTO_REUSE):
                 # for train
                 self.helper_train = contrib.seq2seq.TrainingHelper(inputs=self.decoder_inputs_embedded,
                                                                    sequence_length=self.decoder_length)
@@ -78,10 +79,10 @@ class seq2seqmodel:
                                                                   )
                 self.decoder_train_logits, _, _ = s2s.dynamic_decode(decoder=self.decoder_train
                                                                      )
-            with tf.variable_scope('decoder_infer', reuse=tf.AUTO_REUSE):
+
                 # for infer
                 self.start_tokens = tf.fill([self.batch_size], 19654)
-                self.end_tokens = 0
+                self.end_tokens = 19655
                 self.helper_infer = contrib.seq2seq.GreedyEmbeddingHelper(embedding=self.embeddings_trainable,
                                                                           start_tokens=self.start_tokens,
                                                                           end_token=self.end_tokens)
@@ -92,6 +93,64 @@ class seq2seqmodel:
                 self.decoder_infer_logits, _, _ = s2s.dynamic_decode(self.decoder_infer,
                                                                      maximum_iterations=20
                                                                      )
+
+        elif self.core == "bgru":
+            # multi layer bgru encoder with dropout wrapper
+            with tf.variable_scope('encoder', reuse=tf.AUTO_REUSE):
+                inputs = self.encoder_inputs_embedded
+                for layer_i in range(self.encoder_layers):
+                    with tf.variable_scope(None, default_name="bidirectional-rnn-%i" % layer_i):
+                        cell_fw = tf.nn.rnn_cell.GRUCell(
+                            num_units=self.encoder_hidden_units,
+                            kernel_initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=133),
+                            bias_initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=18))
+                        cell_bw = tf.nn.rnn_cell.GRUCell(
+                            num_units=self.encoder_hidden_units,
+                            kernel_initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=114),
+                            bias_initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=107))
+                        # if self.is_train:
+                        #     cell_fw = tf.nn.rnn_cell.DropoutWrapper(cell_fw, output_keep_prob=self.keep_prob)
+                        #     cell_bw = tf.nn.rnn_cell.DropoutWrapper(cell_bw, output_keep_prob=self.keep_prob)
+
+                        (output, self.encoder_final_state) = tf.nn.bidirectional_dynamic_rnn(
+                            cell_fw=cell_fw,
+                            cell_bw=cell_bw,
+                            inputs=inputs,
+                            dtype=tf.float32)
+                        # inputs = tf.concat(output, 2)
+                self.encoder_final_state = tf.concat(self.encoder_final_state, 1)
+
+            # Basic gru Decoder for train and infer
+            with tf.variable_scope('decoder', reuse=tf.AUTO_REUSE):
+                self.decoder_cell = tf.nn.rnn_cell.GRUCell(num_units=self.decoder_hidden_units,
+                                                           name='decoder_cell')
+                self.fc_layer = tf.layers.Dense(self.vocab_size, name='dense_layer')
+
+                with tf.variable_scope('decoder_train', reuse=tf.AUTO_REUSE):
+                    # for train
+                    self.helper_train = contrib.seq2seq.TrainingHelper(inputs=self.decoder_inputs_embedded,
+                                                                       sequence_length=self.decoder_length)
+                    self.decoder_train = contrib.seq2seq.BasicDecoder(cell=self.decoder_cell,
+                                                                      initial_state=self.encoder_final_state,
+                                                                      helper=self.helper_train,
+                                                                      output_layer=self.fc_layer
+                                                                      )
+                    self.decoder_train_logits, _, _ = s2s.dynamic_decode(decoder=self.decoder_train
+                                                                         )
+                with tf.variable_scope('decoder_infer', reuse=tf.AUTO_REUSE):
+                    # for infer
+                    self.start_tokens = tf.fill([self.batch_size], 19654)
+                    self.end_tokens = 19655
+                    self.helper_infer = contrib.seq2seq.GreedyEmbeddingHelper(embedding=self.embeddings_trainable,
+                                                                              start_tokens=self.start_tokens,
+                                                                              end_token=self.end_tokens)
+                    self.decoder_infer = contrib.seq2seq.BasicDecoder(cell=self.decoder_cell,
+                                                                      initial_state=self.encoder_final_state,
+                                                                      helper=self.helper_infer,
+                                                                      output_layer=self.fc_layer)
+                    self.decoder_infer_logits, _, _ = s2s.dynamic_decode(self.decoder_infer,
+                                                                         maximum_iterations=20
+                                                                         )
 
     def _create_loss(self):
         with tf.name_scope("loss"):
