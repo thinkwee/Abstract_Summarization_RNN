@@ -30,7 +30,7 @@ LEARNING_RATE = 0.001
 KEEP_PROB = 0.5
 
 """Hyper Parameters(Seq2seq infer)"""
-BATCH_SIZE_INFER = 10
+BATCH_SIZE_INFER = 5
 EPOCH_INFER = 1
 NUM_TRAIN_STEPS_INFER = 1
 
@@ -175,7 +175,7 @@ def train(embed_matrix, one_hot_dictionary):
                                  learning_rate=LEARNING_RATE,
                                  is_train=1,
                                  keep_prob=KEEP_PROB,
-                                 core="bgru"
+                                 core="blstm"
                                  )
 
     single_generate = one_hot_generate(one_hot_dictionary=one_hot_dictionary,
@@ -205,7 +205,7 @@ def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index):
                                  embed_matrix_init=embed_matrix,
                                  keep_prob=KEEP_PROB,
                                  is_train=0,
-                                 core="bgru")
+                                 core="blstm")
 
     single_generate = one_hot_generate(one_hot_dictionary,
                                        epoch=EPOCH_INFER,

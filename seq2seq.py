@@ -274,19 +274,19 @@ class seq2seqmodel:
                             file.write(output)
                             file.write("\n")
 
-                            file.write("     - train headline: \n")
-                            logits_train = sess.run(self.decoder_train_logits, feed_dict=feed_dict)
-                            prediction_train = logits_train.sample_id
-                            # prediction = np.argmax(prediction, 2)
-                            # logits_flat = logits_flat[2]
-                            answer = [one_hot[i] for i in prediction_train[test_index]]
-                            output = "        "
-                            for i in answer:
-                                if i != "UNK":
-                                    output += i
-                                    output += " "
-                            file.write(output)
-                            file.write("\n")
+                            # file.write("     - train headline: \n")
+                            # logits_train = sess.run(self.decoder_train_logits, feed_dict=feed_dict)
+                            # prediction_train = logits_train.sample_id
+                            # # prediction = np.argmax(prediction, 2)
+                            # # logits_flat = logits_flat[2]
+                            # answer = [one_hot[i] for i in prediction_train[test_index]]
+                            # output = "        "
+                            # for i in answer:
+                            #     if i != "UNK":
+                            #         output += i
+                            #         output += " "
+                            # file.write(output)
+                            # file.write("\n")
 
                             file.write("     - targets: \n")
                             targets = sess.run(self.decoder_targets, feed_dict=feed_dict)

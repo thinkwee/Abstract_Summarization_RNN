@@ -24,6 +24,7 @@ attention based summarization on tensorflow using seq2seq model
 - try cross validation
 - add bgru seq2seq model
 - add switch module of core and test data
+- move tmp(code snippets) to cacher 
 
 # usage
 - still in developing
