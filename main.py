@@ -22,7 +22,7 @@ EMBED_SIZE = 128
 ENCODER_HIDEEN_UNITS = 128
 DECODER_HIDDEN_UNITS = 256
 BATCH_SIZE = 32
-ENCODER_LAYERS = 1
+ENCODER_LAYERS = 3
 EPOCH = 50
 NUM_TRAIN_STEPS = 205
 SKIP_STEPS = 10
@@ -57,19 +57,6 @@ def build_embed_matrix():
     return w2vmodel.train()
 
 
-# def RunPaperMyRougeHtml(system_path, model_path, modelpattern, systempattern, config_file_path=None,
-#                         perlpath=r'/usr/local/lib/x86_64-linux-gnu/perl/5.22.1/bin/perl', system_idstr=['None']):
-#     r = Rouge155()
-#     r.system_dir = system_path
-#     r.config_file = config_file_path
-#     r.model_dir = model_path
-#     r.system_filename_pattern = systempattern
-#     r.model_filename_pattern = modelpattern
-#     output = r.evaluate(system_id=system_idstr, conf_path=config_file_path, PerlPath=perlpath)
-#     print(output)
-#     return output
-
-
 def save_embed_matrix(embed_matrix, one_hot_dictionary, one_hot_dictionary_index):
     output = open('./save/embed_matrix.pkl', 'wb')
     pickle.dump(embed_matrix, output)
@@ -100,20 +87,35 @@ def get_batch(batch_size, iterator):
         encoder_batch = []
         decoder_batch = []
         target_batch = []
-        encoder_length_batch = np.zeros([batch_size], dtype=int)
-        decoder_length_batch = np.zeros([batch_size], dtype=int)
+
+        bucket_encoder_length = 0
+        bucket_decoder_length = 0
 
         for index in range(batch_size):
             encoder_input_batch_single, decoder_input_batch_single, target_batch_single, encoder_length_single, decoder_length_single = next(
                 iterator)
 
+            if encoder_length_single > bucket_encoder_length:
+                bucket_encoder_length = encoder_length_single
+            if decoder_length_single > bucket_decoder_length:
+                bucket_decoder_length = decoder_length_single
+
             encoder_batch.append(encoder_input_batch_single)
             decoder_batch.append(decoder_input_batch_single)
             target_batch.append(target_batch_single)
-            encoder_length_batch[index] = encoder_length_single
-            decoder_length_batch[index] = decoder_length_single
 
-        yield encoder_batch, decoder_batch, target_batch, encoder_length_batch, decoder_length_batch
+        for index in range(batch_size):
+            len_temp = len(encoder_batch[index])
+            encoder_batch[index] = np.resize(encoder_batch[index], [bucket_encoder_length])
+            encoder_batch[index][len_temp + 1:] = 0
+
+            len_temp = len(decoder_batch[index])
+            decoder_batch[index] = np.resize(decoder_batch[index], [bucket_decoder_length])
+            target_batch[index] = np.resize(target_batch[index], [bucket_decoder_length])
+
+            decoder_batch[index][len_temp + 1:] = 0
+            target_batch[index][len_temp:] = 0
+        yield encoder_batch, decoder_batch, target_batch, bucket_encoder_length, bucket_decoder_length
 
 
 def one_hot_generate(one_hot_dictionary, epoch, is_train):
@@ -142,14 +144,17 @@ def one_hot_generate(one_hot_dictionary, epoch, is_train):
                 word = word.strip(strip)
                 words_headline.append(word)
                 count_headline += 1
-            one_hot_article = np.zeros([72], dtype=int)
-            one_hot_headline_input = np.zeros([30], dtype=int)
-            one_hot_headline_target = np.zeros([30], dtype=int)
+            one_hot_article = np.zeros([count_article + 1], dtype=int)
+            one_hot_headline_input = np.zeros([count_headline + 2], dtype=int)
+            one_hot_headline_target = np.zeros([count_headline + 2], dtype=int)
+
+            index = 0
 
             for index, word in enumerate(words_article):
                 one_hot_article[index] = one_hot_dictionary[word] if word in one_hot_dictionary else 0
 
             one_hot_headline_input[0] = 19654
+
             for index, word in enumerate(words_headline):
                 one_hot_headline_input[index + 1] = one_hot_dictionary[word] if word in one_hot_dictionary else 0
                 one_hot_headline_target[index] = one_hot_dictionary[word] if word in one_hot_dictionary else 0
@@ -209,7 +214,7 @@ def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index):
 
     single_generate = one_hot_generate(one_hot_dictionary,
                                        epoch=EPOCH_INFER,
-                                       is_train=0)
+                                       is_train=1)
     batches = get_batch(batch_size=BATCH_SIZE_INFER,
                         iterator=single_generate)
     logger.debug("batch generated")

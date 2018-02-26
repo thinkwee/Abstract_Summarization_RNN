@@ -35,32 +35,56 @@ class seq2seqmodel:
         self.encoder_inputs_embedded = tf.nn.embedding_lookup(self.embeddings_trainable, self.encoder_inputs)
         self.decoder_inputs_embedded = tf.nn.embedding_lookup(self.embeddings_trainable, self.decoder_inputs)
 
+    def _create_blstmcell(self, layer_i):
+        with tf.variable_scope('lstm_layer%i' % layer_i, reuse=tf.AUTO_REUSE):
+            cell_fw = rnn.LSTMCell(
+                num_units=self.encoder_hidden_units,
+                initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=114),
+                state_is_tuple=True)
+            cell_bw = rnn.LSTMCell(
+                num_units=self.encoder_hidden_units,
+                initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=133),
+                state_is_tuple=True)
+            if self.is_train:
+                cell_fw = rnn.DropoutWrapper(cell=cell_fw, output_keep_prob=self.keep_prob)
+                cell_bw = rnn.DropoutWrapper(cell=cell_bw, output_keep_prob=self.keep_prob)
+        return cell_fw, cell_bw
+
+    def _create_bgrucell(self):
+        with tf.variable_scope("bgru layer"):
+            cell_fw = tf.nn.rnn_cell.GRUCell(
+                num_units=self.encoder_hidden_units,
+                kernel_initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=133),
+                bias_initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=18))
+            cell_bw = tf.nn.rnn_cell.GRUCell(
+                num_units=self.encoder_hidden_units,
+                kernel_initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=114),
+                bias_initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=107))
+        return cell_fw, cell_bw
+
     def _create_seq2seq(self):
 
         if self.core == "blstm":
             # multi layer blstm encoder
-            for layer_i in range(self.encoder_layers):
-                with tf.variable_scope('encoder%i' % layer_i, reuse=tf.AUTO_REUSE):
-                    cell_fw = rnn.LSTMCell(
-                        num_units=self.encoder_hidden_units,
-                        initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=114),
-                        state_is_tuple=True)
-                    cell_bw = rnn.LSTMCell(
-                        num_units=self.encoder_hidden_units,
-                        initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=133),
-                        state_is_tuple=True)
+            with tf.variable_scope('encoder', reuse=tf.AUTO_REUSE):
+                for layer_i in range(self.encoder_layers):
+                    cell_fw, cell_bw = self._create_blstmcell(layer_i)
                     (self.encoder_inputs_embedded, self.encoder_final_state) = tf.nn.bidirectional_dynamic_rnn(
                         cell_fw=cell_fw,
                         cell_bw=cell_bw,
                         inputs=self.encoder_inputs_embedded,
                         dtype=tf.float32)
-            self.encoder_final_state_c = tf.concat(
-                (self.encoder_final_state[0].c, self.encoder_final_state[1].c), 1)
-            self.encoder_final_state_h = tf.concat(
-                (self.encoder_final_state[0].h, self.encoder_final_state[1].h), 1)
-            self.encoder_final_state = contrib.rnn.LSTMStateTuple(
-                c=self.encoder_final_state_c,
-                h=self.encoder_final_state_h)
+                    self.encoder_inputs_embedded = tf.concat(
+                        (self.encoder_inputs_embedded[0], self.encoder_inputs_embedded[1]), 1)
+                    if self.is_train == 0:
+                        self.encoder_inputs_embedded = tf.multiply(self.encoder_inputs_embedded, self.keep_prob)
+                self.encoder_final_state_c = tf.concat(
+                    (self.encoder_final_state[0].c, self.encoder_final_state[1].c), 1)
+                self.encoder_final_state_h = tf.concat(
+                    (self.encoder_final_state[0].h, self.encoder_final_state[1].h), 1)
+                self.encoder_final_state = contrib.rnn.LSTMStateTuple(
+                    c=self.encoder_final_state_c,
+                    h=self.encoder_final_state_h)
 
             # Basic Lstm Decoder for train and infer
             with tf.variable_scope('decoder', reuse=tf.AUTO_REUSE):
@@ -95,29 +119,17 @@ class seq2seqmodel:
                                                                      )
 
         elif self.core == "bgru":
-            # multi layer bgru encoder with dropout wrapper
+            # single layer bgru encoder
             with tf.variable_scope('encoder', reuse=tf.AUTO_REUSE):
                 inputs = self.encoder_inputs_embedded
-                for layer_i in range(self.encoder_layers):
-                    with tf.variable_scope(None, default_name="bidirectional-rnn-%i" % layer_i):
-                        cell_fw = tf.nn.rnn_cell.GRUCell(
-                            num_units=self.encoder_hidden_units,
-                            kernel_initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=133),
-                            bias_initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=18))
-                        cell_bw = tf.nn.rnn_cell.GRUCell(
-                            num_units=self.encoder_hidden_units,
-                            kernel_initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=114),
-                            bias_initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=107))
-                        # if self.is_train:
-                        #     cell_fw = tf.nn.rnn_cell.DropoutWrapper(cell_fw, output_keep_prob=self.keep_prob)
-                        #     cell_bw = tf.nn.rnn_cell.DropoutWrapper(cell_bw, output_keep_prob=self.keep_prob)
+                cell_fw, cell_bw = self._create_bgrucell()
+                with tf.variable_scope(None, default_name="encoder"):
+                    (output, self.encoder_final_state) = tf.nn.bidirectional_dynamic_rnn(
+                        cell_fw=cell_fw,
+                        cell_bw=cell_bw,
+                        inputs=inputs,
+                        dtype=tf.float32)
 
-                        (output, self.encoder_final_state) = tf.nn.bidirectional_dynamic_rnn(
-                            cell_fw=cell_fw,
-                            cell_bw=cell_bw,
-                            inputs=inputs,
-                            dtype=tf.float32)
-                        # inputs = tf.concat(output, 2)
                 self.encoder_final_state = tf.concat(self.encoder_final_state, 1)
 
             # Basic gru Decoder for train and infer
@@ -161,6 +173,8 @@ class seq2seqmodel:
             # tf.losses.softmax_cross_entropy
             self.loss = tf.losses.sparse_softmax_cross_entropy(labels=self.targets,
                                                                logits=self.logits_train)
+            self.loss_infer = tf.losses.sparse_softmax_cross_entropy(labels=self.targets,
+                                                                     logits=self.logits_infer)
             self.optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate).minimize(self.loss)
 
     def _create_summaries(self):
@@ -212,7 +226,7 @@ class seq2seqmodel:
                     tf.add_to_collection('optimizer', self.optimizer)
                     tf.add_to_collection('summary', self.summary_op)
                     print("the model has been built")
-                print("start training seq2seq model")
+                print("start training seq2seq model in [%s] mode" % self.core)
                 writer = tf.summary.FileWriter('./graphs/seq2seq', sess.graph)
                 for i in range(epoch):
                     self.total_loss = 0.0
@@ -220,10 +234,10 @@ class seq2seqmodel:
                         print("epoch: %d at train step: %d" % (i, index + 1))
                         self.global_step += self.batch_size
                         encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length = next(batches)
-                        decoder_length = [30 for i in range(self.batch_size)]
+                        decoder_length_batch = [decoder_length for i in range(self.batch_size)]
                         feed_dict = {
                             self.decoder_targets: decoder_targets,
-                            self.decoder_length: decoder_length,
+                            self.decoder_length: decoder_length_batch,
                             self.encoder_inputs: encoder_inputs,
                             self.decoder_inputs: decoder_inputs
                         }
@@ -248,15 +262,15 @@ class seq2seqmodel:
                     print("the model has been successfully restored")
                     for index in range(num_train_steps):
                         encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length = next(batches)
-                        decoder_length = [30 for i in range(self.batch_size)]
+                        decoder_length = [decoder_length for i in range(self.batch_size)]
                         feed_dict = {
                             self.decoder_targets: decoder_targets,
                             self.decoder_length: decoder_length,
                             self.encoder_inputs: encoder_inputs,
                             self.decoder_inputs: decoder_inputs
                         }
-
                         file = open("./infer/output.txt", "w")
+                        loss_infer_total = 0.0
                         for test_index in range(self.batch_size):
 
                             file.write("- group %d\n" % (test_index + 1))
@@ -301,7 +315,10 @@ class seq2seqmodel:
                             file.write("\n")
                             print("output %d finished" % test_index)
 
-                        file.write("average infer loss: ")
+                        #     loss_infer_total += sess.run(self.loss_infer, feed_dict=feed_dict)
+                        #     print(loss_infer_total)
+                        #
+                        # file.write("average infer loss: %9.9f" % (loss_infer_total / self.batch_size))
 
                         file.close()
                         print("infer file updated")
