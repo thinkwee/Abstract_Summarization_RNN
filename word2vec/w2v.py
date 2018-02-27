@@ -3,8 +3,7 @@ from __future__ import division
 from __future__ import print_function
 
 import tensorflow as tf
-from process_data import process_data
-import logging
+from word2vec.process_data import process_data
 import logging.config
 
 # VOCAB_SIZE = 16800

@@ -24,7 +24,9 @@ attention based summarization on tensorflow using seq2seq model
 - try cross validation
 - add bgru seq2seq model
 - add switch module of core and test data
-- move tmp(code snippets) to cacher 
+- add multilayer encoder
+- add dropout
+- add attention decoder(luong attention)
 
 # usage
 - still in developing
@@ -41,8 +43,7 @@ attention based summarization on tensorflow using seq2seq model
 # problems to solve
 - bad ability of generation
 - can not calculate the loss of infer
-- can not add hierarchical rnn structure with dropout
 - can not continue training from checkpoint
-- no dropout
 - can be improved by embed matrix pretrained on large corpus
 - divide data in train,validate and test
+- bad code structure

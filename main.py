@@ -1,10 +1,9 @@
-from w2v import w2v
+from word2vec.w2v import w2v
 import logging.config
 import string
 import numpy as np
 import pickle
 from seq2seq import seq2seqmodel
-from pyrouge import Rouge155
 
 """Log Configuration"""
 LOG_FILE = './log/train.log'
@@ -22,12 +21,12 @@ EMBED_SIZE = 128
 ENCODER_HIDEEN_UNITS = 128
 DECODER_HIDDEN_UNITS = 256
 BATCH_SIZE = 32
-ENCODER_LAYERS = 3
+ENCODER_LAYERS = 5
 EPOCH = 50
 NUM_TRAIN_STEPS = 205
 SKIP_STEPS = 10
 LEARNING_RATE = 0.001
-KEEP_PROB = 0.5
+KEEP_PROB = 0.2
 
 """Hyper Parameters(Seq2seq infer)"""
 BATCH_SIZE_INFER = 5
@@ -237,8 +236,8 @@ def main():
     embed_matrix, one_hot_dictionary, one_hot_dictionary_index = load_embed_matrix()
     # print(one_hot_dictionary_index)
     logger.debug("w2v restored")
-    # train(embed_matrix, one_hot_dictionary)
-    test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index)
+    train(embed_matrix, one_hot_dictionary)
+    # test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index)
 
 
 if __name__ == '__main__':

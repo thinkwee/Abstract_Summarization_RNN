@@ -29,6 +29,7 @@ class seq2seqmodel:
             self.decoder_inputs = tf.placeholder(shape=(self.batch_size, None), dtype=tf.int32, name='decoder_inputs')
             self.decoder_targets = tf.placeholder(shape=(self.batch_size, None), dtype=tf.int32, name='decoder_targets')
             self.decoder_length = tf.placeholder(shape=self.batch_size, dtype=tf.int32, name='decoder_length')
+            self.encoder_length = tf.placeholder(shape=self.batch_size, dtype=tf.int32, name='encoder_length')
 
     def _create_embedding(self):
         self.embeddings_trainable = tf.Variable(initial_value=self.embed_matrix_init, name='word_embedding_train')
@@ -37,6 +38,8 @@ class seq2seqmodel:
 
     def _create_blstmcell(self, layer_i):
         with tf.variable_scope('lstm_layer%i' % layer_i, reuse=tf.AUTO_REUSE):
+            # if layer_i == 1:
+            #     self.encoder_hidden_units *= 2
             cell_fw = rnn.LSTMCell(
                 num_units=self.encoder_hidden_units,
                 initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=114),
@@ -65,7 +68,7 @@ class seq2seqmodel:
     def _create_seq2seq(self):
 
         if self.core == "blstm":
-            # multi layer blstm encoder
+            # Mutilayer  BLSTM Encoder
             with tf.variable_scope('encoder', reuse=tf.AUTO_REUSE):
                 for layer_i in range(self.encoder_layers):
                     cell_fw, cell_bw = self._create_blstmcell(layer_i)
@@ -74,10 +77,10 @@ class seq2seqmodel:
                         cell_bw=cell_bw,
                         inputs=self.encoder_inputs_embedded,
                         dtype=tf.float32)
-                    self.encoder_inputs_embedded = tf.concat(
-                        (self.encoder_inputs_embedded[0], self.encoder_inputs_embedded[1]), 1)
+                    self.encoder_inputs_embedded = tf.add_n(self.encoder_inputs_embedded)
                     if self.is_train == 0:
                         self.encoder_inputs_embedded = tf.multiply(self.encoder_inputs_embedded, self.keep_prob)
+
                 self.encoder_final_state_c = tf.concat(
                     (self.encoder_final_state[0].c, self.encoder_final_state[1].c), 1)
                 self.encoder_final_state_h = tf.concat(
@@ -86,37 +89,50 @@ class seq2seqmodel:
                     c=self.encoder_final_state_c,
                     h=self.encoder_final_state_h)
 
-            # Basic Lstm Decoder for train and infer
+            # Basic Attention based LSTM Decoder(train and infer)
             with tf.variable_scope('decoder', reuse=tf.AUTO_REUSE):
                 self.decoder_cell = tf.nn.rnn_cell.LSTMCell(num_units=self.decoder_hidden_units,
-                                                            name='decoder_cell',
                                                             state_is_tuple=True)
+
+                self.attention_state = self.encoder_inputs_embedded
+                self.attention_mechanism = contrib.seq2seq.LuongAttention(num_units=self.decoder_hidden_units,
+                                                                          memory=self.attention_state,
+                                                                          memory_sequence_length=self.encoder_length)
+                self.attn_cell = contrib.seq2seq.AttentionWrapper(cell=self.decoder_cell,
+                                                                  attention_mechanism=self.attention_mechanism,
+                                                                  name="decoder_attention_cell",
+                                                                  alignment_history=False
+                                                                  )
                 self.fc_layer = tf.layers.Dense(self.vocab_size, name='dense_layer')
 
                 # for train
-                self.helper_train = contrib.seq2seq.TrainingHelper(inputs=self.decoder_inputs_embedded,
-                                                                   sequence_length=self.decoder_length)
-                self.decoder_train = contrib.seq2seq.BasicDecoder(cell=self.decoder_cell,
-                                                                  initial_state=self.encoder_final_state,
-                                                                  helper=self.helper_train,
-                                                                  output_layer=self.fc_layer
-                                                                  )
-                self.decoder_train_logits, _, _ = s2s.dynamic_decode(decoder=self.decoder_train
-                                                                     )
+                with tf.variable_scope('decoder_train', reuse=tf.AUTO_REUSE):
+                    self.helper_train = contrib.seq2seq.TrainingHelper(inputs=self.decoder_inputs_embedded,
+                                                                       sequence_length=self.decoder_length)
+                    self.decoder_initial_state = self.attn_cell.zero_state(self.batch_size, dtype=tf.float32).clone(
+                        cell_state=self.encoder_final_state)
+                    self.decoder_train = contrib.seq2seq.BasicDecoder(cell=self.attn_cell,
+                                                                      initial_state=self.decoder_initial_state,
+                                                                      helper=self.helper_train,
+                                                                      output_layer=self.fc_layer
+                                                                      )
+                    self.decoder_train_logits, _, _ = s2s.dynamic_decode(decoder=self.decoder_train
+                                                                         )
 
                 # for infer
-                self.start_tokens = tf.fill([self.batch_size], 19654)
-                self.end_tokens = 19655
-                self.helper_infer = contrib.seq2seq.GreedyEmbeddingHelper(embedding=self.embeddings_trainable,
-                                                                          start_tokens=self.start_tokens,
-                                                                          end_token=self.end_tokens)
-                self.decoder_infer = contrib.seq2seq.BasicDecoder(cell=self.decoder_cell,
-                                                                  initial_state=self.encoder_final_state,
-                                                                  helper=self.helper_infer,
-                                                                  output_layer=self.fc_layer)
-                self.decoder_infer_logits, _, _ = s2s.dynamic_decode(self.decoder_infer,
-                                                                     maximum_iterations=20
-                                                                     )
+                with tf.variable_scope('decoder_infer', reuse=tf.AUTO_REUSE):
+                    self.start_tokens = tf.tile([19654], [self.batch_size])
+                    self.end_tokens = 19655
+                    self.helper_infer = contrib.seq2seq.GreedyEmbeddingHelper(embedding=self.embeddings_trainable,
+                                                                              start_tokens=self.start_tokens,
+                                                                              end_token=self.end_tokens)
+                    self.decoder_infer = contrib.seq2seq.BasicDecoder(cell=self.attn_cell,
+                                                                      initial_state=self.decoder_initial_state,
+                                                                      helper=self.helper_infer,
+                                                                      output_layer=self.fc_layer)
+                    self.decoder_infer_logits, _, _ = s2s.dynamic_decode(decoder=self.decoder_infer,
+                                                                         maximum_iterations=20
+                                                                         )
 
         elif self.core == "bgru":
             # single layer bgru encoder
@@ -235,11 +251,14 @@ class seq2seqmodel:
                         self.global_step += self.batch_size
                         encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length = next(batches)
                         decoder_length_batch = [decoder_length for i in range(self.batch_size)]
+                        encoder_length_batch = [encoder_length for i in range(self.batch_size)]
+
                         feed_dict = {
                             self.decoder_targets: decoder_targets,
                             self.decoder_length: decoder_length_batch,
                             self.encoder_inputs: encoder_inputs,
-                            self.decoder_inputs: decoder_inputs
+                            self.decoder_inputs: decoder_inputs,
+                            self.encoder_length: encoder_length_batch
                         }
 
                         loss_batch, _, summary = sess.run([self.loss, self.optimizer, self.summary_op],
