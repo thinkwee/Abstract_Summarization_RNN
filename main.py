@@ -21,11 +21,11 @@ EMBED_SIZE = 128
 ENCODER_HIDEEN_UNITS = 128
 DECODER_HIDDEN_UNITS = 256
 BATCH_SIZE = 32
-ENCODER_LAYERS = 5
-EPOCH = 50
+ENCODER_LAYERS = 3
+EPOCH = 100
 NUM_TRAIN_STEPS = 205
 SKIP_STEPS = 10
-LEARNING_RATE = 0.001
+LEARNING_RATE_INITIAL = 0.001
 KEEP_PROB = 0.2
 
 """Hyper Parameters(Seq2seq infer)"""
@@ -176,7 +176,7 @@ def train(embed_matrix, one_hot_dictionary):
                                  batch_size=BATCH_SIZE,
                                  embed_matrix_init=embed_matrix,
                                  encoder_layers=ENCODER_LAYERS,
-                                 learning_rate=LEARNING_RATE,
+                                 learning_rate_initial=LEARNING_RATE_INITIAL,
                                  is_train=1,
                                  keep_prob=KEEP_PROB,
                                  core="blstm"

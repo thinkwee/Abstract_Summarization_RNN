@@ -8,7 +8,7 @@ import numpy as np
 
 class seq2seqmodel:
     def __init__(self, vocab_size, embed_size, encoder_hidden_units, decoder_hidden_units, batch_size,
-                 embed_matrix_init, encoder_layers, learning_rate, is_train, keep_prob, core):
+                 embed_matrix_init, encoder_layers, learning_rate_initial, is_train, keep_prob, core):
         self.vocab_size = vocab_size
         self.embed_size = embed_size
         self.encoder_hidden_units = encoder_hidden_units
@@ -16,11 +16,12 @@ class seq2seqmodel:
         self.batch_size = batch_size
         self.embed_matrix_init = embed_matrix_init
         self.encoder_layers = encoder_layers
-        self.learning_rate = learning_rate
+        self.learning_rate_initial = learning_rate_initial
         self.is_train = is_train
         self.keep_prob = keep_prob
         self.core = core
         self.global_step = tf.Variable(0, dtype=tf.int32, trainable=False, name='global_step')
+        self.global_epoch = tf.Variable(0, dtype=tf.int32, trainable=False, name='global_epoch')
         self.MODEL_FILE = './model/'
 
     def _create_placeholder(self):
@@ -191,7 +192,11 @@ class seq2seqmodel:
                                                                logits=self.logits_train)
             self.loss_infer = tf.losses.sparse_softmax_cross_entropy(labels=self.targets,
                                                                      logits=self.logits_infer)
-            self.optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate).minimize(self.loss)
+            self.learning_rate = tf.train.exponential_decay(self.learning_rate_initial,
+                                                            global_step=self.global_epoch,
+                                                            decay_steps=30, decay_rate=0.1)
+            self.add_global = self.global_epoch.assign_add(1)
+            self.optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate_initial).minimize(self.loss)
 
     def _create_summaries(self):
         with tf.name_scope("summaries_seq2seq"):
@@ -246,9 +251,12 @@ class seq2seqmodel:
                 writer = tf.summary.FileWriter('./graphs/seq2seq', sess.graph)
                 for i in range(epoch):
                     self.total_loss = 0.0
+                    epoch, lr = sess.run([self.add_global, self.learning_rate])
+                    self.logger.debug("at epoch{} the learning rate is {} ".format(epoch, lr))
                     for index in range(num_train_steps):
                         print("epoch: %d at train step: %d" % (i, index + 1))
                         self.global_step += self.batch_size
+                        self.global_epoch += 1
                         encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length = next(batches)
                         decoder_length_batch = [decoder_length for i in range(self.batch_size)]
                         encoder_length_batch = [encoder_length for i in range(self.batch_size)]

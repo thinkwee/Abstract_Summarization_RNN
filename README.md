@@ -27,6 +27,7 @@ attention based summarization on tensorflow using seq2seq model
 - add multilayer encoder
 - add dropout
 - add attention decoder(luong attention)
+- add learning rate dacay
 
 # usage
 - still in developing
