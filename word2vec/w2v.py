@@ -72,7 +72,7 @@ class w2v:
     def _create_summaries(self):
         with tf.name_scope("summaries_w2v"):
             tf.summary.scalar("loss", self.loss)
-            tf.summary.histogram("histogram loss", self.loss)
+            tf.summary.histogram("histogram_loss", self.loss)
             # because you have several summaries, we should merge them all
             # into one op to make it easier to manage
             self.summary_op = tf.summary.merge_all()
@@ -88,7 +88,7 @@ class w2v:
         print("start w2v train for %s" % self.data_name)
         batch_gen, one_hot_dictionary, one_hot_dictionary_index = process_data(self.vocab_size, self.batch_size,
                                                                                self.win, self.data_name)
-        with tf.Session() as sess:
+        with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
             sess.run(tf.global_variables_initializer())
             total_loss = 0.0
             writer = tf.summary.FileWriter('./graphs/w2v/', sess.graph)

@@ -1,25 +1,25 @@
 - group 1
      - infer headline: 
-        study patient to be given to make it can take effect end_token end_token 
+        us us us us us us us us us us us us us us us us us us us us 
      - targets: 
-        report british economy poised for strong growth and possibly an interest rate hike hold for release until 103104 190100 est end_token 
+        un condemns sudanese rebel attacks in darfur calls for halt to all fighting end_token 
 - group 2
      - infer headline: 
-        arafats widow retrieves his medical dossier from french military hospital end_token end_token 
+        us us us us us us us us us us us us us us us us us us us us 
      - targets: 
-        israel would not allow arafat to be buried in jerusalem but affirms pledge to allow him to return to west bank if he recovers 
+        european judge deciding microsoft appeal calls meeting for thursday after two eu backers jump ship 
 - group 3
      - infer headline: 
-        study vitamin e might make heart disease worse end_token end_token 
+        us us us us us us us us us us us us us us us us us us us us 
      - targets: 
-        leading union declares royal dutchshell enemy of the people in africas largest oil producer end_token 
+        three ethnic albanians convicted for burning old serbian church in kosovo riots end_token 
 - group 4
      - infer headline: 
-        arafats brain only functioning partially all organs except heart and lung not doing well more end_token 
+        us us us us us us us us us us us us us us us us us us us us 
      - targets: 
-        sudanese government says it accepts rebel political demands on darfur end_token 
+        polands central bank keeps interest rates unchanged end_token 
 - group 5
      - infer headline: 
-        powell iranian counterpart dine together but nothing more end_token end_token 
+        us us us us us us us us us us us us us us us us us us us us 
      - targets: 
-        video shows kidnapped foreign election workers militants demand un withdrawal from afghanistan end_token 
+        grocery shop owner security guard slain as violence continues in thailands muslim south end_token 

@@ -4,6 +4,7 @@ import string
 import numpy as np
 import pickle
 from seq2seq import seq2seqmodel
+from timeit import timeit
 
 """Log Configuration"""
 LOG_FILE = './log/train.log'
@@ -21,11 +22,11 @@ EMBED_SIZE = 128
 ENCODER_HIDEEN_UNITS = 128
 DECODER_HIDDEN_UNITS = 256
 BATCH_SIZE = 32
-ENCODER_LAYERS = 3
+ENCODER_LAYERS = 1
 EPOCH = 100
 NUM_TRAIN_STEPS = 205
 SKIP_STEPS = 10
-LEARNING_RATE_INITIAL = 0.001
+LEARNING_RATE_INITIAL = 1.0
 KEEP_PROB = 0.2
 
 """Hyper Parameters(Seq2seq infer)"""
@@ -179,7 +180,7 @@ def train(embed_matrix, one_hot_dictionary):
                                  learning_rate_initial=LEARNING_RATE_INITIAL,
                                  is_train=1,
                                  keep_prob=KEEP_PROB,
-                                 core="blstm"
+                                 core="bgru"
                                  )
 
     single_generate = one_hot_generate(one_hot_dictionary=one_hot_dictionary,
@@ -205,15 +206,15 @@ def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index):
                                  decoder_hidden_units=DECODER_HIDDEN_UNITS,
                                  encoder_layers=ENCODER_LAYERS,
                                  batch_size=BATCH_SIZE_INFER,
-                                 learning_rate=LEARNING_RATE,
+                                 learning_rate_initial=LEARNING_RATE_INITIAL,
                                  embed_matrix_init=embed_matrix,
                                  keep_prob=KEEP_PROB,
                                  is_train=0,
-                                 core="blstm")
+                                 core="bgru")
 
     single_generate = one_hot_generate(one_hot_dictionary,
                                        epoch=EPOCH_INFER,
-                                       is_train=1)
+                                       is_train=0)
     batches = get_batch(batch_size=BATCH_SIZE_INFER,
                         iterator=single_generate)
     logger.debug("batch generated")
@@ -227,6 +228,7 @@ def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index):
 
 
 def main():
+    # print("test word2vec model")
     # embed_matrix, one_hot_dictionary, one_hot_dictionary_index = build_embed_matrix()
     # logger.debug("w2v finished")
     #
@@ -234,11 +236,13 @@ def main():
     # logger.debug("w2v saved")
 
     embed_matrix, one_hot_dictionary, one_hot_dictionary_index = load_embed_matrix()
-    # print(one_hot_dictionary_index)
     logger.debug("w2v restored")
+
     train(embed_matrix, one_hot_dictionary)
     # test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index)
 
 
 if __name__ == '__main__':
+    # t = timeit('main()', 'from __main__ import main', number=1)
+    # print(t)
     main()
