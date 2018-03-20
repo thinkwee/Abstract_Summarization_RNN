@@ -3,8 +3,7 @@ import logging.config
 import string
 import numpy as np
 import pickle
-from seq2seq import seq2seqmodel
-from timeit import timeit
+from seq2seq import Seq2seqModel
 
 """Log Configuration"""
 LOG_FILE = './log/train.log'
@@ -170,7 +169,7 @@ def one_hot_generate(one_hot_dictionary, epoch, is_train):
 
 def train(embed_matrix, one_hot_dictionary):
     print("train mode")
-    seq2seq_train = seq2seqmodel(vocab_size=VOVAB_SIZE,
+    seq2seq_train = Seq2seqModel(vocab_size=VOVAB_SIZE,
                                  embed_size=EMBED_SIZE,
                                  encoder_hidden_units=ENCODER_HIDEEN_UNITS,
                                  decoder_hidden_units=DECODER_HIDDEN_UNITS,
@@ -191,16 +190,16 @@ def train(embed_matrix, one_hot_dictionary):
                         iterator=single_generate)
     logger.debug("batch generated")
 
-    seq2seq_train._run(epoch=EPOCH,
-                       num_train_steps=NUM_TRAIN_STEPS,
-                       batches=batches,
-                       skip_steps=SKIP_STEPS)
+    seq2seq_train.run(epoch=EPOCH,
+                      num_train_steps=NUM_TRAIN_STEPS,
+                      batches=batches,
+                      skip_steps=SKIP_STEPS)
     logger.debug("seq2seq model trained")
 
 
 def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index):
-    print("test mode")
-    seq2seq_infer = seq2seqmodel(vocab_size=VOVAB_SIZE,
+    print("infer mode")
+    seq2seq_infer = Seq2seqModel(vocab_size=VOVAB_SIZE,
                                  embed_size=EMBED_SIZE,
                                  encoder_hidden_units=ENCODER_HIDEEN_UNITS,
                                  decoder_hidden_units=DECODER_HIDDEN_UNITS,
@@ -219,11 +218,11 @@ def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index):
                         iterator=single_generate)
     logger.debug("batch generated")
 
-    seq2seq_infer._run(epoch=EPOCH_INFER,
-                       num_train_steps=NUM_TRAIN_STEPS_INFER,
-                       batches=batches,
-                       one_hot=one_hot_dictionary_index,
-                       skip_steps=1)
+    seq2seq_infer.run(epoch=EPOCH_INFER,
+                      num_train_steps=NUM_TRAIN_STEPS_INFER,
+                      batches=batches,
+                      one_hot=one_hot_dictionary_index,
+                      skip_steps=1)
     logger.debug("seq2seq model tested")
 
 

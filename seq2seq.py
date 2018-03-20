@@ -5,7 +5,7 @@ import tensorflow.contrib as contrib
 import tensorflow.contrib.rnn as rnn
 
 
-class seq2seqmodel:
+class Seq2seqModel:
     def __init__(self, vocab_size, embed_size, encoder_hidden_units, decoder_hidden_units, batch_size,
                  embed_matrix_init, encoder_layers, learning_rate_initial, is_train, keep_prob, core):
         self.vocab_size = vocab_size
@@ -148,7 +148,7 @@ class seq2seqmodel:
 
                 self.encoder_final_state = tf.concat(self.encoder_final_state, 1)
 
-            # Basic gru Decoder for train and infer
+            # basic gru Decoder for train and infer
             with tf.variable_scope('decoder', reuse=tf.AUTO_REUSE):
                 self.decoder_cell = tf.nn.rnn_cell.GRUCell(num_units=self.decoder_hidden_units,
                                                            name='decoder_cell')
@@ -214,8 +214,8 @@ class seq2seqmodel:
             self.summary_op = tf.summary.merge_all()
 
     def _create_log(self):
-        LOG_FILE = './log/seq2seq.log'
-        handler = logging.FileHandler(LOG_FILE, mode='w')  # 实例化handler
+        log_file = './log/seq2seq.log'
+        handler = logging.FileHandler(log_file, mode='w')  # 实例化handler
         fmt = '%(asctime)s - %(filename)s:%(lineno)s - %(name)s - %(message)s'
         formatter = logging.Formatter(fmt)  # 实例化formatter
         handler.setFormatter(formatter)  # 为handler添加formatter
@@ -231,30 +231,29 @@ class seq2seqmodel:
         if self.is_train:
             self._create_summaries()
             self._create_log()
-        print("seq2seq graph built")
 
-    def _run(self, epoch, num_train_steps, batches, skip_steps, one_hot=None):
+    def run(self, epoch, num_train_steps, batches, skip_steps, one_hot=None):
         if self.is_train:
             ckpt = tf.train.get_checkpoint_state(self.MODEL_FILE)
             with tf.Session() as sess:
                 if ckpt and ckpt.model_checkpoint_path:
                     print(ckpt.model_checkpoint_path)
-                    self.saver = tf.train.import_meta_graph(ckpt.model_checkpoint_path + ".meta")
-                    self.saver.restore(sess, ckpt.model_checkpoint_path)
+                    saver = tf.train.import_meta_graph(ckpt.model_checkpoint_path + ".meta")
+                    saver.restore(sess, ckpt.model_checkpoint_path)
                     print("the model has been successfully restored")
                 else:
                     self._build_graph()
-                    self.saver = tf.train.Saver(tf.trainable_variables(), max_to_keep=5)
+                    saver = tf.train.Saver(tf.trainable_variables(), max_to_keep=5)
                     sess.run(tf.global_variables_initializer())
                     print("the model has been built")
                 print("start training seq2seq model in [%s] mode" % self.core)
                 writer = tf.summary.FileWriter('./graphs/seq2seq', sess.graph)
                 for i in range(epoch):
-                    self.total_loss = 0.0
+                    total_loss = 0.0
                     epoch, lr = sess.run([self.add_global, self.learning_rate])
                     self.logger.debug("at epoch{} the learning rate is {} ".format(epoch, lr))
                     for index in range(num_train_steps):
-                        print("epoch: %d at train step: %d" % (i, index + 1))
+                        print("epoch: %d at batch: %d" % (i, index + 1))
                         self.global_step += self.batch_size
                         self.global_epoch += 1
                         encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length = next(batches)
@@ -271,26 +270,26 @@ class seq2seqmodel:
 
                         loss_batch, _, summary = sess.run([self.loss, self.optimizer, self.summary_op],
                                                           feed_dict=feed_dict)
-                        self.total_loss += loss_batch
+                        total_loss += loss_batch
                         writer.add_summary(summary, global_step=self.global_step.eval())
                         if (index + 1) % skip_steps == 0:
-                            self.logger.debug('seq2seq average loss at epoch {} step {} : {:3.9f}'.format(i, index + 1,
-                                                                                                          self.total_loss / skip_steps))
-                            self.total_loss = 0.0
-                    self.saver.save(sess, self.MODEL_FILE + 'model.ckpt', global_step=self.global_step)
+                            self.logger.debug('loss at epoch {} batch {} : {:3.9f}'.format(i, index + 1,
+                                                                                           total_loss / skip_steps))
+                            total_loss = 0.0
+                    saver.save(sess, self.MODEL_FILE + 'model.ckpt', global_step=self.global_step)
                     self.logger.debug("seq2seq trained,model saved at epoch {}".format(i))
         else:
             self._build_graph()
-            self.saver = tf.train.Saver(tf.trainable_variables(), max_to_keep=5)
+            saver = tf.train.Saver(tf.trainable_variables(), max_to_keep=5)
             ckpt = tf.train.get_checkpoint_state(self.MODEL_FILE)
             with tf.Session() as sess:
                 if ckpt and ckpt.model_checkpoint_path:
-                    self.saver.restore(sess, ckpt.model_checkpoint_path)
+                    saver.restore(sess, ckpt.model_checkpoint_path)
                     print("the model has been successfully restored")
                     for index in range(num_train_steps):
                         encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length = next(batches)
-                        decoder_length = [decoder_length for i in range(self.batch_size)]
-                        encoder_length = [encoder_length for i in range(self.batch_size)]
+                        decoder_length = [decoder_length for _ in range(self.batch_size)]
+                        encoder_length = [encoder_length for _ in range(self.batch_size)]
                         feed_dict = {
                             self.decoder_targets: decoder_targets,
                             self.decoder_length: decoder_length,

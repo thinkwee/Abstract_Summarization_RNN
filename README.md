@@ -5,7 +5,7 @@ attention based summarization on tensorflow using seq2seq model
 - ubuntu 16.04 lts
 - anaconda python 3.6
 - recompiled tensorflow r1.5 supporting avx and avx2
-- pyrouge using rouge 1.5.5
+- ~~pyrouge using rouge 1.5.5~~
 
 # refering
 - Neural Machine Translation By Jointly Learning To Align And Translate
@@ -21,11 +21,10 @@ attention based summarization on tensorflow using seq2seq model
 - add lstm seq2seq model
 - add blstm seq2seq model
 - fix infer problem
-- try cross validation
 - add bgru seq2seq model
 - add switch module of core and test data
 - add multilayer encoder
-- add dropout
+- add dropout for multilayer lstm
 - add attention decoder(luong attention)
 - add learning rate dacay
 
@@ -41,10 +40,16 @@ attention based summarization on tensorflow using seq2seq model
 # current effect
 - test output can been seen under "./infer/output.txt"
 
-# problems to solve
-- bad ability of generation
-- can not calculate the loss of infer
-- can not continue training from checkpoint
-- can be improved by embed matrix pretrained on large corpus
-- divide data in train,validate and test
-- bad code structure
+# to do
+- [ ] choose one batch randomly as the validation set in each epoch
+- [ ] learning rate decay:gradient descent,low init value,decay=0.995
+- [ ] cut vocab size to 1000,replace unusual word to unk
+- [ ] enlarge rnn hidden units size
+- [ ] fix word embedding matrix and try to load model
+- [ ] divide infer and train into two graphs
+- [ ] use rouge to value model
+- [ ] save each test result
+- [ ] fix unk problems
+- [ ] train sentiment classification svm
+- [ ] add sentiment-blended word embeddings
+- [ ] enlarge corpus
