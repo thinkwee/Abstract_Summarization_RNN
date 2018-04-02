@@ -30,10 +30,10 @@ attention based summarization on tensorflow using seq2seq model
 - [x] fix infer problem
 - [x] test multilayer with dropout core
 - [ ] test attention decoder(luong attention)
-- [ ] choose one batch randomly as the validation set in each epoch
-- [ ] learning rate decay:gradient descent,low init value,decay=0.995
-- [ ] cut vocab size to 1000,replace unusual word to unk
-- [ ] enlarge rnn hidden units size
+- [x] choose last batch in each epoch as the validation set
+- [x] learning rate decay:gradient descent,low init value,decay=0.995
+- [x] cut vocab size to 1000,replace unusual word to unk
+- [x] enlarge rnn hidden units size
 - [ ] fix word embedding matrix and try to load model
 - [ ] divide infer and train into two graphs
 - [ ] use rouge to value model
@@ -41,7 +41,7 @@ attention based summarization on tensorflow using seq2seq model
 - [ ] fix unk problems
 - [ ] train sentiment classification svm
 - [ ] add sentiment-blended word embeddings
-- [ ] enlarge corpus
+- [ ] use large corpus
 
 # temp dir
 - graph(for tensorboard)

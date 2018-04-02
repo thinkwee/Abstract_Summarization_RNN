@@ -1,7 +1,7 @@
 import string
 
 
-# train:validate:test=18:1:1
+# train:test=19:1
 
 def init():
     sentence_count = 0
@@ -20,10 +20,10 @@ def init():
 
 def divide(sentence_count):
     count = 1
-    line_validate = sentence_count / 20 * 18
+    # line_validate = sentence_count / 20 * 18
     line_test = sentence_count / 20 * 19
-    file_article_validate = open('./article_validate.txt', 'w')
-    file_headline_validate = open('./headline_validate.txt', 'w')
+    # file_article_validate = open('./article_validate.txt', 'w')
+    # file_headline_validate = open('./headline_validate.txt', 'w')
     file_article_test = open('./article_test.txt', 'w')
     file_headline_test = open('./headline_test.txt', 'w')
     file_article_train = open('./article_train.txt', 'w')
@@ -37,9 +37,9 @@ def divide(sentence_count):
         if count > line_test:
             file_article_test.writelines(sentence_article)
             file_headline_test.writelines(sentence_headline)
-        elif count > line_validate:
-            file_article_validate.writelines(sentence_article)
-            file_headline_validate.writelines(sentence_headline)
+        # elif count > line_validate:
+        #     file_article_validate.writelines(sentence_article)
+        #     file_headline_validate.writelines(sentence_headline)
         else:
             file_article_train.writelines(sentence_article)
             file_headline_train.writelines(sentence_headline)
@@ -50,8 +50,8 @@ def divide(sentence_count):
     file_headline.close()
     file_headline_train.close()
     file_article_train.close()
-    file_article_validate.close()
-    file_headline_validate.close()
+    # file_article_validate.close()
+    # file_headline_validate.close()
     file_article_test.close()
     file_headline_test.close()
 

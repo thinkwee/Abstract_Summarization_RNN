@@ -16,17 +16,19 @@ logger.addHandler(handler)  # 为logger添加handler
 logger.setLevel(logging.DEBUG)
 
 """Hyper Parameters(Seq2Seq train)"""
-VOVAB_SIZE = 20000
+VOCAB_SIZE = 2000
 EMBED_SIZE = 128
-ENCODER_HIDEEN_UNITS = 128
-DECODER_HIDDEN_UNITS = 256
+ENCODER_HIDEEN_UNITS = 512
+DECODER_HIDDEN_UNITS = 1024
 BATCH_SIZE = 32
 ENCODER_LAYERS = 1
 EPOCH = 100
-NUM_TRAIN_STEPS = 205
+NUM_TRAIN_STEPS = 208
 SKIP_STEPS = 10
-LEARNING_RATE_INITIAL = 1.0
+LEARNING_RATE_INITIAL = 0.1
 KEEP_PROB = 0.2
+START_TOKEN_ID = 1998
+END_TOKEN_ID = 1999
 
 """Hyper Parameters(Seq2seq infer)"""
 BATCH_SIZE_INFER = 5
@@ -43,7 +45,7 @@ SKIP_STEPS_W2V = 100
 
 
 def build_embed_matrix():
-    w2vmodel = w2v(vocab_size=VOVAB_SIZE,
+    w2vmodel = w2v(vocab_size=VOCAB_SIZE,
                    embed_size=EMBED_SIZE,
                    batch_size=BATCH_SIZE,
                    num_sampled=NUM_SAMPLED,
@@ -53,7 +55,8 @@ def build_embed_matrix():
                    num_train_steps=NUM_TRAIN_STEPS_W2V,
                    skip_steps=SKIP_STEPS_W2V)
     w2vmodel.build_graph()
-    return w2vmodel.train()
+    return w2vmodel.train(start_token_id=START_TOKEN_ID,
+                          end_token_id=END_TOKEN_ID)
 
 
 def save_embed_matrix(embed_matrix, one_hot_dictionary, one_hot_dictionary_index):
@@ -152,12 +155,12 @@ def one_hot_generate(one_hot_dictionary, epoch, is_train):
             for index, word in enumerate(words_article):
                 one_hot_article[index] = one_hot_dictionary[word] if word in one_hot_dictionary else 0
 
-            one_hot_headline_input[0] = 19654
+            one_hot_headline_input[0] = START_TOKEN_ID
 
             for index, word in enumerate(words_headline):
                 one_hot_headline_input[index + 1] = one_hot_dictionary[word] if word in one_hot_dictionary else 0
                 one_hot_headline_target[index] = one_hot_dictionary[word] if word in one_hot_dictionary else 0
-            one_hot_headline_target[index + 2] = 19655
+            one_hot_headline_target[index + 2] = END_TOKEN_ID
 
             yield one_hot_article, one_hot_headline_input, one_hot_headline_target, count_article, count_headline
             sentence_article = bytes.decode(file_article.readline())
@@ -169,7 +172,7 @@ def one_hot_generate(one_hot_dictionary, epoch, is_train):
 
 def train(embed_matrix, one_hot_dictionary):
     print("train mode")
-    seq2seq_train = Seq2seqModel(vocab_size=VOVAB_SIZE,
+    seq2seq_train = Seq2seqModel(vocab_size=VOCAB_SIZE,
                                  embed_size=EMBED_SIZE,
                                  encoder_hidden_units=ENCODER_HIDEEN_UNITS,
                                  decoder_hidden_units=DECODER_HIDDEN_UNITS,
@@ -199,7 +202,7 @@ def train(embed_matrix, one_hot_dictionary):
 
 def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index):
     print("infer mode")
-    seq2seq_infer = Seq2seqModel(vocab_size=VOVAB_SIZE,
+    seq2seq_infer = Seq2seqModel(vocab_size=VOCAB_SIZE,
                                  embed_size=EMBED_SIZE,
                                  encoder_hidden_units=ENCODER_HIDEEN_UNITS,
                                  decoder_hidden_units=DECODER_HIDDEN_UNITS,
@@ -236,6 +239,9 @@ def main():
 
     embed_matrix, one_hot_dictionary, one_hot_dictionary_index = load_embed_matrix()
     logger.debug("w2v restored")
+
+    # print(one_hot_dictionary)
+    # print(one_hot_dictionary_index)
 
     train(embed_matrix, one_hot_dictionary)
     # test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index)

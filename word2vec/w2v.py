@@ -73,8 +73,7 @@ class w2v:
         with tf.name_scope("summaries_w2v"):
             tf.summary.scalar("loss", self.loss)
             tf.summary.histogram("histogram_loss", self.loss)
-            # because you have several summaries, we should merge them all
-            # into one op to make it easier to manage
+            # because you have several summaries, we should merge them all into one op to make it easier to manage
             self.summary_op = tf.summary.merge_all()
 
     def build_graph(self):
@@ -84,11 +83,13 @@ class w2v:
         self._create_summaries()
         logger.debug('w2v graph for %s has been build', self.data_name)
 
-    def train(self):
+    def train(self, start_token_id, end_token_id):
         print("start w2v train for %s" % self.data_name)
         batch_gen, one_hot_dictionary, one_hot_dictionary_index = process_data(self.vocab_size, self.batch_size,
                                                                                self.win, self.data_name)
-        with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
+        # show device_assignment
+        # with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
+        with tf.Session() as sess:
             sess.run(tf.global_variables_initializer())
             total_loss = 0.0
             writer = tf.summary.FileWriter('./graphs/w2v/', sess.graph)
@@ -107,4 +108,8 @@ class w2v:
         sess.close()
         logger.debug('w2v train for %s has finished', self.data_name)
         print('embed_matrix for %s has been build' % self.data_name)
+        one_hot_dictionary_index[start_token_id] = 'start_token'
+        one_hot_dictionary['start_token'] = start_token_id
+        one_hot_dictionary_index[end_token_id] = 'end_token'
+        one_hot_dictionary['end_token'] = end_token_id
         return self.final_embed_matrix, one_hot_dictionary, one_hot_dictionary_index

@@ -178,8 +178,8 @@ class Seq2seqModel:
                                                                          )
                 with tf.variable_scope('decoder_infer', reuse=tf.AUTO_REUSE):
                     # for infer
-                    self.start_tokens = tf.fill([self.batch_size], 19654)
-                    self.end_tokens = 19655
+                    self.start_tokens = tf.fill([self.batch_size], 2000)
+                    self.end_tokens = 2001
                     self.helper_infer = contrib.seq2seq.GreedyEmbeddingHelper(embedding=self.embeddings_trainable,
                                                                               start_tokens=self.start_tokens,
                                                                               end_token=self.end_tokens)
@@ -202,7 +202,7 @@ class Seq2seqModel:
                                                                      logits=self.logits_infer)
             self.learning_rate = tf.train.exponential_decay(self.learning_rate_initial,
                                                             global_step=self.global_epoch,
-                                                            decay_steps=100, decay_rate=0.5)
+                                                            decay_steps=100, decay_rate=0.995)
             self.add_global = self.global_epoch.assign_add(1)
             # self.optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate_initial).minimize(self.loss)
             self.optimizer = tf.train.GradientDescentOptimizer(self.learning_rate).minimize(self.loss)
@@ -251,11 +251,12 @@ class Seq2seqModel:
                 for i in range(epoch):
                     total_loss = 0.0
                     epoch, lr = sess.run([self.add_global, self.learning_rate])
-                    self.logger.debug("at epoch{} the learning rate is {} ".format(epoch, lr))
-                    for index in range(num_train_steps):
+                    self.logger.debug("at epoch {} the learning rate is {} ".format(epoch, lr))
+
+                    # save last batch in each epoch for validate
+                    for index in range(num_train_steps - 1):
                         print("epoch: %d at batch: %d" % (i, index + 1))
                         self.global_step += self.batch_size
-                        self.global_epoch += 1
                         encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length = next(batches)
                         decoder_length_batch = [decoder_length for i in range(self.batch_size)]
                         encoder_length_batch = [encoder_length for i in range(self.batch_size)]
@@ -276,6 +277,26 @@ class Seq2seqModel:
                             self.logger.debug('loss at epoch {} batch {} : {:3.9f}'.format(i, index + 1,
                                                                                            total_loss / skip_steps))
                             total_loss = 0.0
+
+                    # use last batch to assess generalization
+                    print("epoch: %d validation" % i)
+                    self.global_step += self.batch_size
+                    encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length = next(batches)
+                    decoder_length_batch = [decoder_length for i in range(self.batch_size)]
+                    encoder_length_batch = [encoder_length for i in range(self.batch_size)]
+
+                    feed_dict = {
+                        self.decoder_targets: decoder_targets,
+                        self.decoder_length: decoder_length_batch,
+                        self.encoder_inputs: encoder_inputs,
+                        self.decoder_inputs: decoder_inputs,
+                        self.encoder_length: encoder_length_batch
+                    }
+
+                    loss_batch_validate, _ = sess.run([self.loss, self.optimizer],
+                                                      feed_dict=feed_dict)
+                    self.logger.debug("validate loss at epoch {} :{:3.9f}".format(i, loss_batch_validate))
+
                     saver.save(sess, self.MODEL_FILE + 'model.ckpt', global_step=self.global_step)
                     self.logger.debug("seq2seq trained,model saved at epoch {}".format(i))
         else:
