@@ -370,7 +370,7 @@ class Seq2seqModel:
                     saver.save(sess=sess,
                                save_path=self.MODEL_FILE + 'model.ckpt',
                                global_step=self.global_step,
-                               write_meta_graph=False)
+                               write_meta_graph=True)
                     self.logger.debug("seq2seq trained,model saved at epoch {}\n".format(epoch_index))
         else:
             print("model not found,check your saved model")
