@@ -192,18 +192,18 @@ def train(embed_matrix, one_hot_dictionary, continue_train):
                                  keep_prob=KEEP_PROB,
                                  core="bgru"
                                  )
+    seq2seq_train.build_graph()
+    print("the model has been built")
 
     if continue_train == 0:
-        print("build a new model")
-        seq2seq_train.build_graph()
-        print("the model has been built")
-        seq2seq_train.first_train(epoch=EPOCH,
+        print("first training")
+        seq2seq_train.first_train(epoch_total=EPOCH,
                                   num_train_steps=NUM_TRAIN_STEPS,
                                   batches=batches,
                                   skip_steps=SKIP_STEPS)
     else:
-        print("continue traning")
-        seq2seq_train.continue_train(epoch=EPOCH,
+        print("continue training")
+        seq2seq_train.continue_train(epoch_total=EPOCH,
                                      num_train_steps=NUM_TRAIN_STEPS,
                                      batches=batches,
                                      skip_steps=SKIP_STEPS)

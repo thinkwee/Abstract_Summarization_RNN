@@ -233,7 +233,7 @@ class Seq2seqModel:
         self._create_summaries()
         self._create_log()
 
-    def first_train(self, epoch, num_train_steps, batches, skip_steps):
+    def first_train(self, epoch_total, num_train_steps, batches, skip_steps):
 
         # limit the usage of gpu
         config = tf.ConfigProto()
@@ -247,15 +247,15 @@ class Seq2seqModel:
             sess.run(tf.global_variables_initializer())
             print("start training seq2seq model in [%s] mode" % self.core)
             writer = tf.summary.FileWriter('./graphs/seq2seq', sess.graph)
-            for i in range(epoch):
+            for i in range(epoch_total):
                 total_loss = 0.0
-                epoch, lr = sess.run([self.add_global, self.learning_rate])
-                self.logger.debug("at epoch {} the learning rate is {}".format(epoch, lr))
+                epoch_index, lr = sess.run([self.add_global, self.learning_rate])
+                self.logger.debug("at epoch {} the learning rate is {}".format(epoch_index, lr))
                 self.logger.debug("--------------------------------------------------------")
 
                 # save last batch in each epoch for validate
                 for index in range(num_train_steps - 1):
-                    print("batch: %d at epoch: %d" % (i, index + 1))
+                    print("batch: %d at epoch: %d" % (index + 1, epoch_index))
                     self.global_step += self.batch_size
                     encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length = next(batches)
                     decoder_length_batch = [decoder_length for i in range(self.batch_size)]
@@ -274,12 +274,12 @@ class Seq2seqModel:
                     total_loss += loss_batch
                     writer.add_summary(summary, global_step=self.global_step.eval())
                     if (index + 1) % skip_steps == 0:
-                        self.logger.debug('loss at epoch {} batch {} : {:3.9f}'.format(i, index + 1,
+                        self.logger.debug('loss at epoch {} batch {} : {:3.9f}'.format(epoch_index, index + 1,
                                                                                        total_loss / skip_steps))
                         total_loss = 0.0
 
                 # use last batch to assess generalization
-                print("epoch: %d validation" % i)
+                print("epoch: %d validation" % epoch_index)
                 self.global_step += self.batch_size
                 encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length = next(batches)
                 decoder_length_batch = [decoder_length for i in range(self.batch_size)]
@@ -295,15 +295,15 @@ class Seq2seqModel:
 
                 loss_batch_validate, _ = sess.run([self.loss, self.optimizer],
                                                   feed_dict=feed_dict)
-                self.logger.debug("validate loss at epoch {} :{:3.9f}".format(i, loss_batch_validate))
+                self.logger.debug("validate loss at epoch {} :{:3.9f}".format(epoch_index, loss_batch_validate))
 
                 saver.save(sess=sess,
                            save_path=self.MODEL_FILE + 'model.ckpt',
                            global_step=self.global_step,
                            write_meta_graph=True)
-                self.logger.debug("seq2seq trained,model saved at epoch {}\n".format(i))
+                self.logger.debug("seq2seq trained,model saved at epoch {}\n".format(epoch_index))
 
-    def continue_train(self, epoch, num_train_steps, batches, skip_steps):
+    def continue_train(self, epoch_total, num_train_steps, batches, skip_steps):
         config = tf.ConfigProto()
         config.gpu_options.per_process_gpu_memory_fraction = 0.3
         config.gpu_options.allow_growth = True
@@ -311,21 +311,21 @@ class Seq2seqModel:
         if ckpt and ckpt.model_checkpoint_path:
             print("found model,continue training")
             with tf.Session(config=config) as sess:
-                saver = tf.train.import_meta_graph(ckpt.model_checkpoint_path + ".meta")
-                # saver = tf.train.Saver()
-                saver.restore(sess, tf.train.latest_checkpoint(self.MODEL_FILE))
-                # saver.restore(sess, ckpt.model_checkpoint_path)
+                # saver = tf.train.import_meta_graph(ckpt.model_checkpoint_path + ".meta")
+                saver = tf.train.Saver()
+                # saver.restore(sess, tf.train.latest_checkpoint(self.MODEL_FILE))
+                saver.restore(sess, ckpt.model_checkpoint_path)
                 print("start training seq2seq model in [%s] mode" % self.core)
                 writer = tf.summary.FileWriter('./graphs/seq2seq', sess.graph)
-                for i in range(epoch):
+                for i in range(epoch_total):
                     total_loss = 0.0
-                    epoch, lr = sess.run([self.add_global, self.learning_rate])
-                    self.logger.debug("at epoch {} the learning rate is {}".format(epoch, lr))
+                    epoch_index, lr = sess.run([self.add_global, self.learning_rate])
+                    self.logger.debug("at epoch {} the learning rate is {}".format(epoch_index, lr))
                     self.logger.debug("--------------------------------------------------------")
 
                     # save last batch in each epoch for validate
                     for index in range(num_train_steps - 1):
-                        print("epoch: %d at batch: %d" % (i, index + 1))
+                        print("batch: %d at epoch: %d" % (index + 1, epoch_index))
                         self.global_step += self.batch_size
                         encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length = next(batches)
                         decoder_length_batch = [decoder_length for i in range(self.batch_size)]
@@ -344,12 +344,12 @@ class Seq2seqModel:
                         total_loss += loss_batch
                         writer.add_summary(summary, global_step=self.global_step.eval())
                         if (index + 1) % skip_steps == 0:
-                            self.logger.debug('loss at epoch {} batch {} : {:3.9f}'.format(i, index + 1,
+                            self.logger.debug('loss at epoch {} batch {} : {:3.9f}'.format(epoch_index, index + 1,
                                                                                            total_loss / skip_steps))
                             total_loss = 0.0
 
                     # use last batch to assess generalization
-                    print("epoch: %d validation" % i)
+                    print("epoch: %d validation" % epoch_index)
                     self.global_step += self.batch_size
                     encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length = next(batches)
                     decoder_length_batch = [decoder_length for i in range(self.batch_size)]
@@ -365,10 +365,12 @@ class Seq2seqModel:
 
                     loss_batch_validate, _ = sess.run([self.loss, self.optimizer],
                                                       feed_dict=feed_dict)
-                    self.logger.debug("validate loss at epoch {} :{:3.9f}".format(i, loss_batch_validate))
+                    self.logger.debug("validate loss at epoch {} :{:3.9f}".format(epoch_index, loss_batch_validate))
 
                     saver.save(sess=sess,
                                save_path=self.MODEL_FILE + 'model.ckpt',
                                global_step=self.global_step,
                                write_meta_graph=False)
-                    self.logger.debug("seq2seq trained,model saved at epoch {}\n".format(i))
+                    self.logger.debug("seq2seq trained,model saved at epoch {}\n".format(epoch_index))
+        else:
+            print("model not found,check your saved model")
