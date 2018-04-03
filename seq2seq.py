@@ -32,9 +32,12 @@ class Seq2seqModel:
             self.encoder_length = tf.placeholder(shape=self.batch_size, dtype=tf.int32, name='encoder_length')
 
     def _create_embedding(self):
-        self.embeddings_trainable = tf.Variable(initial_value=self.embed_matrix_init, name='word_embedding_train')
-        self.encoder_inputs_embedded = tf.nn.embedding_lookup(self.embeddings_trainable, self.encoder_inputs)
-        self.decoder_inputs_embedded = tf.nn.embedding_lookup(self.embeddings_trainable, self.decoder_inputs)
+        # self.embeddings_trainable = tf.Variable(initial_value=self.embed_matrix_init, name='word_embedding_train')
+        # fix embedding_layer, do not train with the model
+        self.embeddings_untrainable = tf.Variable(initial_value=self.embed_matrix_init, trainable=False,
+                                                  name='word_embedding_fixed')
+        self.encoder_inputs_embedded = tf.nn.embedding_lookup(self.embeddings_untrainable, self.encoder_inputs)
+        self.decoder_inputs_embedded = tf.nn.embedding_lookup(self.embeddings_untrainable, self.decoder_inputs)
 
     def _create_blstmcell(self, layer_i):
         with tf.variable_scope('lstm_layer%i' % layer_i, reuse=tf.AUTO_REUSE):
@@ -180,7 +183,7 @@ class Seq2seqModel:
                     # for infer
                     self.start_tokens = tf.fill([self.batch_size], 2000)
                     self.end_tokens = 2001
-                    self.helper_infer = contrib.seq2seq.GreedyEmbeddingHelper(embedding=self.embeddings_trainable,
+                    self.helper_infer = contrib.seq2seq.GreedyEmbeddingHelper(embedding=self.embeddings_untrainable,
                                                                               start_tokens=self.start_tokens,
                                                                               end_token=self.end_tokens)
                     self.decoder_infer = contrib.seq2seq.BasicDecoder(cell=self.attn_cell,
@@ -235,7 +238,13 @@ class Seq2seqModel:
     def run(self, epoch, num_train_steps, batches, skip_steps, one_hot=None):
         if self.is_train:
             ckpt = tf.train.get_checkpoint_state(self.MODEL_FILE)
-            with tf.Session() as sess:
+
+            # limit the usage of gpu
+            config = tf.ConfigProto()
+            config.gpu_options.per_process_gpu_memory_fraction = 0.3
+            config.gpu_options.allow_growth = True
+
+            with tf.Session(config=config) as sess:
                 if ckpt and ckpt.model_checkpoint_path:
                     print(ckpt.model_checkpoint_path)
                     saver = tf.train.import_meta_graph(ckpt.model_checkpoint_path + ".meta")
@@ -251,7 +260,8 @@ class Seq2seqModel:
                 for i in range(epoch):
                     total_loss = 0.0
                     epoch, lr = sess.run([self.add_global, self.learning_rate])
-                    self.logger.debug("at epoch {} the learning rate is {} ".format(epoch, lr))
+                    self.logger.debug("at epoch {} the learning rate is {}".format(epoch, lr))
+                    self.logger.debug("--------------------------------------------------------")
 
                     # save last batch in each epoch for validate
                     for index in range(num_train_steps - 1):
@@ -298,7 +308,8 @@ class Seq2seqModel:
                     self.logger.debug("validate loss at epoch {} :{:3.9f}".format(i, loss_batch_validate))
 
                     saver.save(sess, self.MODEL_FILE + 'model.ckpt', global_step=self.global_step)
-                    self.logger.debug("seq2seq trained,model saved at epoch {}".format(i))
+                    self.logger.debug("seq2seq trained,model saved at epoch {}\n".format(i))
+
         else:
             self._build_graph()
             saver = tf.train.Saver(tf.trainable_variables(), max_to_keep=5)
