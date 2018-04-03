@@ -29,6 +29,7 @@ LEARNING_RATE_INITIAL = 0.1
 KEEP_PROB = 0.2
 START_TOKEN_ID = 1998
 END_TOKEN_ID = 1999
+CONTINUE_TRAIN = 1
 
 """Hyper Parameters(Seq2seq infer)"""
 BATCH_SIZE_INFER = 5
@@ -170,8 +171,16 @@ def one_hot_generate(one_hot_dictionary, epoch, is_train):
         file_article.close()
 
 
-def train(embed_matrix, one_hot_dictionary):
+def train(embed_matrix, one_hot_dictionary, continue_train):
     print("train mode")
+
+    single_generate = one_hot_generate(one_hot_dictionary=one_hot_dictionary,
+                                       epoch=EPOCH,
+                                       is_train=1)
+    batches = get_batch(batch_size=BATCH_SIZE,
+                        iterator=single_generate)
+    logger.debug("batch generated")
+
     seq2seq_train = Seq2seqModel(vocab_size=VOCAB_SIZE,
                                  embed_size=EMBED_SIZE,
                                  encoder_hidden_units=ENCODER_HIDEEN_UNITS,
@@ -180,53 +189,51 @@ def train(embed_matrix, one_hot_dictionary):
                                  embed_matrix_init=embed_matrix,
                                  encoder_layers=ENCODER_LAYERS,
                                  learning_rate_initial=LEARNING_RATE_INITIAL,
-                                 is_train=1,
                                  keep_prob=KEEP_PROB,
                                  core="bgru"
                                  )
 
-    single_generate = one_hot_generate(one_hot_dictionary=one_hot_dictionary,
-                                       epoch=EPOCH,
-                                       is_train=1)
+    if continue_train == 0:
+        print("build a new model")
+        seq2seq_train.build_graph()
+        print("the model has been built")
+        seq2seq_train.first_train(epoch=EPOCH,
+                                  num_train_steps=NUM_TRAIN_STEPS,
+                                  batches=batches,
+                                  skip_steps=SKIP_STEPS)
+    else:
+        print("continue traning")
+        seq2seq_train.continue_train(epoch=EPOCH,
+                                     num_train_steps=NUM_TRAIN_STEPS,
+                                     batches=batches,
+                                     skip_steps=SKIP_STEPS)
 
-    batches = get_batch(batch_size=BATCH_SIZE,
-                        iterator=single_generate)
-    logger.debug("batch generated")
 
-    seq2seq_train.run(epoch=EPOCH,
-                      num_train_steps=NUM_TRAIN_STEPS,
-                      batches=batches,
-                      skip_steps=SKIP_STEPS)
-    logger.debug("seq2seq model trained")
-
-
-def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index):
-    print("infer mode")
-    seq2seq_infer = Seq2seqModel(vocab_size=VOCAB_SIZE,
-                                 embed_size=EMBED_SIZE,
-                                 encoder_hidden_units=ENCODER_HIDEEN_UNITS,
-                                 decoder_hidden_units=DECODER_HIDDEN_UNITS,
-                                 encoder_layers=ENCODER_LAYERS,
-                                 batch_size=BATCH_SIZE_INFER,
-                                 learning_rate_initial=LEARNING_RATE_INITIAL,
-                                 embed_matrix_init=embed_matrix,
-                                 keep_prob=KEEP_PROB,
-                                 is_train=0,
-                                 core="bgru")
-
-    single_generate = one_hot_generate(one_hot_dictionary,
-                                       epoch=EPOCH_INFER,
-                                       is_train=0)
-    batches = get_batch(batch_size=BATCH_SIZE_INFER,
-                        iterator=single_generate)
-    logger.debug("batch generated")
-
-    seq2seq_infer.run(epoch=EPOCH_INFER,
-                      num_train_steps=NUM_TRAIN_STEPS_INFER,
-                      batches=batches,
-                      one_hot=one_hot_dictionary_index,
-                      skip_steps=1)
-    logger.debug("seq2seq model tested")
+# def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index):
+#     print("infer mode")
+#     seq2seq_infer = Seq2seqModel(vocab_size=VOCAB_SIZE,
+#                                  embed_size=EMBED_SIZE,
+#                                  encoder_hidden_units=ENCODER_HIDEEN_UNITS,
+#                                  decoder_hidden_units=DECODER_HIDDEN_UNITS,
+#                                  encoder_layers=ENCODER_LAYERS,
+#                                  batch_size=BATCH_SIZE_INFER,
+#                                  learning_rate_initial=LEARNING_RATE_INITIAL,
+#                                  embed_matrix_init=embed_matrix,
+#                                  keep_prob=KEEP_PROB,
+#                                  core="bgru")
+#
+#     single_generate = one_hot_generate(one_hot_dictionary,
+#                                        epoch=EPOCH_INFER,
+#                                        is_train=0)
+#     batches = get_batch(batch_size=BATCH_SIZE_INFER,
+#                         iterator=single_generate)
+#     logger.debug("batch generated")
+#
+#     seq2seq_infer.run(epoch=EPOCH_INFER,
+#                       num_train_steps=NUM_TRAIN_STEPS_INFER,
+#                       batches=batches,
+#                       skip_steps=1)
+#     logger.debug("seq2seq model tested")
 
 
 def main():
@@ -243,7 +250,7 @@ def main():
     # print(one_hot_dictionary)
     # print(one_hot_dictionary_index)
 
-    train(embed_matrix, one_hot_dictionary)
+    train(embed_matrix=embed_matrix, one_hot_dictionary=one_hot_dictionary, continue_train=CONTINUE_TRAIN)
     # test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index)
 
 
