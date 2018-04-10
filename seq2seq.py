@@ -3,6 +3,20 @@ import logging.config
 import tensorflow.contrib.seq2seq as s2s
 import tensorflow.contrib as contrib
 import tensorflow.contrib.rnn as rnn
+import functools
+
+
+# def lazy_property(function):
+#     attribute = '_cache_' + function.__name__
+#
+#     @property
+#     @functools.wraps(function)
+#     def decorator(self):
+#         if not hasattr(self, attribute):
+#             setattr(self, attribute, function(self))
+#         return getattr(self, attribute)
+#
+#     return decorator
 
 
 class Seq2seqModel:
@@ -125,7 +139,7 @@ class Seq2seqModel:
                 with tf.variable_scope('decoder_infer', reuse=tf.AUTO_REUSE):
                     self.start_tokens = tf.tile([19654], [self.batch_size])
                     self.end_tokens = 19655
-                    self.helper_infer = contrib.seq2seq.GreedyEmbeddingHelper(embedding=self.embeddings_trainable,
+                    self.helper_infer = contrib.seq2seq.GreedyEmbeddingHelper(embedding=self.embeddings_untrainable,
                                                                               start_tokens=self.start_tokens,
                                                                               end_token=self.end_tokens)
                     self.decoder_infer = contrib.seq2seq.BasicDecoder(cell=self.attn_cell,
@@ -154,25 +168,25 @@ class Seq2seqModel:
             with tf.variable_scope('decoder', reuse=tf.AUTO_REUSE):
                 self.decoder_cell = tf.nn.rnn_cell.GRUCell(num_units=self.decoder_hidden_units,
                                                            name='decoder_cell')
-                self.attention_state = self.encoder_inputs_embedded
-                self.attention_mechanism = contrib.seq2seq.LuongAttention(num_units=self.decoder_hidden_units,
-                                                                          memory=self.attention_state,
-                                                                          memory_sequence_length=self.encoder_length)
-                self.attn_cell = contrib.seq2seq.AttentionWrapper(cell=self.decoder_cell,
-                                                                  attention_mechanism=self.attention_mechanism,
-                                                                  name="decoder_attention_cell",
-                                                                  alignment_history=False
-                                                                  )
+                # self.attention_state = self.encoder_inputs_embedded
+                # self.attention_mechanism = contrib.seq2seq.LuongAttention(num_units=self.decoder_hidden_units,
+                #                                                           memory=self.attention_state,
+                #                                                           memory_sequence_length=self.encoder_length)
+                # self.attn_cell = contrib.seq2seq.AttentionWrapper(cell=self.decoder_cell,
+                #                                                   attention_mechanism=self.attention_mechanism,
+                #                                                   name="decoder_attention_cell",
+                #                                                   alignment_history=False
+                #                                                   )
                 self.fc_layer = tf.layers.Dense(self.vocab_size, name='dense_layer')
 
                 with tf.variable_scope('decoder_train', reuse=tf.AUTO_REUSE):
                     # for train
                     self.helper_train = contrib.seq2seq.TrainingHelper(inputs=self.decoder_inputs_embedded,
                                                                        sequence_length=self.decoder_length)
-                    self.decoder_initial_state = self.attn_cell.zero_state(self.batch_size, dtype=tf.float32).clone(
-                        cell_state=self.encoder_final_state)
-                    self.decoder_train = contrib.seq2seq.BasicDecoder(cell=self.attn_cell,
-                                                                      initial_state=self.decoder_initial_state,
+                    # self.decoder_initial_state = self.attn_cell.zero_state(self.batch_size, dtype=tf.float32).clone(
+                    #     cell_state=self.encoder_final_state)
+                    self.decoder_train = contrib.seq2seq.BasicDecoder(cell=self.decoder_cell,
+                                                                      initial_state=self.encoder_final_state,
                                                                       helper=self.helper_train,
                                                                       output_layer=self.fc_layer
                                                                       )
@@ -185,12 +199,12 @@ class Seq2seqModel:
                     self.helper_infer = contrib.seq2seq.GreedyEmbeddingHelper(embedding=self.embeddings_untrainable,
                                                                               start_tokens=self.start_tokens,
                                                                               end_token=self.end_tokens)
-                    self.decoder_infer = contrib.seq2seq.BasicDecoder(cell=self.attn_cell,
-                                                                      initial_state=self.decoder_initial_state,
+                    self.decoder_infer = contrib.seq2seq.BasicDecoder(cell=self.decoder_cell,
+                                                                      initial_state=self.encoder_final_state,
                                                                       helper=self.helper_infer,
                                                                       output_layer=self.fc_layer)
                     self.decoder_infer_logits, _, _ = s2s.dynamic_decode(self.decoder_infer,
-                                                                         maximum_iterations=20
+                                                                         maximum_iterations=self.decoder_length[0]
                                                                          )
 
     def _create_loss(self):
@@ -205,9 +219,10 @@ class Seq2seqModel:
             self.learning_rate = tf.train.exponential_decay(self.learning_rate_initial,
                                                             global_step=self.global_epoch,
                                                             decay_steps=100, decay_rate=0.995)
-            self.add_global = self.global_epoch.assign_add(1)
-            # self.optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate_initial).minimize(self.loss)
-            self.optimizer = tf.train.GradientDescentOptimizer(self.learning_rate).minimize(self.loss)
+            self.add_global_epoch = self.global_epoch.assign_add(1)
+            self.add_global_step = self.global_step.assign_add(self.batch_size)
+            self.optimizer = tf.train.AdamOptimizer().minimize(self.loss)
+            # self.optimizer = tf.train.GradientDescentOptimizer(self.learning_rate).minimize(self.loss)
 
     def _create_summaries(self):
         with tf.name_scope("summaries_seq2seq"):
@@ -237,9 +252,11 @@ class Seq2seqModel:
 
         # limit the usage of gpu
         config = tf.ConfigProto()
-        config.gpu_options.per_process_gpu_memory_fraction = 0.3
+        # config.gpu_options.per_process_gpu_memory_fraction = 0.7
         config.gpu_options.allow_growth = True
 
+        graph = tf.get_default_graph
+        tf.Graph.finalize(graph)
         with tf.Session(config=config) as sess:
 
             # saver = tf.train.Saver(tf.trainable_variables(), max_to_keep=5)
@@ -249,14 +266,14 @@ class Seq2seqModel:
             writer = tf.summary.FileWriter('./graphs/seq2seq', sess.graph)
             for i in range(epoch_total):
                 total_loss = 0.0
-                epoch_index, lr = sess.run([self.add_global, self.learning_rate])
-                self.logger.debug("at epoch {} the learning rate is {}".format(epoch_index, lr))
+                epoch_index, lr = sess.run([self.add_global_epoch, self.learning_rate])
+                # self.logger.debug("at epoch {} the learning rate is {}".format(epoch_index, lr))
                 self.logger.debug("--------------------------------------------------------")
 
                 # save last batch in each epoch for validate
                 for index in range(num_train_steps - 1):
-                    print("batch: %d at epoch: %d" % (index + 1, epoch_index))
-                    self.global_step += self.batch_size
+                    # print("batch: %d at epoch: %d" % (index + 1, epoch_index))
+                    self.global_step = sess.run(self.add_global_step)
                     encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length = next(batches)
                     decoder_length_batch = [decoder_length for i in range(self.batch_size)]
                     encoder_length_batch = [encoder_length for i in range(self.batch_size)]
@@ -272,15 +289,16 @@ class Seq2seqModel:
                     loss_batch, _, summary = sess.run([self.loss, self.optimizer, self.summary_op],
                                                       feed_dict=feed_dict)
                     total_loss += loss_batch
-                    writer.add_summary(summary, global_step=self.global_step.eval())
+                    writer.add_summary(summary, global_step=self.global_step)
                     if (index + 1) % skip_steps == 0:
                         self.logger.debug('loss at epoch {} batch {} : {:3.9f}'.format(epoch_index, index + 1,
                                                                                        total_loss / skip_steps))
+                        print('loss at epoch %d batch %d : %9.9f' % (epoch_index, index + 1,
+                                                                     total_loss / skip_steps))
                         total_loss = 0.0
 
                 # use last batch to assess generalization
-                print("epoch: %d validation" % epoch_index)
-                self.global_step += self.batch_size
+                self.global_step = sess.run(self.add_global_step)
                 encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length = next(batches)
                 decoder_length_batch = [decoder_length for i in range(self.batch_size)]
                 encoder_length_batch = [encoder_length for i in range(self.batch_size)]
@@ -293,21 +311,24 @@ class Seq2seqModel:
                     self.encoder_length: encoder_length_batch
                 }
 
-                loss_batch_validate, _ = sess.run([self.loss, self.optimizer],
-                                                  feed_dict=feed_dict)
+                loss_batch_validate, = sess.run([self.loss_infer],
+                                                feed_dict=feed_dict)
                 self.logger.debug("validate loss at epoch {} :{:3.9f}".format(epoch_index, loss_batch_validate))
-
-                saver.save(sess=sess,
-                           save_path=self.MODEL_FILE + 'model.ckpt',
-                           global_step=self.global_step,
-                           write_meta_graph=True)
-                self.logger.debug("seq2seq trained,model saved at epoch {}\n".format(epoch_index))
+                print("epoch: %d validation: %9.9f" % (epoch_index, loss_batch_validate))
+                if epoch_index % 10 == 0:
+                    saver.save(sess=sess,
+                               save_path=self.MODEL_FILE + 'model.ckpt',
+                               global_step=self.global_step,
+                               write_meta_graph=True)
+                    self.logger.debug("seq2seq trained,model saved at epoch {}\n".format(epoch_index))
 
     def continue_train(self, epoch_total, num_train_steps, batches, skip_steps):
         config = tf.ConfigProto()
-        config.gpu_options.per_process_gpu_memory_fraction = 0.3
+        # config.gpu_options.per_process_gpu_memory_fraction = 0.7
         config.gpu_options.allow_growth = True
         ckpt = tf.train.get_checkpoint_state(self.MODEL_FILE)
+        graph = tf.get_default_graph
+        tf.Graph.finalize(graph)
         if ckpt and ckpt.model_checkpoint_path:
             print("found model,continue training")
             with tf.Session(config=config) as sess:
@@ -319,14 +340,14 @@ class Seq2seqModel:
                 writer = tf.summary.FileWriter('./graphs/seq2seq', sess.graph)
                 for i in range(epoch_total):
                     total_loss = 0.0
-                    epoch_index, lr = sess.run([self.add_global, self.learning_rate])
-                    self.logger.debug("at epoch {} the learning rate is {}".format(epoch_index, lr))
+                    epoch_index, lr = sess.run([self.add_global_epoch, self.learning_rate])
+                    # self.logger.debug("at epoch {} the learning rate is {}".format(epoch_index, lr))
                     self.logger.debug("--------------------------------------------------------")
 
                     # save last batch in each epoch for validate
                     for index in range(num_train_steps - 1):
-                        print("batch: %d at epoch: %d" % (index + 1, epoch_index))
-                        self.global_step += self.batch_size
+                        # print("batch: %d at epoch: %d" % (index + 1, epoch_index))
+                        self.global_step = sess.run(self.add_global_step)
                         encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length = next(batches)
                         decoder_length_batch = [decoder_length for i in range(self.batch_size)]
                         encoder_length_batch = [encoder_length for i in range(self.batch_size)]
@@ -342,15 +363,16 @@ class Seq2seqModel:
                         loss_batch, _, summary = sess.run([self.loss, self.optimizer, self.summary_op],
                                                           feed_dict=feed_dict)
                         total_loss += loss_batch
-                        writer.add_summary(summary, global_step=self.global_step.eval())
+                        writer.add_summary(summary, global_step=self.global_step)
                         if (index + 1) % skip_steps == 0:
                             self.logger.debug('loss at epoch {} batch {} : {:3.9f}'.format(epoch_index, index + 1,
                                                                                            total_loss / skip_steps))
+                            print('loss at epoch %d batch %d : %9.9f' % (epoch_index, index + 1,
+                                                                         total_loss / skip_steps))
                             total_loss = 0.0
 
                     # use last batch to assess generalization
-                    print("epoch: %d validation" % epoch_index)
-                    self.global_step += self.batch_size
+                    self.global_step = sess.run(self.add_global_step)
                     encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length = next(batches)
                     decoder_length_batch = [decoder_length for i in range(self.batch_size)]
                     encoder_length_batch = [encoder_length for i in range(self.batch_size)]
@@ -363,15 +385,17 @@ class Seq2seqModel:
                         self.encoder_length: encoder_length_batch
                     }
 
-                    loss_batch_validate, _ = sess.run([self.loss, self.optimizer],
+                    loss_batch_validate, _ = sess.run([self.loss_infer],
                                                       feed_dict=feed_dict)
                     self.logger.debug("validate loss at epoch {} :{:3.9f}".format(epoch_index, loss_batch_validate))
+                    print("epoch: %d validation: %9.9f" % (epoch_index, loss_batch_validate))
 
-                    saver.save(sess=sess,
-                               save_path=self.MODEL_FILE + 'model.ckpt',
-                               global_step=self.global_step,
-                               write_meta_graph=True)
-                    self.logger.debug("seq2seq trained,model saved at epoch {}\n".format(epoch_index))
+                    if epoch_index % 10 == 0:
+                        saver.save(sess=sess,
+                                   save_path=self.MODEL_FILE + 'model.ckpt',
+                                   global_step=self.global_step,
+                                   write_meta_graph=True)
+                        self.logger.debug("seq2seq trained,model saved at epoch {}\n".format(epoch_index))
         else:
             print("model not found,check your saved model")
 
@@ -384,17 +408,17 @@ class Seq2seqModel:
                 print("the model has been successfully restored")
                 for index in range(num_train_steps):
                     encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length = next(batches)
-                    decoder_length = [decoder_length for _ in range(self.batch_size)]
-                    encoder_length = [encoder_length for _ in range(self.batch_size)]
+                    decoder_length = [decoder_length for i in range(self.batch_size)]
+                    encoder_length = [encoder_length for i in range(self.batch_size)]
                     feed_dict = {
                         self.decoder_targets: decoder_targets,
                         self.decoder_length: decoder_length,
                         self.encoder_inputs: encoder_inputs,
                         self.decoder_inputs: decoder_inputs,
-                        self.encoder_length: encoder_length
+                        self.encoder_length: encoder_length,
+
                     }
                     file = open("./infer/output.txt", "w")
-                    loss_infer_total = 0.0
                     for test_index in range(self.batch_size):
 
                         file.write("- group %d\n" % (test_index + 1))
@@ -402,7 +426,22 @@ class Seq2seqModel:
                         file.write("     - infer headline: \n")
                         logits_infer = sess.run(self.decoder_infer_logits, feed_dict=feed_dict)
                         prediction_infer = logits_infer.sample_id
+                        # prediction = prediction[2]
                         answer = [one_hot[i] for i in prediction_infer[test_index]]
+                        output = "        "
+                        for i in answer:
+                            if i != "UNK":
+                                output += i
+                                output += " "
+                        file.write(output)
+                        file.write("\n")
+
+                        file.write("     - train headline: \n")
+                        logits_train = sess.run(self.decoder_train_logits, feed_dict=feed_dict)
+                        prediction_train = logits_train.sample_id
+                        # prediction = np.argmax(prediction, 2)
+                        # logits_flat = logits_flat[2]
+                        answer = [one_hot[i] for i in prediction_train[test_index]]
                         output = "        "
                         for i in answer:
                             if i != "UNK":
@@ -413,6 +452,7 @@ class Seq2seqModel:
 
                         file.write("     - targets: \n")
                         targets = sess.run(self.decoder_targets, feed_dict=feed_dict)
+                        # targets = targets[2]
                         answer = [one_hot[i] for i in targets[test_index]]
                         output = "        "
                         for i in answer:
@@ -422,11 +462,6 @@ class Seq2seqModel:
                         file.write(output)
                         file.write("\n")
                         print("output %d finished" % test_index)
-
-                        loss_infer_total += sess.run(self.loss_infer, feed_dict=feed_dict)
-                        print(loss_infer_total)
-
-                    file.write("average infer loss: %9.9f" % (loss_infer_total / self.batch_size))
 
                     file.close()
                     print("infer file updated")

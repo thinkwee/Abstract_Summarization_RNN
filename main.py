@@ -22,17 +22,17 @@ ENCODER_HIDEEN_UNITS = 512
 DECODER_HIDDEN_UNITS = 1024
 BATCH_SIZE = 32
 ENCODER_LAYERS = 1
-EPOCH = 100
+EPOCH = 1000
 NUM_TRAIN_STEPS = 208
-SKIP_STEPS = 10
+SKIP_STEPS = 50
 LEARNING_RATE_INITIAL = 0.1
 KEEP_PROB = 0.2
 START_TOKEN_ID = 1998
 END_TOKEN_ID = 1999
-CONTINUE_TRAIN = 1
+CONTINUE_TRAIN = 0
 
 """Hyper Parameters(Seq2seq infer)"""
-BATCH_SIZE_INFER = 5
+BATCH_SIZE_INFER = 10
 EPOCH_INFER = 1
 NUM_TRAIN_STEPS_INFER = 1
 
@@ -228,6 +228,7 @@ def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index):
                                  embed_matrix_init=embed_matrix,
                                  keep_prob=KEEP_PROB,
                                  core="bgru")
+    seq2seq_infer.build_graph()
     seq2seq_infer.test(num_train_steps=NUM_TRAIN_STEPS_INFER,
                        batches=batches,
                        one_hot=one_hot_dictionary_index)
@@ -248,8 +249,8 @@ def main():
     # print(one_hot_dictionary)
     # print(one_hot_dictionary_index)
 
-    train(embed_matrix=embed_matrix, one_hot_dictionary=one_hot_dictionary, continue_train=CONTINUE_TRAIN)
-    # test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index)
+    # train(embed_matrix=embed_matrix, one_hot_dictionary=one_hot_dictionary, continue_train=CONTINUE_TRAIN)
+    test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index)
 
 
 if __name__ == '__main__':
