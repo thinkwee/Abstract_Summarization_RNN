@@ -1,70 +1,500 @@
 - group 1
      - infer headline: 
-        united nations seeks to release in middle east peace process end_token for 
-     - train headline: 
-        united envoy appeals darfur with of government rebel increase with end_token 
+        us navy makes border with aid against un nuclear agency appeals for fight in 
      - targets: 
-        un sudanese rebel attacks in darfur calls for halt to all fighting end_token 
+        united arab emirates president sheik zayed bin al nahyan dies at age united arab emirates president sheik zayed 
 - group 2
      - infer headline: 
-        eu no plans over gas with india end_token end_token for more time 
-     - train headline: 
-        eu union of with ties for macedonia nuclear british british end_token 
+        who with life to be in asks to be for 
      - targets: 
-        european judge microsoft appeal calls meeting for thursday after two eu jump ship 
+        accused us pleads guilty says he wanted to avoid duty in korea and vietnam accused us pleads guilty 
 - group 3
      - infer headline: 
-        court turkish end_token for alleged us election end_token talks end_token two end_token 
-     - train headline: 
-        swiss court suspects of immigration leader driver court end_token end_token 
+        republicans daschle at german in republicans thousands of in thousands of 
      - targets: 
-        three ethnic albanians convicted for old church in kosovo end_token 
+        republicans extend decade of house control republicans extend decade of house control republicans extend decade of house control 
 - group 4
      - infer headline: 
-        polish leaders to end group as for group end_token end_token 
-     - train headline: 
-        rate to end_token for 
+        new jersey to go on us and apec turkish budget to keep up on 
      - targets: 
-        polands central bank interest rates end_token 
+        polls close in florida with only minor problems reported polls close in florida with only minor problems reported polls 
 - group 5
      - infer headline: 
-        deputy prime minister says injured killed in violent south thailand end_token for release 
-     - train headline: 
-        thai president down down forces suspected in south south south end_token 
+        march in nigeria protest to protest against march thousands march in nigeria protest to protest on march thousands march 
      - targets: 
-        security guard slain as violence continues in thailands muslim south end_token 
+        thousands march in nigeria in support of planned general strike to protest fuel prices thousands march in nigeria in support 
 - group 6
      - infer headline: 
-        court battle end_token for alleged end_token end_token 
-     - train headline: 
-        killer for of end_token 
+        group of ethnic in eastern thousands of of 
      - targets: 
-        convicted soldiers seek in assassination case end_token 
+        overseas voters take greater interest in us election but play role than in 2000 overseas voters take greater interest 
 - group 7
      - infer headline: 
-        to leave in end_token up fight against money end_token 
-     - train headline: 
-        reports to end_token end_token 
+        in bush victory some of war in southern africa of bush victory in africa 
      - targets: 
-        and russian energy giant billion oil field deal end_token 
+        bush puts off victory until after planned from kerry bush puts off victory until after planned 
 - group 8
      - infer headline: 
-        british police for end_token end_token end_token end_token 
-     - train headline: 
-        british british for of attack terrorist end_token head 
+        will be peace talks with us troops to iraq uzbek of reports strike to protest 
      - targets: 
-        former who thousands of out of germany as british 
+        claims victory in puerto rico governors race recount planned claims victory in puerto rico governors race 
 - group 9
      - infer headline: 
-        car will be to border with ivory coast end_token for arafat in 
-     - train headline: 
-        and denies will will now not end_token 
+        study learning to death penalty medical study shows better agree to press freedom in tehran german chancellor 
      - targets: 
-        french minister says january elections for iraq possible but end_token 
+        of flu vaccine given in a new way to work but not for elderly studies find 
 - group 10
      - infer headline: 
-        for million end_token for end_token end_token 
-     - train headline: 
-        for for end_token 
+        china strike to offer as part of china to discuss china announces food back to 
      - targets: 
-        gets new europe end_token 
+        latin american leaders arrive in rio for regional summit latin american leaders arrive in rio for regional summit latin 
+- group 11
+     - infer headline: 
+        bush will help up to help global king bush victory to global 
+     - targets: 
+        leaders bush but critics worry about his plans for future leaders bush but critics worry about his plans 
+- group 12
+     - infer headline: 
+        muslim insurgents kill government attack in iraq muslim insurgents kill government government in iraq sunday november at british 
+     - targets: 
+        suicide attack kills three british soldiers us troops fallujah with and fire suicide attack kills three british 
+- group 13
+     - infer headline: 
+        international to buy off to buy billion debt to buy billion company deal to buy billion 
+     - targets: 
+        plans 40 new including with cameras for 2005 plans 40 new including with cameras 
+- group 14
+     - infer headline: 
+        british judge rules to pay suicide pill in as british judge rules to pay off to remain 
+     - targets: 
+        british lawyer receives award for seven lives in earthquake british lawyer receives award for seven lives in 
+- group 15
+     - infer headline: 
+        california plan to cut on nuclear start un plan to on research nuclear weapons 
+     - targets: 
+        be buying into to do well under bush be buying into to do well 
+- group 16
+     - infer headline: 
+        supporters move to be government of gay marriage of opposition leader to be senate 
+     - targets: 
+        mourning wants from so he can play for a winner mourning wants from so he can 
+- group 17
+     - infer headline: 
+        us marines fallujah bridge inside us iraqi us marines fallujah bridge 
+     - targets: 
+        american warplanes fallujah residents say attacks are strongest in months american warplanes fallujah residents say attacks are strongest 
+- group 18
+     - infer headline: 
+        three storm erupts in southern pakistan after attacks on violence three die in southern sudan after violence 
+     - targets: 
+        insurgents set off car bombs attack police station in bloody assault on insurgents set off car bombs attack police 
+- group 19
+     - infer headline: 
+        possible to in us to on with in 
+     - targets: 
+        syria calls for to improve strained ties with us syria calls for to improve strained ties with us 
+- group 20
+     - infer headline: 
+        japans on the of us troops on of us soldiers on iraq 
+     - targets: 
+        us forces storm into western of fallujah opening major assault on insurgent stronghold us forces storm into western 
+- group 21
+     - infer headline: 
+        prime minister to be in the insurgency iraqi prime to be in the 
+     - targets: 
+        iraqi prime minister tells un chief fallujah attack is best way to elections iraqi prime minister tells un chief 
+- group 22
+     - infer headline: 
+        warns of more research into a warns of for research hunt 
+     - targets: 
+        ivory coast why west africas economic is into war and why it ivory coast why west africas 
+- group 23
+     - infer headline: 
+        off mexican on despite mexican star wins to show 
+     - targets: 
+        colin vice over james bond colin vice over james bond colin 
+- group 24
+     - infer headline: 
+        bush letter for bush in iran bush administration to be in middle east 
+     - targets: 
+        spain denies from us as bush meets with spain denies from us as bush meets with 
+- group 25
+     - infer headline: 
+        arafat in death of violence arrested in coma death of arafat death in palestinians death of 
+     - targets: 
+        state funeral in egypt has political but takes the personal into account state funeral in egypt has political 
+- group 26
+     - infer headline: 
+        police arrest two suspected of to fight police arrest two more bodies of emergency in 
+     - targets: 
+        blamed on continue to bloody despite security blamed on continue to bloody despite 
+- group 27
+     - infer headline: 
+        from bankruptcy amid fears over past from bankruptcy amid vioxx 
+     - targets: 
+        bans young for life after second doping violation bans young for life after second doping violation 
+- group 28
+     - infer headline: 
+        arafats death toll to push for middle east peace asian death toll to be on peace 
+     - targets: 
+        yasser arafats departure opens door to both chaos and peace yasser arafats departure opens door to both chaos and peace 
+- group 29
+     - infer headline: 
+        to croatian consulate in southern russia to leave southern in southern russia 
+     - targets: 
+        churches mosque school targets of overnight arson in the netherlands churches mosque school targets of overnight arson in the netherlands 
+- group 30
+     - infer headline: 
+        italys berlusconi meets with coalition partners italys berlusconi faces tough with coalition partners italys berlusconi with 
+     - targets: 
+        in italy over first for arafat funeral delegation in italy over first for arafat funeral delegation 
+- group 31
+     - infer headline: 
+        palestinian leader on calls for arafat to stay on peace palestinian leader calls for leader to 
+     - targets: 
+        hamas leader arafats funeral despite political differences hamas leader arafats funeral despite political differences hamas leader 
+- group 32
+     - infer headline: 
+        arafat death of yasser arafat in hospital polish arafat hundreds of for arafat 
+     - targets: 
+        thousands of palestinians break into arafats compound thousands of palestinians break into arafats compound thousands of palestinians break into 
+- group 33
+     - infer headline: 
+        out growth in ukraine of asks in madrid of 
+     - targets: 
+        new eu commission team seen parliament backing despite new eu commission team seen parliament backing despite 
+- group 34
+     - infer headline: 
+        to pay million at 72 demand to rural at 
+     - targets: 
+        families of victims to sue government for compensation families of victims to sue government for compensation families 
+- group 35
+     - infer headline: 
+        bush will be no agenda to be next toward bush seeks to mend ties with latin america 
+     - targets: 
+        bush promises europe trip to help over iraq us foreign policy bush promises europe trip to help 
+- group 36
+     - infer headline: 
+        arafat has in jerusalem top muslim cleric bush in relations provisional bush whether 
+     - targets: 
+        bush meets with blair sees palestinian state possible within 4 years bush meets with blair sees palestinian state possible within 
+- group 37
+     - infer headline: 
+        us agrees to global standard to improve auto us us agrees to global standard to improve auto safety 
+     - targets: 
+        worries about possible us dollar crisis as trade deficit euro rises worries about possible us dollar crisis as trade 
+- group 38
+     - infer headline: 
+        to move shares of on flu to move on bell challenge to 
+     - targets: 
+        tourists change dollars into local currency before new takes effect tourists change dollars into local currency before 
+- group 39
+     - infer headline: 
+        china to budget talks china to japan china to trade talks china to budget deficit 
+     - targets: 
+        asian leaders hoping for progress at apec on trade political ties asian leaders hoping for progress at apec on trade 
+- group 40
+     - infer headline: 
+        us bushs plan to create jobs tax cuts bushs plan to create jobs tax cuts on getting 
+     - targets: 
+        bush pushes global efforts to keep out of terrorists hands bush pushes global efforts to keep out of 
+- group 41
+     - infer headline: 
+        to send more bodies trial before to decide to three more working to be to 
+     - targets: 
+        report portuguese police deported dutch islamic radicals because of attack fears report portuguese police deported dutch islamic radicals because of 
+- group 42
+     - infer headline: 
+        to be the first of fair in sweden sweden to make first or on fallujah 
+     - targets: 
+        colombia can count on more us military support us commander says colombia can count on more us military support us 
+- group 43
+     - infer headline: 
+        marine commander shot dead following fallujah attack us commander found hostage in fallujah us marine commander shot dead in 
+     - targets: 
+        television report says us marine wounded prisoner in a fallujah mosque television report says us marine 
+- group 44
+     - infer headline: 
+        un mission to head new in iraq first a warns to avoid political in ivory coast 
+     - targets: 
+        loss of iraqi country of future source of reconstruction revenue tourism chief loss of iraqi country 
+- group 45
+     - infer headline: 
+        us secretary of state visit to iraq us secretary of state visit to iraq bush and us presidents meeting 
+     - targets: 
+        bush to visit canada on nov 30 bush to visit canada on nov 30 bush to visit canada on 
+- group 46
+     - infer headline: 
+        from a to take the mexican president on heading to boost 
+     - targets: 
+        ecuador lawmakers lose their over legislative support for president one a ecuador lawmakers lose their 
+- group 47
+     - infer headline: 
+        russia russia approve to make software production in russia russia to lay billion in russia ireland 
+     - targets: 
+        russia developing new nuclear missile systems putin says russia developing new nuclear missile systems putin says russia developing new 
+- group 48
+     - infer headline: 
+        rate king on pay rise sales on losing sales on 
+     - targets: 
+        enron bankruptcy plan pipeline sale closes enron bankruptcy plan pipeline sale closes enron bankruptcy plan pipeline 
+- group 49
+     - infer headline: 
+        to withdraw from ivory coast to be to be given against open from 
+     - targets: 
+        un officials say limited but may reach as far east as israeli coast un officials say 
+- group 50
+     - infer headline: 
+        at american awards at american music awards at 
+     - targets: 
+        makes it three in a row as player of year makes it three in a row as player 
+- group 51
+     - infer headline: 
+        of the apparently from disputed of by internet of most by 
+     - targets: 
+        fed chairman worried about impact of trade deficits fed chairman worried about impact of trade deficits fed chairman worried 
+- group 52
+     - infer headline: 
+        of the first time in demand for of prisoners in 
+     - targets: 
+        to first defeat on to first defeat on to 
+- group 53
+     - infer headline: 
+        clinton library to at age clinton library clinton library to area at clinton 
+     - targets: 
+        clinton presidential center the next morning members of general public in clinton presidential center the next morning 
+- group 54
+     - infer headline: 
+        to join airport million to join to join with to 
+     - targets: 
+        to give myanmar more time to show its serious about forced labor to give myanmar more time 
+- group 55
+     - infer headline: 
+        prime minister says he will be forward to nepal killed the soldiers prime minister says rebels will be pressure to 
+     - targets: 
+        pakistani prime minister with opposition ahead of planned protests pakistani prime minister with opposition ahead of 
+- group 56
+     - infer headline: 
+        to buy of slaying to receive to of abandoned to receive research 
+     - targets: 
+        prosecution accuses michael attorneys of demands for records from alleged victims family prosecution accuses michael attorneys 
+- group 57
+     - infer headline: 
+        will more more than 500 when more to democratic charges 
+     - targets: 
+        some colombian troops deployed for bush visit some colombian troops deployed for bush visit some colombian 
+- group 58
+     - infer headline: 
+        rights court rights activist to death penalty judge california case to be all with his 
+     - targets: 
+        activist released from prison on royal says king serious about reform activist released from prison on royal says 
+- group 59
+     - infer headline: 
+        to bush victory on middle east peace to on middle east future calls 
+     - targets: 
+        lawmakers hold out hope for intelligence bill bush promises help lawmakers hold out hope for intelligence bill bush promises help 
+- group 60
+     - infer headline: 
+        is more in southern of sales for latest in 
+     - targets: 
+        security situation threats delay iraqi vote preparations in mosul security situation threats delay iraqi vote preparations in mosul 
+- group 61
+     - infer headline: 
+        major million percent for six weeks us major offensive in northern 
+     - targets: 
+        sentenced to 6 months house arrest in iraqi case sentenced to 6 months house arrest in iraqi 
+- group 62
+     - infer headline: 
+        put for day of us put civil servants 
+     - targets: 
+        for with detroit fans for with detroit fans for with 
+- group 63
+     - infer headline: 
+        us attack rebels fallujah police attack on fallujah us attack on fallujah attack 
+     - targets: 
+        rebels bomb us convoy near iraqs one man dead in us return fire rebels bomb us convoy near iraqs 
+- group 64
+     - infer headline: 
+        to indonesia in iraq christians say found to play in iraq town beaten to in 
+     - targets: 
+        gunmen second sunni cleric whose group urged election boycott in iraq gunmen second sunni cleric whose group urged 
+- group 65
+     - infer headline: 
+        to expand more with deal with greece to offer more than for more microsoft to emergency 
+     - targets: 
+        arsenal for group e lead in arsenal for group e lead in arsenal 
+- group 66
+     - infer headline: 
+        union vote against more access to end union demand says more government to 
+     - targets: 
+        no mad cow tests come back on suspected new case no mad cow tests come back on suspected 
+- group 67
+     - infer headline: 
+        group reports into north korean regulators on delay reports and regulators 
+     - targets: 
+        japanese bank into loss profit japanese bank into loss 
+- group 68
+     - infer headline: 
+        german president german visit to visit german court german visit to visit german court 
+     - targets: 
+        german president arrives in on last day of baltic tour german president arrives in on last day of 
+- group 69
+     - infer headline: 
+        chinese in peter in victory peter in victory 
+     - targets: 
+        defends australian open title defends australian open title defends australian open title 
+- group 70
+     - infer headline: 
+        case case of presidential runoff case of case of 
+     - targets: 
+        iran group for suicide to attack us in iraq israel iran group for suicide to attack 
+- group 71
+     - infer headline: 
+        from heading over ivory coast in elections 
+     - targets: 
+        army base in georgia is set for largest troop expansion since vietnam war army base in georgia is set for 
+- group 72
+     - infer headline: 
+        government record ambassador in northern ireland party leads in car over 
+     - targets: 
+        wins elections at west bank university ahead of race for president wins elections at west bank 
+- group 73
+     - infer headline: 
+        advance a in bell cup advance in cup advance in 
+     - targets: 
+        west indies training camp opens in west indies training camp opens in west indies training camp opens 
+- group 74
+     - infer headline: 
+        to avoid a week on pacific election kerry to talk off 200 terrorism with taiwan 
+     - targets: 
+        mexicos fox to ship 2005 budget back to congress asking for mexicos fox to ship 2005 budget back to 
+- group 75
+     - infer headline: 
+        out of us election of a year of of most 
+     - targets: 
+        posts time in training run at lake posts time in training run at 
+- group 76
+     - infer headline: 
+        us troops in kosovo dozens injured in fallujah hostage us commander injured in fallujah hostage us forces in iraq 
+     - targets: 
+        fresh us troops arrive in iraq on eve of expected showdown in fallujah fresh us troops arrive in iraq on 
+- group 77
+     - infer headline: 
+        to take force with probe to help with four to take 
+     - targets: 
+        four to terror charges released until next appearance four to terror charges released until 
+- group 78
+     - infer headline: 
+        to acquire of british company to of filipino hostage to 
+     - targets: 
+        files response calling files response calling files response calling 
+- group 79
+     - infer headline: 
+        to help for next year to for settlement of 
+     - targets: 
+        to take million charge for court ruling to take million charge for court ruling 
+- group 80
+     - infer headline: 
+        delta pilots on nov policy on news european stocks drop up on news european stocks 
+     - targets: 
+        delta pilots vote on cuts airline more delta pilots vote on cuts airline more 
+- group 81
+     - infer headline: 
+        to pay back at europes first planned to back on former campaign 
+     - targets: 
+        the new assault on aggressive the new assault on aggressive the new assault 
+- group 82
+     - infer headline: 
+        say bush on presidential election in iraq bush on in postelection bush 
+     - targets: 
+        nobel sues us for rights to nobel sues us for rights to nobel 
+- group 83
+     - infer headline: 
+        court of suspect charges to be court suspect court of opposition leader to be court extradition 
+     - targets: 
+        report court orders leaders to to petition to mosques destruction report court orders leaders 
+- group 84
+     - infer headline: 
+        suspect more in violent for support us officers for alleged of missing from 
+     - targets: 
+        remains of six us killed in laos in to be buried as a group remains of six us 
+- group 85
+     - infer headline: 
+        american to stay from ivory coast government to reach to leave further 
+     - targets: 
+        tight governors race in puerto rico so close it may be headed for recount tight governors race in puerto rico 
+- group 86
+     - infer headline: 
+        putin pushes putin on election day putin pledges putin on russias putin pledges un putin 
+     - targets: 
+        russian president says bush victory would mean americans did not to terrorist threats russian president says bush victory would 
+- group 87
+     - infer headline: 
+        putin pushes putin on election day putin pledges putin on russias putin pledges un putin 
+     - targets: 
+        russian president says bush victory would mean americans did not to terrorist threats russian president says bush victory would 
+- group 88
+     - infer headline: 
+        bush kerry trade early victories in bitter contest bush kerry trade early victories in bitter contest bush kerry 
+     - targets: 
+        bin laden accuses bush of leading the united states into a in iraq bin laden accuses bush of leading 
+- group 89
+     - infer headline: 
+        un staff in sudan to face un peacekeepers sudan in new vote for un staff bush 
+     - targets: 
+        dignitaries in funeral prayers for emirates president nation in mourning dignitaries in funeral prayers for emirates president 
+- group 90
+     - infer headline: 
+        us senator on future of violence leader accuses in the or us attacks 
+     - targets: 
+        bush faces new questions on iraq strength of coalition bush faces new questions on iraq strength of coalition bush 
+- group 91
+     - infer headline: 
+        to bush victory over sale of to bush victory over with 
+     - targets: 
+        an almost in the presidential race an almost in the presidential race an almost in the 
+- group 92
+     - infer headline: 
+        brazil to take back out of final as more soldiers to take back out of settlement brazil 
+     - targets: 
+        democrats to what went wrong democrats to what went wrong democrats to what went wrong 
+- group 93
+     - infer headline: 
+        bush wins to make news conference after bush white house to seek global on middle east bush 
+     - targets: 
+        cabinet changes likely in bush second term cabinet changes likely in bush second term cabinet changes likely in bush 
+- group 94
+     - infer headline: 
+        the way title civil kevin 
+     - targets: 
+        
+- group 95
+     - infer headline: 
+        as no longer in movie harry found in the 
+     - targets: 
+        at the movies the at the movies the at the movies the at the movies 
+- group 96
+     - infer headline: 
+        bush will be next next year but no bush to be next next year 
+     - targets: 
+        bush by of on blamed for global warming bush by of on 
+- group 97
+     - infer headline: 
+        us will press with with us leader says us will be 
+     - targets: 
+        us ambassador says there are no plans to german military support for iraq us ambassador says there are no 
+- group 98
+     - infer headline: 
+        to acquire next music companys jailed to be to improve when eastern 
+     - targets: 
+        of the receives award from catholic group of the receives award from catholic group 
+- group 99
+     - infer headline: 
+        to help more foreign companies on bid to acquire latvian in to 
+     - targets: 
+        news corp pill news corp pill news corp pill 
+- group 100
+     - infer headline: 
+        poland to continue talks with yukos next year to continue talks on russias and south africa 
+     - targets: 
+        speaker of parliament poland seeking ways to limit its iraq presence speaker of parliament poland seeking ways to limit its 

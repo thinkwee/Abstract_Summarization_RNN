@@ -19,7 +19,8 @@
 - [x] fix infer problem
 - [x] test multilayer with dropout core
 - [x] fix lazy loading
-- [ ] fix pre-processing
+- [x] fix pre-processing
+- [x] try training with non-mentor model
 - [ ] test attention decoder(luong attention)
 - [x] choose last batch in each epoch as the validation set
 - [x] learning rate decay:gradient descent,low init value,decay=0.995
@@ -27,7 +28,7 @@
 - [x] enlarge rnn hidden units size
 - [x] fix word embedding matrix and try to load model
 - [x] divide infer and train into two graphs
-- [ ] use rouge to value model
+- [x] use rouge to value model
 - [x] save each test result
 - [ ] fix unk problems
 - [ ] train sentiment classification svm
