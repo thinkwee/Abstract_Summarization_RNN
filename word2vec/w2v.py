@@ -69,18 +69,11 @@ class w2v:
     def _create_optimizer(self):
         self.optimizer = tf.train.GradientDescentOptimizer(self.lr).minimize(self.loss)
 
-    def _create_summaries(self):
-        with tf.name_scope("summaries_w2v"):
-            tf.summary.scalar("loss", self.loss)
-            tf.summary.histogram("histogram_loss", self.loss)
-            # because you have several summaries, we should merge them all into one op to make it easier to manage
-            self.summary_op = tf.summary.merge_all()
-
     def build_graph(self):
         self._create_placeholders()
         self._create_loss()
         self._create_optimizer()
-        self._create_summaries()
+
         logger.debug('w2v graph for %s has been build', self.data_name)
 
     def train(self):
@@ -92,20 +85,17 @@ class w2v:
         with tf.Session() as sess:
             sess.run(tf.global_variables_initializer())
             total_loss = 0.0
-            writer = tf.summary.FileWriter('./graphs/w2v/', sess.graph)
             for index in range(self.num_train_steps):
                 centers, targets = next(batch_gen)
-                loss_batch, _, summary = sess.run([self.loss, self.optimizer, self.summary_op],
-                                                  feed_dict={self.center_words: centers, self.target_words: targets})
+                loss_batch, _ = sess.run([self.loss, self.optimizer],
+                                         feed_dict={self.center_words: centers, self.target_words: targets})
                 total_loss += loss_batch
-                writer.add_summary(summary, global_step=index)
                 if (index + 1) % self.skip_steps == 0:
                     logger.debug('w2v for {} average loss at step {} : {:5.1f}'.format(self.data_name, index + 1,
                                                                                        total_loss / self.skip_steps))
                     total_loss = 0.0
-                writer.close()
-            self.final_embed_matrix = sess.run(self.embed_matrix)
+            final_embed_matrix = sess.run(self.embed_matrix)
         sess.close()
         logger.debug('w2v train for %s has finished', self.data_name)
         print('embed_matrix for %s has been build' % self.data_name)
-        return self.final_embed_matrix, one_hot_dictionary, one_hot_dictionary_index
+        return final_embed_matrix, one_hot_dictionary, one_hot_dictionary_index

@@ -122,7 +122,6 @@ class AttentionModel(model.Model):
         output_attention=hparams.output_attention,
         name="attention")
 
-    # TODO(thangluong): do we need num_layers, num_gpus?
     cell = tf.contrib.rnn.DeviceWrapper(cell,
                                         model_helper.get_device_str(
                                             num_layers - 1, self.num_gpus))

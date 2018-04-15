@@ -21,6 +21,7 @@
 - [x] fix lazy loading
 - [x] fix pre-processing
 - [x] try training with non-mentor model
+- [x] secondary activation
 - [ ] test attention decoder(luong attention)
 - [x] choose last batch in each epoch as the validation set
 - [x] learning rate decay:gradient descent,low init value,decay=0.995

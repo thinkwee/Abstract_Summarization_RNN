@@ -6,6 +6,8 @@ def make_file_model():
             file_create.writelines(line)
             count += 1
             file_create.close()
+            if count == 32:
+                break
     print("make models files complete")
 
 

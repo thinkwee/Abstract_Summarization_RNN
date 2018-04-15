@@ -4,6 +4,7 @@ import pickle
 from seq2seq import Seq2seqModel
 from pre_process import *
 from numpy import *
+import sys
 
 """Log Configuration"""
 LOG_FILE = './log/train.log'
@@ -16,21 +17,21 @@ logger.addHandler(handler)  # 为logger添加handler
 logger.setLevel(logging.DEBUG)
 
 """Hyper Parameters(Seq2Seq train)"""
-VOCAB_SIZE = 3650
-EMBED_SIZE = 128
-ENCODER_HIDEEN_UNITS = 512
-DECODER_HIDDEN_UNITS = 1024
+VOCAB_SIZE = 2000
+EMBED_SIZE = 256
+ENCODER_HIDEEN_UNITS = 256
+DECODER_HIDDEN_UNITS = 256
 BATCH_SIZE = 32
 ENCODER_LAYERS = 1
 EPOCH = 1000
 NUM_TRAIN_STEPS = 215
 SKIP_STEPS = 50
-LEARNING_RATE_INITIAL = 0.1
+LEARNING_RATE_INITIAL = 0.01
 KEEP_PROB = 0.2
 CONTINUE_TRAIN = 0
 
 """Hyper Parameters(Seq2seq infer)"""
-BATCH_SIZE_INFER = 100
+BATCH_SIZE_INFER = 16
 EPOCH_INFER = 1
 NUM_TRAIN_STEPS_INFER = 1
 
@@ -101,10 +102,10 @@ def train(embed_matrix, one_hot_dictionary, continue_train, start_token_id, end_
                                  encoder_layers=ENCODER_LAYERS,
                                  learning_rate_initial=LEARNING_RATE_INITIAL,
                                  keep_prob=KEEP_PROB,
-                                 core="bgru",
+                                 rnn_core="gru",
                                  start_token_id=start_token_id,
-                                 end_token_id=end_token_id
-                                 )
+                                 end_token_id=end_token_id,
+                                 grad_clip=2.0)
     seq2seq_train.build_graph()
     print("the model has been built")
 
@@ -140,38 +141,83 @@ def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index, start_token
                                  learning_rate_initial=LEARNING_RATE_INITIAL,
                                  embed_matrix_init=embed_matrix,
                                  keep_prob=KEEP_PROB,
-                                 core="bgru",
+                                 rnn_core="gru",
                                  start_token_id=start_token_id,
-                                 end_token_id=end_token_id)
+                                 end_token_id=end_token_id,
+                                 grad_clip=2.0)
     seq2seq_infer.build_graph()
-    seq2seq_infer.test(num_train_steps=NUM_TRAIN_STEPS_INFER,
+    seq2seq_infer.test(epoch=EPOCH_INFER,
+                       num_train_steps=NUM_TRAIN_STEPS_INFER,
                        batches=batches,
                        one_hot=one_hot_dictionary_index)
     logger.debug("seq2seq model tested")
 
 
+def batch_test(test_batch_num, one_hot_dictionary):
+    single_generate = one_hot_generate(one_hot_dictionary=one_hot_dictionary,
+                                       epoch=1,
+                                       is_train=1)
+    batches = get_batch(batch_size=3,
+                        iterator=single_generate)
+    for i in range(test_batch_num):
+        encoder_batch, decoder_batch, target_batch, bucket_encoder_length, bucket_decoder_length, decode_max_iter = next(
+            batches)
+        print(i)
+        print(encoder_batch)
+        print(decoder_batch)
+        print(target_batch)
+        print(bucket_encoder_length)
+        print(bucket_decoder_length)
+        print(decode_max_iter)
+
+
 def main():
-    # print("test word2vec model")
-    # embed_matrix, one_hot_dictionary, one_hot_dictionary_index = build_embed_matrix()
-    # logger.debug("w2v finished")
-    #
-    # save_embed_matrix(embed_matrix, one_hot_dictionary, one_hot_dictionary_index)
-    # logger.debug("w2v saved")
+    option = sys.argv[1]
+    if option == "-w2v":
+        print("train word2vec model")
+        embed_matrix, one_hot_dictionary, one_hot_dictionary_index = build_embed_matrix()
+        logger.debug("w2v finished")
 
-    embed_matrix, one_hot_dictionary, one_hot_dictionary_index = load_embed_matrix()
-    logger.debug("w2v restored")
-
-    # print(one_hot_dictionary)
-    # print(one_hot_dictionary_index)
-    start_token_id = one_hot_dictionary['_GO']
-    end_token_id = one_hot_dictionary['_EOS']
-    # train(embed_matrix=embed_matrix, one_hot_dictionary=one_hot_dictionary, continue_train=CONTINUE_TRAIN,
-    #       start_token_id=start_token_id, end_token_id=end_token_id)
-    test(embed_matrix=embed_matrix, one_hot_dictionary=one_hot_dictionary,
-         one_hot_dictionary_index=one_hot_dictionary_index, start_token_id=start_token_id, end_token_id=end_token_id)
+        save_embed_matrix(embed_matrix, one_hot_dictionary, one_hot_dictionary_index)
+        logger.debug("w2v saved")
+    elif option == "-train":
+        embed_matrix, one_hot_dictionary, one_hot_dictionary_index = load_embed_matrix()
+        logger.debug("w2v restored")
+        start_token_id = one_hot_dictionary['_GO']
+        end_token_id = one_hot_dictionary['_EOS']
+        train(embed_matrix=embed_matrix, one_hot_dictionary=one_hot_dictionary, continue_train=CONTINUE_TRAIN,
+              start_token_id=start_token_id, end_token_id=end_token_id)
+    elif option == "-test":
+        embed_matrix, one_hot_dictionary, one_hot_dictionary_index = load_embed_matrix()
+        logger.debug("w2v restored")
+        start_token_id = one_hot_dictionary['_GO']
+        end_token_id = one_hot_dictionary['_EOS']
+        test(embed_matrix=embed_matrix, one_hot_dictionary=one_hot_dictionary,
+             one_hot_dictionary_index=one_hot_dictionary_index, start_token_id=start_token_id,
+             end_token_id=end_token_id)
+    elif option == "-check":
+        embed_matrix, one_hot_dictionary, one_hot_dictionary_index = load_embed_matrix()
+        # print("one_hot_dictionary:")
+        # print(one_hot_dictionary)
+        start_token_id = one_hot_dictionary['_GO']
+        end_token_id = one_hot_dictionary['_EOS']
+        pad_token_id = one_hot_dictionary['_PAD']
+        unk_token_id = one_hot_dictionary['_UNK']
+        original_unk_token_id = one_hot_dictionary['UNK']
+        print("_GO _EOS _PAD _UNK UNK")
+        print(start_token_id, end_token_id, pad_token_id, unk_token_id, original_unk_token_id)
+    elif option == "-batch":
+        print("batch test")
+        embed_matrix, one_hot_dictionary, one_hot_dictionary_index = load_embed_matrix()
+        batch_test(1, one_hot_dictionary)
+    else:
+        print("wrong option")
+        print("use -w2v to train word2vec embed matrix")
+        print("use -train to train the seq2seq model")
+        print("use -test to test the seq2seq model")
+        print("use -check to check word2vec embed matrix")
+        print("use -batch to test batch generalization")
 
 
 if __name__ == '__main__':
-    # t = timeit('main()', 'from __main__ import main', number=1)
-    # print(t)
     main()
