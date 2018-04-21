@@ -18,17 +18,17 @@ logger.setLevel(logging.DEBUG)
 
 """Hyper Parameters(Seq2Seq train)"""
 VOCAB_SIZE = 2000
-EMBED_SIZE = 32
+EMBED_SIZE = 512
 ENCODER_HIDEEN_UNITS = 32
 DECODER_HIDDEN_UNITS = 64
-LEARNING_RATE_INITIAL = 0.05
+LEARNING_RATE_INITIAL = 0.1
 BATCH_SIZE = 32
 ENCODER_LAYERS = 2
 EPOCH = 1000
 NUM_TRAIN_STEPS = 215
 SKIP_STEPS = 50
 KEEP_PROB = 1.0
-CONTINUE_TRAIN = 1
+CONTINUE_TRAIN = 0
 
 """Hyper Parameters(Seq2seq infer)"""
 BATCH_SIZE_INFER = 32
@@ -122,7 +122,7 @@ def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index, start_token
     print("infer mode")
     single_generate = one_hot_generate(one_hot_dictionary,
                                        epoch=EPOCH_INFER,
-                                       is_train=1)
+                                       is_train=0)
     batches = get_batch(batch_size=BATCH_SIZE_INFER,
                         iterator=single_generate)
     logger.debug("batch generated")
@@ -141,7 +141,8 @@ def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index, start_token
                                  end_token_id=end_token_id,
                                  num_layers=2,
                                  is_train=0,
-                                 grad_clip=5.0)
+                                 grad_clip=5.0,
+                                 is_continue=0)
     seq2seq_infer.build_graph()
     seq2seq_infer.test(epoch=EPOCH_INFER,
                        num_train_steps=NUM_TRAIN_STEPS_INFER,

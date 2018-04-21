@@ -21,7 +21,7 @@ class Seq2seqModel:
         self.keep_prob = keep_prob
         self.core = rnn_core
         self.global_step = tf.Variable(0, dtype=tf.int32, trainable=False, name='global_step')
-        self.global_epoch = tf.Variable(0, dtype=tf.int32, trainable=False, name='global_epoch')
+        self.global_epoch = tf.Variable(0.0, dtype=tf.float32, trainable=False, name='global_epoch')
         self.MODEL_FILE = './model/'
         self.start_token_id = start_token_id
         self.end_token_id = end_token_id
@@ -313,15 +313,17 @@ class Seq2seqModel:
             train_variable = tf.trainable_variables()
             grads, _ = tf.clip_by_global_norm(tf.gradients(self.loss, train_variable), self.grad_clip)
 
-            self.learning_rate = tf.train.exponential_decay(self.learning_rate_initial,
-                                                            global_step=self.global_epoch,
-                                                            decay_steps=1000, decay_rate=0.995)
+            # self.learning_rate = tf.train.exponential_decay(self.learning_rate_initial,
+            #                                                 global_step=self.global_epoch,
+            #                                                 decay_steps=1000, decay_rate=0.995)
 
-            self.add_global_epoch = self.global_epoch.assign_add(1)
+            sinvalue = tf.sin(tf.multiply(3.14 / 8.0, self.global_epoch))
+            self.learning_rate = tf.add(tf.multiply(0.1, sinvalue), 0.11)
+            self.add_global_epoch = self.global_epoch.assign_add(1.0)
             self.add_global_step = self.global_step.assign_add(self.batch_size)
 
             # self.optimizer = tf.train.GradientDescentOptimizer(self.learning_rate).minimize(self.loss)
-            self.optimizer = tf.train.MomentumOptimizer(learning_rate=self.learning_rate_initial, momentum=0.9)
+            self.optimizer = tf.train.MomentumOptimizer(learning_rate=self.learning_rate, momentum=0.9)
 
             self.train_op = self.optimizer.apply_gradients(zip(grads, train_variable))
 
@@ -386,7 +388,8 @@ class Seq2seqModel:
             for i in range(epoch_total):
                 total_loss = 0.0
                 epoch_index, lr = sess.run([self.add_global_epoch, self.learning_rate])
-                # self.logger.debug("at epoch {} the learning rate is {}".format(epoch_index, lr))
+                self.logger.debug("at epoch {} the learning rate is {}".format(epoch_index, lr))
+                print("learning rate is: %9.9f" % lr)
                 self.logger.debug("--------------------------------------------------------")
 
                 # save last batch in each epoch for validation
@@ -406,7 +409,7 @@ class Seq2seqModel:
                         loss_batch_validate, = sess.run([self.loss],
                                                         feed_dict=feed_dict)
                         self.logger.debug("validate loss at epoch {} :{:3.9f}".format(epoch_index, loss_batch_validate))
-                        print("epoch: %d validation: %9.9f" % (epoch_index, loss_batch_validate))
+                        print("epoch: %d validation: %9.9f\n" % (epoch_index, loss_batch_validate))
 
                         # save 5 minimum validate loss model
                         # if min_validate_loss > loss_batch_validate:
