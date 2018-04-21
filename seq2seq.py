@@ -223,7 +223,6 @@ class Seq2seqModel:
                                                                      )
 
     def _create_attention_seq2seq(self):
-        # TODO:need to correct
         # single layer bgru encoder
         with tf.variable_scope('encoder', reuse=tf.AUTO_REUSE):
             inputs = self.encoder_inputs_embedded
@@ -235,7 +234,7 @@ class Seq2seqModel:
                     inputs=inputs,
                     dtype=tf.float32,
                     sequence_length=self.encoder_length,
-                    parallel_iterations=128)
+                    parallel_iterations=32)
 
             self.encoder_final_state = tf.concat(self.encoder_final_state, 1)
 
@@ -265,7 +264,7 @@ class Seq2seqModel:
                                                                   helper=self.helper_train,
                                                                   output_layer=self.fc_layer
                                                                   )
-                self.decoder_train_logits, _, _ = s2s.dynamic_decode(decoder=self.decoder_train
+                self.decoder_train_output, _, _ = s2s.dynamic_decode(decoder=self.decoder_train
                                                                      )
             with tf.variable_scope('decoder_infer', reuse=tf.AUTO_REUSE):
                 # for infer
@@ -277,7 +276,7 @@ class Seq2seqModel:
                                                                   initial_state=self.decoder_initial_state,
                                                                   helper=self.helper_infer,
                                                                   output_layer=self.fc_layer)
-                self.decoder_infer_logits, _, _ = s2s.dynamic_decode(self.decoder_infer,
+                self.decoder_infer_output, _, _ = s2s.dynamic_decode(self.decoder_infer,
                                                                      maximum_iterations=self.decoder_max_iter
                                                                      )
 
@@ -323,7 +322,7 @@ class Seq2seqModel:
             self.add_global_step = self.global_step.assign_add(self.batch_size)
 
             # self.optimizer = tf.train.GradientDescentOptimizer(self.learning_rate).minimize(self.loss)
-            self.optimizer = tf.train.MomentumOptimizer(learning_rate=self.learning_rate, momentum=0.9)
+            self.optimizer = tf.train.MomentumOptimizer(learning_rate=self.learning_rate_initial, momentum=0.9)
 
             self.train_op = self.optimizer.apply_gradients(zip(grads, train_variable))
 

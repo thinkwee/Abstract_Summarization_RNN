@@ -19,8 +19,8 @@ logger.setLevel(logging.DEBUG)
 """Hyper Parameters(Seq2Seq train)"""
 VOCAB_SIZE = 2000
 EMBED_SIZE = 512
-ENCODER_HIDEEN_UNITS = 32
-DECODER_HIDDEN_UNITS = 64
+ENCODER_HIDEEN_UNITS = 128
+DECODER_HIDDEN_UNITS = 256
 LEARNING_RATE_INITIAL = 0.1
 BATCH_SIZE = 32
 ENCODER_LAYERS = 2
@@ -102,7 +102,7 @@ def train(embed_matrix, one_hot_dictionary, continue_train, start_token_id, end_
                                  encoder_layers=ENCODER_LAYERS,
                                  learning_rate_initial=LEARNING_RATE_INITIAL,
                                  keep_prob=KEEP_PROB,
-                                 rnn_core="bgru",
+                                 rnn_core="bgru_attetion",
                                  start_token_id=start_token_id,
                                  end_token_id=end_token_id,
                                  num_layers=2,
@@ -136,7 +136,7 @@ def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index, start_token
                                  learning_rate_initial=LEARNING_RATE_INITIAL,
                                  embed_matrix_init=embed_matrix,
                                  keep_prob=KEEP_PROB,
-                                 rnn_core="bgru",
+                                 rnn_core="bgru_attetion",
                                  start_token_id=start_token_id,
                                  end_token_id=end_token_id,
                                  num_layers=2,
