@@ -3,6 +3,7 @@ import logging.config
 import tensorflow.contrib.seq2seq as s2s
 import tensorflow.contrib as contrib
 import tensorflow.contrib.rnn as rnn
+import shuffle
 
 
 class Seq2seqModel:
@@ -58,14 +59,14 @@ class Seq2seqModel:
 
     def _create_bgrucell(self):
         with tf.variable_scope("bgru_layer"):
-            cell_fw = tf.nn.rnn_cell.GRUCell(
+            cell_fw = contrib.cudnn_rnn.CudnnCompatibleGRUCell(
                 num_units=self.encoder_hidden_units,
-                kernel_initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=133),
-                bias_initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=18))
-            cell_bw = tf.nn.rnn_cell.GRUCell(
+                kernel_initializer=tf.truncated_normal_initializer(mean=0.0,
+                                                                   stddev=0.1))
+            cell_bw = contrib.cudnn_rnn.CudnnCompatibleGRUCell(
                 num_units=self.encoder_hidden_units,
-                kernel_initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=114),
-                bias_initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=107))
+                kernel_initializer=tf.truncated_normal_initializer(mean=0.0,
+                                                                   stddev=0.1))
         return cell_fw, cell_bw
 
     def _create_blstm_seq2seq(self):
@@ -121,7 +122,7 @@ class Seq2seqModel:
 
     def _create_bgru_seq2seq(self):
         # single layer bgru encoder
-        with tf.variable_scope('encoder', reuse=tf.AUTO_REUSE):
+        with tf.variable_scope('encoder', reuse=tf.AUTO_REUSE, initializer=tf.initializers.orthogonal):
             inputs = self.encoder_inputs_embedded
             cell_fw, cell_bw = self._create_bgrucell()
             with tf.variable_scope(None, default_name="encoder"):
@@ -136,8 +137,11 @@ class Seq2seqModel:
             self.encoder_final_state = tf.concat(self.encoder_final_state, 1)
 
         # basic gru Decoder for train and infer
-        with tf.variable_scope('decoder', reuse=tf.AUTO_REUSE):
-            self.decoder_cell = tf.nn.rnn_cell.GRUCell(num_units=self.decoder_hidden_units)
+        with tf.variable_scope('decoder', reuse=tf.AUTO_REUSE, initializer=tf.initializers.orthogonal):
+            self.decoder_cell = contrib.cudnn_rnn.CudnnCompatibleGRUCell(num_units=self.decoder_hidden_units,
+                                                                         kernel_initializer=tf.truncated_normal_initializer(
+                                                                             mean=0.0,
+                                                                             stddev=0.1))
             self.fc_layer = tf.layers.Dense(self.vocab_size,
                                             kernel_initializer=tf.truncated_normal_initializer(mean=0.0,
                                                                                                stddev=0.1),
@@ -425,6 +429,7 @@ class Seq2seqModel:
                             print('loss at epoch %d batch %d : %9.9f' % (epoch_index, index + 1,
                                                                          total_loss / skip_steps))
                             total_loss = 0.0
+                shuffle.shuffle_train_data()
 
     def test(self, epoch, num_train_steps, batches, one_hot):
         saver = tf.train.Saver()

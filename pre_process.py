@@ -187,7 +187,7 @@ def main():
     batch_size = 32
     most_n_words = get_words('traintext', vocab_size)
     changetext(batch_size, 'article', most_n_words)
-    changetext(batch_size, 'article', most_n_words)
+    changetext(batch_size, 'headline', most_n_words)
     # simple_word_count('article_train')
 
 
