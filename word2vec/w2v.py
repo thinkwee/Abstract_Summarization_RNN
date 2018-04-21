@@ -6,23 +6,13 @@ import tensorflow as tf
 from word2vec.process_data import process_data
 import logging.config
 
-# VOCAB_SIZE = 16800
-# BATCH_SIZE = 32
-# EMBED_SIZE = 128
-# SKIP_WINDOW = 1
-# NUM_SAMPLED = 64
-# LEARNING_RATE = 1.0
-# NUM_TRAIN_STEPS = 13000
-# SKIP_STEP = 100
-# DATA_NAME = 'article.zip'
-
 LOG_FILE = './log/w2v.log'
-handler = logging.FileHandler(LOG_FILE, mode='w')  # 实例化handler
+handler = logging.FileHandler(LOG_FILE, mode='w')
 fmt = '%(asctime)s - %(filename)s:%(lineno)s - %(name)s - %(message)s'
-formatter = logging.Formatter(fmt)  # 实例化formatter
-handler.setFormatter(formatter)  # 为handler添加formatter
-logger = logging.getLogger('w2vlogger')  # 获取名为tst的logger
-logger.addHandler(handler)  # 为logger添加handler
+formatter = logging.Formatter(fmt)
+handler.setFormatter(formatter)
+logger = logging.getLogger('w2vlogger')
+logger.addHandler(handler)
 logger.setLevel(logging.DEBUG)
 
 
@@ -45,6 +35,8 @@ class w2v:
         with tf.name_scope('data_w2v'):
             self.center_words = tf.placeholder(tf.int32, shape=[self.batch_size], name='center_words')
             self.target_words = tf.placeholder(tf.int32, shape=[self.batch_size, 1], name='target_words')
+
+    def _create_embedmatrix(self):
         with tf.name_scope('embedding_matrix_w2v'):
             self.embed_matrix = tf.Variable(tf.random_uniform([self.vocab_size, self.embed_size], -1.0, 1.0),
                                             name='embed_matrix')
@@ -69,31 +61,39 @@ class w2v:
     def _create_optimizer(self):
         self.optimizer = tf.train.GradientDescentOptimizer(self.lr).minimize(self.loss)
 
+    def _create_summaries(self):
+        with tf.name_scope("summaries_w2v"):
+            tf.summary.scalar("loss", self.loss)
+            tf.summary.histogram("histogram loss", self.loss)
+            self.summary_op = tf.summary.merge_all()
+
     def build_graph(self):
         self._create_placeholders()
+        self._create_embedmatrix()
         self._create_loss()
         self._create_optimizer()
-
+        self._create_summaries()
         logger.debug('w2v graph for %s has been build', self.data_name)
 
     def train(self):
         print("start w2v train for %s" % self.data_name)
         batch_gen, one_hot_dictionary, one_hot_dictionary_index = process_data(self.vocab_size, self.batch_size,
                                                                                self.win, self.data_name)
-        # show device_assignment
-        # with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
         with tf.Session() as sess:
             sess.run(tf.global_variables_initializer())
             total_loss = 0.0
+            writer = tf.summary.FileWriter('./graphs/w2v/', sess.graph)
             for index in range(self.num_train_steps):
                 centers, targets = next(batch_gen)
-                loss_batch, _ = sess.run([self.loss, self.optimizer],
-                                         feed_dict={self.center_words: centers, self.target_words: targets})
+                loss_batch, _, summary = sess.run([self.loss, self.optimizer, self.summary_op],
+                                                  feed_dict={self.center_words: centers, self.target_words: targets})
                 total_loss += loss_batch
+                writer.add_summary(summary, global_step=index)
                 if (index + 1) % self.skip_steps == 0:
                     logger.debug('w2v for {} average loss at step {} : {:5.1f}'.format(self.data_name, index + 1,
                                                                                        total_loss / self.skip_steps))
                     total_loss = 0.0
+            writer.close()
             final_embed_matrix = sess.run(self.embed_matrix)
         sess.close()
         logger.debug('w2v train for %s has finished', self.data_name)

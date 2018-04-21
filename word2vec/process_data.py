@@ -19,12 +19,12 @@ sys.path.append('..')
 DATA_FOLDER = 'data/'
 LOG_FILE = './log/processdata.log'
 
-handler = logging.FileHandler(LOG_FILE, mode='w')  # 实例化handler
+handler = logging.FileHandler(LOG_FILE, mode='w')
 fmt = '%(asctime)s - %(filename)s:%(lineno)s - %(name)s - %(message)s'
-formatter = logging.Formatter(fmt)  # 实例化formatter
-handler.setFormatter(formatter)  # 为handler添加formatter
-logger = logging.getLogger('datalogger')  # 获取名为tst的logger
-logger.addHandler(handler)  # 为logger添加handler
+formatter = logging.Formatter(fmt)
+handler.setFormatter(formatter)
+logger = logging.getLogger('datalogger')
+logger.addHandler(handler)
 logger.setLevel(logging.DEBUG)
 
 
@@ -41,7 +41,8 @@ def build_vocab(words, vocab_size):
     """ Build vocabulary of VOCAB_SIZE most frequent words """
     """ Save first 1000 words in vocab_1000 for projection """
     dictionary = dict()
-    count = [('UNK', -1)]
+    # count = [('UNK', -1)]
+    count = []
     count.extend(Counter(words).most_common(vocab_size - 1))
     index = 0
     utils.make_dir('processed')

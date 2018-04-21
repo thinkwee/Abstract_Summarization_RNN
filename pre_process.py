@@ -19,12 +19,8 @@ def get_words(file_name, n):
 
 def changetext(batch_size, file_name, most_n_words):
     # add <_GO>,<_EOS>,<_PAD>,<_UNK> to the file_name.txt
-    # attention! we use article_processed.txt to train the w2v embed matrix but article.txt to train the seq2seq model
 
     filename = './data/' + file_name + '.txt'
-
-    # TODO:use sorted file can reduce <_PAD> in each batch
-    # filename_sorted = './data/' + file_name + '_sorted.txt'
 
     filename_processed = './data/' + file_name + '_processed.txt'
     file_processed = open(filename_processed, 'w')
@@ -45,7 +41,6 @@ def changetext(batch_size, file_name, most_n_words):
     if index != 0:
         batch_length.append(max_length)
 
-    # TODO:it seems that <_GO> is useless
     # add <_GO>,<_EOS>,<_UNK>,<_PAD> to the sentence
     # tf.dynamic_rnn still need padded sentences in each batch
     batch_idx = 0
@@ -151,13 +146,13 @@ def one_hot_generate(one_hot_dictionary, epoch, is_train):
             one_hot_article = np.zeros([count_article], dtype=int)
             one_hot_headline_raw = np.zeros([count_headline], dtype=int)
 
-            # one_hot_dictionary['_UNK']=2
-            # TODO:should look up the _UNK id not appoint 2
+            # one_hot_dictionary['_UNK']=1
+            # TODO:should look up the _UNK id not appoint 1
             for index, word in enumerate(words_article):
-                one_hot_article[index] = one_hot_dictionary[word] if word in one_hot_dictionary else 2
+                one_hot_article[index] = one_hot_dictionary[word] if word in one_hot_dictionary else 1
 
             for index, word in enumerate(words_headline):
-                one_hot_headline_raw[index] = one_hot_dictionary[word] if word in one_hot_dictionary else 2
+                one_hot_headline_raw[index] = one_hot_dictionary[word] if word in one_hot_dictionary else 1
 
             # raw: <_GO> V1 V2 V3 V4 V5 V6 <_EOS>
             # target: V1 V2 V3 V4 V5 V6 <_EOS>
@@ -188,9 +183,11 @@ def simple_word_count(file_name):
 
 
 def main():
-    most_n_words = get_words('traintext', 2000)
-    # print(most_n_words)
-    changetext(32, 'article', most_n_words)
+    vocab_size = 2000
+    batch_size = 32
+    most_n_words = get_words('traintext', vocab_size)
+    changetext(batch_size, 'article', most_n_words)
+    changetext(batch_size, 'article', most_n_words)
     # simple_word_count('article_train')
 
 

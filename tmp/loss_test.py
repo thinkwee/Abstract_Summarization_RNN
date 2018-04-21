@@ -1,23 +1,17 @@
-self.decoder_logits_test = tf.contrib.layers.linear(self.decoder_outputs_test, self.vocab_size)
-self.decoder_prediction = tf.argmax(self.decoder_logits_test, 2)
+import numpy as np
 
-self.targets = tf.reshape(self.decoder_targets, [-1])
-self.logits_flat = tf.reshape(self.decoder_train_logits.rnn_output, [-1, self.vocab_size])
+a = [13, 10, 10, 11, 12, 10, 11, 9, 13, 13, 9, 12, 9, 10, 11, 8, 12, 17, 8, 13, 10, 17, 14, 12, 7, 13, 12, 10, 15, 7,
+     10, 14]
+print(np.sum(a))
 
+# self.masks_infer = tf.sequence_mask(lengths=self.decoder_length, maxlen=self.decoder_max_iter,
+#                                     dtype=tf.float32,
+#                                     name='masks_infer')
+# self.loss_infer = contrib.seq2seq.sequence_loss(targets=self.targets,
+#                                                 logits=self.logits_infer,
+#                                                 weights=self.masks_infer)
 
-
-
-
-self.logits_flat = tf.argmax(self.logits_flat, 0)
-
-self.stepwise_cross_entropy = tf.nn.softmax_cross_entropy_with_logits_v2(
-    labels=tf.one_hot(self.decoder_targets,
-                      depth=self.vocab_size,
-                      dtype=tf.float32),
-    logits=self.model_outputs,
-)
-self.loss = tf.reduce_mean(self.stepwise_cross_entropy)
-
-self.loss = tf.losses.sparse_softmax_cross_entropy(self.targets, self.logits_flat)
-
-
+# self.loss = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=self.decoder_targets,
+#                                                            logits=self.logits_train)
+# self.loss_infer = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=self.decoder_targets,
+#                                                                  logits=self.logits_infer)
