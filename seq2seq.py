@@ -8,15 +8,14 @@ import shuffle
 
 class Seq2seqModel:
     def __init__(self, vocab_size, embed_size, encoder_hidden_units, decoder_hidden_units, batch_size,
-                 embed_matrix_init, encoder_layers, learning_rate_initial, keep_prob, rnn_core, start_token_id,
-                 end_token_id, num_layers, is_train, grad_clip, is_continue):
+                 embed_matrix_init, learning_rate_initial, keep_prob, rnn_core, start_token_id,
+                 end_token_id, num_layers, grad_clip, is_continue):
         self.vocab_size = vocab_size
         self.embed_size = embed_size
         self.encoder_hidden_units = encoder_hidden_units
         self.decoder_hidden_units = decoder_hidden_units
         self.batch_size = batch_size
         self.embed_matrix_init = embed_matrix_init
-        self.encoder_layers = encoder_layers
         self.learning_rate_initial = learning_rate_initial
         self.keep_prob = keep_prob
         self.core = rnn_core
@@ -27,23 +26,27 @@ class Seq2seqModel:
         self.end_token_id = end_token_id
         self.grad_clip = grad_clip
         self.is_continue = is_continue
+        self.num_layers = num_layers
 
     def _create_placeholder(self):
         with tf.name_scope("data_seq2seq"):
-            self.encoder_inputs = tf.placeholder(shape=(None, None), dtype=tf.int32, name='encoder_inputs')
-            self.decoder_inputs = tf.placeholder(shape=(None, None), dtype=tf.int32, name='decoder_inputs')
-            self.decoder_targets = tf.placeholder(shape=(None, None), dtype=tf.int32, name='decoder_targets')
+            self.encoder_inputs = tf.placeholder(shape=(self.batch_size, None), dtype=tf.int32, name='encoder_inputs')
+            self.decoder_inputs = tf.placeholder(shape=(self.batch_size, None), dtype=tf.int32, name='decoder_inputs')
+            self.decoder_targets = tf.placeholder(shape=(self.batch_size, None), dtype=tf.int32, name='decoder_targets')
             self.decoder_length = tf.placeholder(shape=(None,), dtype=tf.int32, name='decoder_length')
             self.encoder_length = tf.placeholder(shape=(None,), dtype=tf.int32, name='encoder_length')
             self.decoder_max_iter = tf.placeholder(shape=(), dtype=tf.int32, name='encoder_length')
 
     def _create_embedding(self):
-        self.embeddings = tf.Variable(tf.random_uniform([self.vocab_size, self.embed_size]))
-        self.encoder_inputs_embedded = tf.nn.embedding_lookup(self.embeddings, self.encoder_inputs)
-        self.decoder_inputs_embedded = tf.nn.embedding_lookup(self.embeddings, self.decoder_inputs)
+        # self.embeddings_encoder = tf.Variable(tf.random_uniform([self.vocab_size, self.embed_size]))
+        # self.embeddings_decoder = tf.Variable(tf.random_uniform([self.vocab_size, self.embed_size]))
+        self.embeddings_encoder = tf.Variable(initial_value=self.embed_matrix_init, trainable=True)
+        self.embeddings_decoder = tf.Variable(initial_value=self.embed_matrix_init, trainable=True)
+        self.encoder_inputs_embedded = tf.nn.embedding_lookup(self.embeddings_encoder, self.encoder_inputs)
+        self.decoder_inputs_embedded = tf.nn.embedding_lookup(self.embeddings_decoder, self.decoder_inputs)
 
-    def _create_blstmcell(self, layer_i):
-        with tf.variable_scope('lstm_layer%i' % layer_i, reuse=tf.AUTO_REUSE):
+    def _create_blstmcell(self):
+        with tf.variable_scope('lstm_layer', reuse=tf.AUTO_REUSE):
             cell_fw = rnn.LSTMCell(
                 num_units=self.encoder_hidden_units,
                 initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=114),
@@ -61,16 +64,18 @@ class Seq2seqModel:
         with tf.variable_scope("bgru_layer"):
             cell_fw = contrib.cudnn_rnn.CudnnCompatibleGRUCell(
                 num_units=self.encoder_hidden_units,
-                kernel_initializer=tf.truncated_normal_initializer(mean=0.0,
-                                                                   stddev=0.1))
+                kernel_initializer=tf.initializers.orthogonal)
             cell_bw = contrib.cudnn_rnn.CudnnCompatibleGRUCell(
                 num_units=self.encoder_hidden_units,
-                kernel_initializer=tf.truncated_normal_initializer(mean=0.0,
-                                                                   stddev=0.1))
+                kernel_initializer=tf.initializers.orthogonal)
         return cell_fw, cell_bw
 
+    def _create_grucell(self):
+        cell = contrib.cudnn_rnn.CudnnCompatibleGRUCell(num_units=self.encoder_hidden_units,
+                                                        kernel_initializer=tf.initializers.orthogonal)
+        return cell
+
     def _create_blstm_seq2seq(self):
-        # TODO:need to correct
         # BiLSTM Encoder
         with tf.variable_scope('encoder', reuse=tf.AUTO_REUSE):
             cell_fw, cell_bw = self._create_blstmcell()
@@ -109,7 +114,7 @@ class Seq2seqModel:
             # for infer
             with tf.variable_scope('decoder_infer', reuse=tf.AUTO_REUSE):
                 self.start_tokens = tf.tile([self.start_token_id], [self.batch_size])
-                self.helper_infer = contrib.seq2seq.GreedyEmbeddingHelper(embedding=self.embeddings,
+                self.helper_infer = contrib.seq2seq.GreedyEmbeddingHelper(embedding=self.embeddings_decoder,
                                                                           start_tokens=self.start_tokens,
                                                                           end_token=self.end_token_id)
                 self.decoder_infer = contrib.seq2seq.BasicDecoder(cell=self.attn_cell,
@@ -124,17 +129,21 @@ class Seq2seqModel:
         # single layer bgru encoder
         with tf.variable_scope('encoder', reuse=tf.AUTO_REUSE, initializer=tf.initializers.orthogonal):
             inputs = self.encoder_inputs_embedded
-            cell_fw, cell_bw = self._create_bgrucell()
-            with tf.variable_scope(None, default_name="encoder"):
-                (output, self.encoder_final_state) = tf.nn.bidirectional_dynamic_rnn(
-                    cell_fw=cell_fw,
-                    cell_bw=cell_bw,
-                    inputs=inputs,
-                    dtype=tf.float32,
-                    sequence_length=self.encoder_length,
-                    parallel_iterations=32)
-
-            self.encoder_final_state = tf.concat(self.encoder_final_state, 1)
+            cells_fw = []
+            cells_bw = []
+            for _ in range(self.num_layers):
+                cell_fw, cell_bw = self._create_bgrucell()
+                cells_fw.append(cell_fw)
+                cells_bw.append(cell_bw)
+            _, encoder_final_state_fw, encoder_final_state_bw = contrib.rnn.stack_bidirectional_dynamic_rnn(
+                cells_fw=cells_fw,
+                cells_bw=cells_bw,
+                inputs=inputs,
+                dtype=tf.float32,
+                sequence_length=self.encoder_length,
+                parallel_iterations=32)
+            self.encoder_final_state = tf.concat(axis=1, values=[encoder_final_state_fw[self.num_layers - 1],
+                                                                 encoder_final_state_bw[self.num_layers - 1]])
 
         # basic gru Decoder for train and infer
         with tf.variable_scope('decoder', reuse=tf.AUTO_REUSE, initializer=tf.initializers.orthogonal):
@@ -162,7 +171,7 @@ class Seq2seqModel:
             with tf.variable_scope('decoder_infer', reuse=tf.AUTO_REUSE):
                 # for infer
                 self.start_tokens = tf.fill([self.batch_size], self.start_token_id)
-                self.helper_infer = contrib.seq2seq.GreedyEmbeddingHelper(embedding=self.embeddings,
+                self.helper_infer = contrib.seq2seq.GreedyEmbeddingHelper(embedding=self.embeddings_decoder,
                                                                           start_tokens=self.start_tokens,
                                                                           end_token=self.end_token_id)
                 self.decoder_infer = contrib.seq2seq.BasicDecoder(cell=self.decoder_cell,
@@ -175,21 +184,21 @@ class Seq2seqModel:
                                                                      )
 
     def _create_gru_seq2seq(self):
-        # single layer bgru encoder
+        # multilayers gru encoder
         with tf.variable_scope('encoder', reuse=tf.AUTO_REUSE):
             inputs = self.encoder_inputs_embedded
-            cell = tf.nn.rnn_cell.GRUCell(num_units=self.encoder_hidden_units)
-            with tf.variable_scope(None, default_name="encoder"):
-                (output, self.encoder_final_state) = tf.nn.dynamic_rnn(
-                    cell=cell,
-                    inputs=inputs,
-                    dtype=tf.float32,
-                    sequence_length=self.encoder_length,
-                    parallel_iterations=32)
+            encoder_cell = contrib.rnn.MultiRNNCell([self._create_grucell() for _ in range(self.num_layers)])
+            (output, self.encoder_final_state) = tf.nn.dynamic_rnn(
+                cell=encoder_cell,
+                inputs=inputs,
+                dtype=tf.float32,
+                sequence_length=self.encoder_length,
+                parallel_iterations=32)
 
-        # basic gru Decoder for train and infer
+        # multilayers gru Decoder for train and infer with same num_layers in encoder
         with tf.variable_scope('decoder', reuse=tf.AUTO_REUSE):
-            self.decoder_cell = tf.nn.rnn_cell.GRUCell(num_units=self.decoder_hidden_units)
+            decoder_cell = contrib.rnn.MultiRNNCell([self._create_grucell() for _ in range(self.num_layers)])
+
             self.fc_layer = tf.layers.Dense(self.vocab_size,
                                             kernel_initializer=tf.truncated_normal_initializer(mean=0.0,
                                                                                                stddev=0.1),
@@ -199,7 +208,7 @@ class Seq2seqModel:
                 # for train
                 self.helper_train = contrib.seq2seq.TrainingHelper(inputs=self.decoder_inputs_embedded,
                                                                    sequence_length=self.decoder_length)
-                self.decoder_train = contrib.seq2seq.BasicDecoder(cell=self.decoder_cell,
+                self.decoder_train = contrib.seq2seq.BasicDecoder(cell=decoder_cell,
                                                                   initial_state=self.encoder_final_state,
                                                                   helper=self.helper_train,
                                                                   output_layer=self.fc_layer
@@ -210,10 +219,10 @@ class Seq2seqModel:
             with tf.variable_scope('decoder_infer', reuse=tf.AUTO_REUSE):
                 # for infer
                 self.start_tokens = tf.fill([self.batch_size], self.start_token_id)
-                self.helper_infer = contrib.seq2seq.GreedyEmbeddingHelper(embedding=self.embeddings,
+                self.helper_infer = contrib.seq2seq.GreedyEmbeddingHelper(embedding=self.embeddings_decoder,
                                                                           start_tokens=self.start_tokens,
                                                                           end_token=self.end_token_id)
-                self.decoder_infer = contrib.seq2seq.BasicDecoder(cell=self.decoder_cell,
+                self.decoder_infer = contrib.seq2seq.BasicDecoder(cell=decoder_cell,
                                                                   initial_state=self.encoder_final_state,
                                                                   helper=self.helper_infer,
                                                                   output_layer=self.fc_layer)
@@ -269,7 +278,7 @@ class Seq2seqModel:
             with tf.variable_scope('decoder_infer', reuse=tf.AUTO_REUSE):
                 # for infer
                 self.start_tokens = tf.fill([self.batch_size], self.start_token_id)
-                self.helper_infer = contrib.seq2seq.GreedyEmbeddingHelper(embedding=self.embeddings,
+                self.helper_infer = contrib.seq2seq.GreedyEmbeddingHelper(embedding=self.embeddings_decoder,
                                                                           start_tokens=self.start_tokens,
                                                                           end_token=self.end_token_id)
                 self.decoder_infer = contrib.seq2seq.BasicDecoder(cell=self.attn_cell,
@@ -316,14 +325,17 @@ class Seq2seqModel:
             #                                                 global_step=self.global_epoch,
             #                                                 decay_steps=1000, decay_rate=0.995)
 
-            sinvalue = tf.sin(tf.multiply(3.14 / 8.0, self.global_epoch))
-            self.learning_rate = tf.add(tf.multiply(0.1, sinvalue), 0.11)
+            sinvalue = tf.sin(tf.multiply(3.14 / 10.0, self.global_epoch))
+            self.learning_rate = tf.add(tf.multiply(0.01, sinvalue), 0.011)
             self.add_global_epoch = self.global_epoch.assign_add(1.0)
             self.add_global_step = self.global_step.assign_add(self.batch_size)
 
-            # self.optimizer = tf.train.GradientDescentOptimizer(self.learning_rate).minimize(self.loss)
-            self.optimizer = tf.train.MomentumOptimizer(learning_rate=self.learning_rate_initial, momentum=0.9)
+            # SGD Optimizer
+            # self.optimizer = tf.train.GradientDescentOptimizer(self.learning_rate)
+            # self.train_op = self.optimizer.minimize(self.loss)
 
+            # Momentum Optimizer
+            self.optimizer = tf.train.MomentumOptimizer(learning_rate=self.learning_rate, momentum=0.9)
             self.train_op = self.optimizer.apply_gradients(zip(grads, train_variable))
 
     def _create_summaries(self):

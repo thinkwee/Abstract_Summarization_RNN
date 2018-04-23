@@ -17,18 +17,19 @@ logger.addHandler(handler)
 logger.setLevel(logging.DEBUG)
 
 """Hyper Parameters(Seq2Seq train)"""
-VOCAB_SIZE = 2000
-EMBED_SIZE = 512
-ENCODER_HIDEEN_UNITS = 128
-DECODER_HIDDEN_UNITS = 256
+VOCAB_SIZE = 1000
+EMBED_SIZE = 256
+ENCODER_HIDEEN_UNITS = 512
+DECODER_HIDDEN_UNITS = 1024
 LEARNING_RATE_INITIAL = 0.1
 BATCH_SIZE = 32
-ENCODER_LAYERS = 2
+RNN_LAYERS = 2
 EPOCH = 1000
 NUM_TRAIN_STEPS = 215
 SKIP_STEPS = 50
 KEEP_PROB = 1.0
 CONTINUE_TRAIN = 0
+GRAD_CLIP = 1.0
 
 """Hyper Parameters(Seq2seq infer)"""
 BATCH_SIZE_INFER = 32
@@ -99,15 +100,13 @@ def train(embed_matrix, one_hot_dictionary, continue_train, start_token_id, end_
                                  decoder_hidden_units=DECODER_HIDDEN_UNITS,
                                  batch_size=BATCH_SIZE,
                                  embed_matrix_init=embed_matrix,
-                                 encoder_layers=ENCODER_LAYERS,
                                  learning_rate_initial=LEARNING_RATE_INITIAL,
                                  keep_prob=KEEP_PROB,
-                                 rnn_core="bgru_attetion",
+                                 rnn_core="bgru",
                                  start_token_id=start_token_id,
                                  end_token_id=end_token_id,
-                                 num_layers=2,
-                                 is_train=1,
-                                 grad_clip=5.0,
+                                 num_layers=RNN_LAYERS,
+                                 grad_clip=GRAD_CLIP,
                                  is_continue=CONTINUE_TRAIN)
     seq2seq_train.build_graph()
     print("the model has been built")
@@ -131,17 +130,15 @@ def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index, start_token
                                  embed_size=EMBED_SIZE,
                                  encoder_hidden_units=ENCODER_HIDEEN_UNITS,
                                  decoder_hidden_units=DECODER_HIDDEN_UNITS,
-                                 encoder_layers=ENCODER_LAYERS,
                                  batch_size=BATCH_SIZE_INFER,
                                  learning_rate_initial=LEARNING_RATE_INITIAL,
                                  embed_matrix_init=embed_matrix,
                                  keep_prob=KEEP_PROB,
-                                 rnn_core="bgru_attetion",
+                                 rnn_core="bgru",
                                  start_token_id=start_token_id,
                                  end_token_id=end_token_id,
-                                 num_layers=2,
-                                 is_train=0,
-                                 grad_clip=5.0,
+                                 num_layers=RNN_LAYERS,
+                                 grad_clip=GRAD_CLIP,
                                  is_continue=0)
     seq2seq_infer.build_graph()
     seq2seq_infer.test(epoch=EPOCH_INFER,
@@ -195,8 +192,6 @@ def main():
              end_token_id=end_token_id)
     elif option == "-check":
         embed_matrix, one_hot_dictionary, one_hot_dictionary_index = load_embed_matrix()
-        print(embed_matrix)
-        print(embed_matrix)
         print("one_hot_dictionary:")
         print(one_hot_dictionary)
         start_token_id = one_hot_dictionary['_GO']

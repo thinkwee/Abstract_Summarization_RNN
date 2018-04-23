@@ -21,3 +21,16 @@
 #                         dtype=tf.float32)
 #                     inputs = tf.concat(output, 2)
 #             self.encoder_final_state = tf.concat(self.encoder_final_state, 1)
+
+
+# # single layer gru encoder
+# cell_fw, cell_bw = self._create_bgrucell()
+#             (output, self.encoder_final_state) = tf.nn.bidirectional_dynamic_rnn(
+#                 cell_fw=cell_fw,
+#                 cell_bw=cell_bw,
+#                 inputs=inputs,
+#                 dtype=tf.float32,
+#                 sequence_length=self.encoder_length,
+#                 parallel_iterations=32)
+#
+#             self.encoder_final_state = tf.concat(self.encoder_final_state, 1)

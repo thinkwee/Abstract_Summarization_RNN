@@ -183,7 +183,7 @@ def simple_word_count(file_name):
 
 
 def main():
-    vocab_size = 2000
+    vocab_size = 1000
     batch_size = 32
     most_n_words = get_words('traintext', vocab_size)
     changetext(batch_size, 'article', most_n_words)
