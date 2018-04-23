@@ -64,15 +64,18 @@ class Seq2seqModel:
         with tf.variable_scope("bgru_layer"):
             cell_fw = contrib.cudnn_rnn.CudnnCompatibleGRUCell(
                 num_units=self.encoder_hidden_units,
-                kernel_initializer=tf.initializers.orthogonal)
+                kernel_initializer=tf.truncated_normal_initializer(mean=0.0,
+                                                                   stddev=0.1))
             cell_bw = contrib.cudnn_rnn.CudnnCompatibleGRUCell(
                 num_units=self.encoder_hidden_units,
-                kernel_initializer=tf.initializers.orthogonal)
+                kernel_initializer=tf.truncated_normal_initializer(mean=0.0,
+                                                                   stddev=0.1))
         return cell_fw, cell_bw
 
     def _create_grucell(self):
         cell = contrib.cudnn_rnn.CudnnCompatibleGRUCell(num_units=self.encoder_hidden_units,
-                                                        kernel_initializer=tf.initializers.orthogonal)
+                                                        kernel_initializer=tf.truncated_normal_initializer(mean=0.0,
+                                                                                                           stddev=0.1))
         return cell
 
     def _create_blstm_seq2seq(self):
@@ -127,12 +130,14 @@ class Seq2seqModel:
 
     def _create_bgru_seq2seq(self):
         # single layer bgru encoder
-        with tf.variable_scope('encoder', reuse=tf.AUTO_REUSE, initializer=tf.initializers.orthogonal):
+        with tf.variable_scope('encoder', reuse=tf.AUTO_REUSE):
             inputs = self.encoder_inputs_embedded
             cells_fw = []
             cells_bw = []
             for _ in range(self.num_layers):
                 cell_fw, cell_bw = self._create_bgrucell()
+                cell_fw = contrib.rnn.DropoutWrapper(cell=cell_fw, output_keep_prob=self.keep_prob)
+                cell_bw = contrib.rnn.DropoutWrapper(cell=cell_bw, output_keep_prob=self.keep_prob)
                 cells_fw.append(cell_fw)
                 cells_bw.append(cell_bw)
             _, encoder_final_state_fw, encoder_final_state_bw = contrib.rnn.stack_bidirectional_dynamic_rnn(
@@ -146,7 +151,7 @@ class Seq2seqModel:
                                                                  encoder_final_state_bw[self.num_layers - 1]])
 
         # basic gru Decoder for train and infer
-        with tf.variable_scope('decoder', reuse=tf.AUTO_REUSE, initializer=tf.initializers.orthogonal):
+        with tf.variable_scope('decoder', reuse=tf.AUTO_REUSE):
             self.decoder_cell = contrib.cudnn_rnn.CudnnCompatibleGRUCell(num_units=self.decoder_hidden_units,
                                                                          kernel_initializer=tf.truncated_normal_initializer(
                                                                              mean=0.0,

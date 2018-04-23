@@ -1,224 +1,224 @@
 - group 1
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        _UNK _UNK off _UNK _UNK _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _EOS _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK _UNK out manager _UNK _UNK cup _UNK cup _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         _UNK _UNK _UNK star for _UNK in _UNK face _EOS 
 - group 2
      - infer headline: 
-        iraqi prime minister _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        iraqi prime minister warns that _UNK _UNK from prison _UNK _EOS 
      - train headline: 
-        iraqi _UNK _UNK minister _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        allawi says _UNK _UNK _UNK in in _UNK in in _EOS the of _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         allawi to meet opposition _UNK _UNK without _UNK a _UNK _EOS 
 - group 3
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        _UNK _UNK _UNK _UNK who _UNK _UNK _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         _UNK _UNK _UNK _UNK by new _UNK _EOS 
 - group 4
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        _UNK _UNK _UNK at _UNK world cup _UNK _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS us _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         _UNK _UNK _UNK _UNK in _UNK _UNK _EOS 
 - group 5
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        _UNK police _UNK _UNK of _UNK _UNK for muslim _UNK _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK _UNK of _UNK texas of _UNK _UNK in _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         police arrest five in murder of israeli judge _EOS 
 - group 6
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        _UNK _UNK in netherlands _UNK _UNK _UNK killing one _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        four of in of pakistan in in _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         thousands protest _UNK of opposition officials _EOS 
 - group 7
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK in _UNK _EOS 
+        saudi forces _UNK suspected militants suspected militants in _UNK _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        saudi forces _UNK suspected _UNK in police _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         saudi authorities _UNK militant killed as wanted terrorist _EOS 
 - group 8
      - infer headline: 
-        _UNK minister _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        german foreign minister _UNK elections to be _UNK of ukrainian elections _EOS 
      - train headline: 
-        _UNK minister minister _UNK _UNK _UNK _UNK _UNK minister _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        german _UNK minister _UNK about _UNK _UNK _UNK of _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         german foreign minister _UNK new election in ukraine _EOS 
 - group 9
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        _UNK _UNK _UNK on second league in _UNK _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK _UNK _UNK _UNK _UNK to to _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         england beat _UNK by _UNK _UNK _EOS 
 - group 10
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        _UNK _UNK across north korean after _UNK _UNK of _UNK _UNK _UNK in new _UNK _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK _UNK _UNK _UNK _UNK on north on _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         _UNK _UNK islands battle _UNK from africa _EOS 
 - group 11
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        _UNK for _UNK british _UNK in iraq _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK in _UNK _UNK _UNK in _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK for _UNK for for of _UNK of _EOS _EOS iraq _EOS _EOS _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         trial of _UNK men accused of fighting coalition forces in iraq opens in _UNK _EOS 
 - group 12
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        prime minister _UNK _UNK to ukrainian opposition candidate _UNK _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK minister _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK prime prime over prime mexico to election _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         _UNK _UNK two _UNK in ukraine presidential race do not meet sunday _EOS 
 - group 13
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        _UNK in _UNK _UNK case against _UNK _UNK _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK _UNK found _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         southern _UNK man _UNK after _UNK his _UNK father is korean _UNK _EOS 
 - group 14
      - infer headline: 
-        eu _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        palestinian official says it will _UNK _UNK to _UNK _UNK with _UNK _UNK _EOS 
      - train headline: 
-        eu _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        china palestinian be _UNK to to to to to to to _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         top teams more _UNK but _UNK fall further behind _EOS 
 - group 15
      - infer headline: 
-        _UNK _UNK _UNK _UNK in _UNK _EOS 
+        _UNK soldier killed in _UNK attack in _UNK _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK in in _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK soldier killed two _UNK attack in western iraq _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         us soldier killed in traffic accident in northern iraq _EOS 
 - group 16
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        _UNK _UNK _UNK _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK _UNK _UNK _EOS at _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         _UNK _UNK _UNK _UNK after _UNK _UNK _EOS 
 - group 17
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        _UNK _UNK _UNK _UNK to _UNK in presidential candidate _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK wins _UNK _UNK _UNK _UNK _UNK more over over _EOS _EOS _EOS _EOS _UNK _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         england cricket tour to _UNK has _UNK _UNK a _UNK victory minister says _EOS 
 - group 18
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        _UNK _UNK _UNK world cup _UNK against the _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        spain states _UNK _UNK to cup _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         united states win _UNK world cup _UNK by _UNK second _EOS 
 - group 19
      - infer headline: 
-        un _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        more _UNK _UNK in germany to germany _UNK on _UNK elections _EOS 
      - train headline: 
-        un _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        more _UNK _UNK _UNK in _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         report _UNK 11 _UNK gave order for madrid train bombing _EOS 
 - group 20
      - infer headline: 
-        _UNK _UNK _UNK _EOS 
+        palestinian _UNK _UNK says he will _UNK _UNK to _UNK arafat _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        palestinian leader _UNK to palestinians to _UNK _UNK in _EOS _EOS _EOS _UNK _EOS _UNK _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         palestinian leaders meet with _UNK to discuss security peace efforts ahead of elections _EOS 
 - group 21
      - infer headline: 
-        european _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        eu to _UNK emergency ties with _UNK in _UNK _UNK against us dollar _UNK and _UNK bank _UNK _EOS 
      - train headline: 
-        european _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        eu to to to to _UNK dispute with kashmir _EOS _EOS north _EOS _EOS _EOS _UNK _EOS trade _EOS _EOS _EOS 
      - targets: 
         eu _UNK _UNK million to help _UNK major food crisis in darfur _UNK end to attacks on civilians aid workers _EOS 
 - group 22
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        at least _UNK _UNK _UNK _UNK in _UNK capital _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK _UNK _UNK _UNK _UNK region _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         ethnic _UNK in southern _UNK _UNK their _UNK _EOS 
 - group 23
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        _UNK _UNK at the world cup _UNK _UNK _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK _UNK at at first quarter in _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         _UNK _UNK _UNK for third place _EOS 
 - group 24
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        iraqi military _UNK military _UNK _UNK fallujah attack _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        military military military military military _UNK iraqi iraqi _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         iraqi _UNK _UNK training in _UNK _EOS 
 - group 25
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        _UNK _UNK agreement on _UNK dispute _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK _UNK _UNK _UNK _UNK _UNK _UNK of _UNK _EOS _EOS _EOS new _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         strike by air security _UNK at _UNK airport _UNK _UNK _UNK _EOS 
 - group 26
      - infer headline: 
-        _UNK opposition _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        indias prime minister visits with swedish _UNK about _UNK for _UNK _EOS 
      - train headline: 
-        _UNK opposition _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        india opposition debate _UNK meeting _UNK political political on _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         ukrainian _UNK decision democracy or _UNK _EOS 
 - group 27
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        _UNK new _UNK new _UNK _UNK to _UNK _UNK _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK _UNK _UNK _UNK is _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         _UNK _UNK new _UNK in _UNK _UNK by child _UNK _UNK _EOS 
 - group 28
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        _UNK of _UNK elections will be _UNK in iraq _UNK as they _UNK _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK to it with _UNK to be _UNK _UNK _UNK to _UNK up peace _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         _UNK says deal with _UNK will not stop _UNK plans to _UNK nuclear weapons _EOS 
 - group 29
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        _UNK fire in northern russia _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK _UNK _UNK _UNK _UNK russia _UNK _EOS official _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         fire _UNK in main southern oil _UNK _UNK say _EOS 
 - group 30
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        report more _UNK _UNK _UNK to _UNK more than _UNK _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        report in _UNK in _UNK in _UNK arafat in with _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         newspaper _UNK _UNK _UNK _UNK city _UNK _UNK _EOS 
 - group 31
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        _UNK _UNK warns that _UNK _UNK for europe leaders _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK _UNK house _UNK on on on on on _UNK _EOS _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         at white house _UNK _UNK _UNK _UNK _UNK until january _EOS 
 - group 32
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        _UNK president _UNK from french _UNK over _UNK to _UNK conflict _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        french says _UNK to _UNK to _UNK _UNK it _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         minister orders _UNK into claims that he _UNK his _UNK _EOS 
