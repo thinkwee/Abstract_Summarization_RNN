@@ -331,7 +331,7 @@ class Seq2seqModel:
             #                                                 decay_steps=1000, decay_rate=0.995)
 
             sinvalue = tf.sin(tf.multiply(3.14 / 10.0, self.global_epoch))
-            self.learning_rate = tf.add(tf.multiply(0.01, sinvalue), 0.011)
+            self.learning_rate = tf.add(tf.multiply(0.001, sinvalue), 0.0011)
             self.add_global_epoch = self.global_epoch.assign_add(1.0)
             self.add_global_step = self.global_step.assign_add(self.batch_size)
 

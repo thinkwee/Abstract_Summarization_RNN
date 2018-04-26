@@ -45,7 +45,7 @@ def changetext(batch_size, file_name, most_n_words):
     # tf.dynamic_rnn still need padded sentences in each batch
     batch_idx = 0
     index = 0
-    if file_name == 'headline':
+    if file_name == 'headline' or file_name == "headline_large":
         for line in open(filename):
             newline = ""
             newline += '_GO '
@@ -64,7 +64,7 @@ def changetext(batch_size, file_name, most_n_words):
             newline += '\n'
             file_processed.writelines(newline)
         print('pre processing headline finished')
-    elif file_name == 'article':
+    elif file_name == 'article' or file_name == 'article_large':
         for line in open(filename):
             newline = ""
             for word in line.split():
@@ -183,11 +183,13 @@ def simple_word_count(file_name):
 
 
 def main():
-    vocab_size = 1000
+    vocab_size = 1500
     batch_size = 32
     most_n_words = get_words('traintext', vocab_size)
-    changetext(batch_size, 'article', most_n_words)
-    changetext(batch_size, 'headline', most_n_words)
+    # changetext(batch_size, 'article', most_n_words)
+    # changetext(batch_size, 'headline', most_n_words)
+    changetext(batch_size, 'article_large', most_n_words)
+    changetext(batch_size, 'headline_large', most_n_words)
     # simple_word_count('article_train')
 
 

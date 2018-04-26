@@ -92,9 +92,9 @@ def statistics(file_path):
 
 
 def main():
-    # statistics("./data/traintext.txt")
+    statistics("./data/negative.txt")
     # print(check_count())
-    divide()
+    # divide()
 
 
 if __name__ == '__main__':

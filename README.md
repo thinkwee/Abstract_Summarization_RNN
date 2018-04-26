@@ -22,7 +22,7 @@
 - [x] fix pre-processing
 - [x] try training with non-mentor model
 - [x] secondary activation
-- [ ] test attention decoder(luong attention)
+- [x] test attention decoder(luong attention)
 - [x] choose last batch in each epoch as the validation set
 - [x] learning rate decay:gradient descent,low init value,decay=0.995
 - [x] cut vocab size to 1000,replace unusual word to unk
@@ -32,7 +32,7 @@
 - [x] use rouge to value model
 - [x] save each test result
 - [ ] fix unk problems
-- [ ] train sentiment classification svm
+- [x] train sentiment classification svm
 - [ ] add sentiment-blended word embeddings
 - [ ] use large corpus
 

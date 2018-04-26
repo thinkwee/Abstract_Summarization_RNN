@@ -17,13 +17,13 @@ logger.addHandler(handler)
 logger.setLevel(logging.DEBUG)
 
 """Hyper Parameters(Seq2Seq train)"""
-VOCAB_SIZE = 1000
+VOCAB_SIZE = 1500
 EMBED_SIZE = 256
 ENCODER_HIDEEN_UNITS = 256
 DECODER_HIDDEN_UNITS = 512
 LEARNING_RATE_INITIAL = 0.1
 BATCH_SIZE = 32
-RNN_LAYERS = 3
+RNN_LAYERS = 2
 EPOCH = 1000
 NUM_TRAIN_STEPS = 215
 SKIP_STEPS = 50
@@ -121,7 +121,7 @@ def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index, start_token
     print("infer mode")
     single_generate = one_hot_generate(one_hot_dictionary,
                                        epoch=EPOCH_INFER,
-                                       is_train=0)
+                                       is_train=1)
     batches = get_batch(batch_size=BATCH_SIZE_INFER,
                         iterator=single_generate)
     logger.debug("batch generated")
