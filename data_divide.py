@@ -91,10 +91,26 @@ def statistics(file_path):
     print("average sentence length: {0}".format(words_count / sentence_count))
 
 
+def large2mid(file_name):
+    count = 0
+    input_file = open("./data/" + file_name + "_large.txt", "r")
+    output_file = open("./data/" + file_name + "_middle.txt", "w")
+    output_file_together = open("./data/together.txt", "a")
+    for line in input_file:
+        output_file.write(line)
+        output_file_together.write(line)
+        count += 1
+        if count == 300000:
+            break
+    print(file_name + "_large to middle complete")
+
+
 def main():
-    statistics("./data/negative.txt")
+    # statistics("./data/article_large.txt")
     # print(check_count())
     # divide()
+    large2mid("article")
+    large2mid("headline")
 
 
 if __name__ == '__main__':
