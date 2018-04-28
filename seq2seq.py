@@ -326,12 +326,15 @@ class Seq2seqModel:
             train_variable = tf.trainable_variables()
             grads, _ = tf.clip_by_global_norm(tf.gradients(self.loss, train_variable), self.grad_clip)
 
+            # exponential_decay learning  rate
             # self.learning_rate = tf.train.exponential_decay(self.learning_rate_initial,
             #                                                 global_step=self.global_epoch,
             #                                                 decay_steps=1000, decay_rate=0.995)
 
-            sinvalue = tf.sin(tf.multiply(3.14 / 10.0, self.global_epoch))
-            self.learning_rate = tf.add(tf.multiply(0.001, sinvalue), 0.0011)
+            # sin learning rate
+            sinvalue = tf.sin(tf.multiply(3.14 / 5.0, self.global_epoch))
+            self.learning_rate = tf.add(tf.multiply(0.1, sinvalue), 0.11)
+
             self.add_global_epoch = self.global_epoch.assign_add(1.0)
             self.add_global_step = self.global_step.assign_add(self.batch_size)
 
@@ -340,8 +343,12 @@ class Seq2seqModel:
             # self.train_op = self.optimizer.minimize(self.loss)
 
             # Momentum Optimizer
-            self.optimizer = tf.train.MomentumOptimizer(learning_rate=self.learning_rate, momentum=0.9)
-            self.train_op = self.optimizer.apply_gradients(zip(grads, train_variable))
+            # self.optimizer = tf.train.MomentumOptimizer(learning_rate=self.learning_rate, momentum=0.9)
+            # self.train_op = self.optimizer.apply_gradients(zip(grads, train_variable))
+
+            # Adam Optimizer
+            self.optimizer = tf.train.AdamOptimizer()
+            self.train_op = self.optimizer.minimize(self.loss)
 
     def _create_summaries(self):
         with tf.name_scope("summaries_seq2seq"):
@@ -448,7 +455,7 @@ class Seq2seqModel:
                             print('loss at epoch %d batch %d : %9.9f' % (epoch_index, index + 1,
                                                                          total_loss / skip_steps))
                             total_loss = 0.0
-                shuffle.shuffle_train_data()
+                    shuffle.shuffle_train_data()
 
     def test(self, epoch, num_train_steps, batches, one_hot):
         saver = tf.train.Saver()

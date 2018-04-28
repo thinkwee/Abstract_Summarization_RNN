@@ -21,17 +21,17 @@ def divide():
 
     count = 1
 
-    # train:test=19:1
-    # TODO:the number should be calculated and be the multiple of batch_size
-    # TODO:if the batch size be changed,the seq2seq model will go into wrong due to codes here
-    line_test = 6880
+    # depend on the copora to train
+    # little:6880(32*215)
+    # mid:99840(32*3120)
+    line_test = 99840
 
-    file_article_test = open('./data/article_test.txt', 'w')
-    file_headline_test = open('./data/headline_test.txt', 'w')
-    file_article_train = open('./data/article_train.txt', 'w')
-    file_headline_train = open('./data/headline_train.txt', 'w')
-    file_article = open('./data/article_processed.txt', 'rb')
-    file_headline = open('./data/headline_processed.txt', 'rb')
+    file_article_test = open('./data/article_middle_test.txt', 'w')
+    file_headline_test = open('./data/headline_middle_test.txt', 'w')
+    file_article_train = open('./data/article_middle_train.txt', 'w')
+    file_headline_train = open('./data/headline_middle_train.txt', 'w')
+    file_article = open('./data/article_middle_processed.txt', 'rb')
+    file_headline = open('./data/headline_middle_processed.txt', 'rb')
     file_w2v_train = open('./data/traintext.txt', 'w')
 
     sentence_headline = bytes.decode(file_headline.readline())
@@ -100,17 +100,17 @@ def large2mid(file_name):
         output_file.write(line)
         output_file_together.write(line)
         count += 1
-        if count == 300000:
+        if count == 100000:
             break
     print(file_name + "_large to middle complete")
 
 
 def main():
-    # statistics("./data/article_large.txt")
+    statistics("./data/headline_middle.txt")
     # print(check_count())
     # divide()
-    large2mid("article")
-    large2mid("headline")
+    # large2mid("article")
+    # large2mid("headline")
 
 
 if __name__ == '__main__':

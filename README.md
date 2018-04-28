@@ -34,7 +34,7 @@
 - [ ] fix unk problems
 - [x] train sentiment classification svm
 - [ ] add sentiment-blended word embeddings
-- [ ] use large corpus
+- [X] use larger corpus
 
 # current effect
 - test output can been seen under "./infer/output.txt"

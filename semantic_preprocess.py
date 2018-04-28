@@ -40,7 +40,7 @@ class SVM(object):
 
     def Predict(self):
         self.result = self.clf.predict(self.test_x)
-        self.result_prob = self.clf.decision_function(self.test_x)
+        self.result_prob = self.clf.predict_proba(self.test_x)
         return self.result, self.result_prob
 
     def SaveModel(self):
@@ -55,37 +55,25 @@ def train_SVM():
     test_data = "./data/doc_vector_np_test.txt"
 
     classifier = SVM(train_data, test_data)
-    # print(classifier.train_x)
-    # print(classifier.train_y)
     classifier.Normalization()
-    # classifier.Fitclf()
-    # classifier.SaveModel()
-    classifier.LoadModel()
+    classifier.Fitclf()
+    classifier.SaveModel()
+    # classifier.LoadModel()
     print("SVM training complete")
     result, result_prob = classifier.Predict()
 
-    # result_depend_on_prob = [0 for i in range(200)]
-    # for i in range(200):
-    #     if result_prob[i] > 1.0:
-    #         result_depend_on_prob[i] = 1
-    #     elif result_prob[i] < -1.0:
-    #         result_depend_on_prob[i] = -1
-    #     else:
-    #         result_depend_on_prob[i] = 0
-
     standard = []
-    for i in range(100):
+    for i in range(200):
         standard.append(1)
         standard.append(-1)
     target_name = ['negative', 'positive']
-    # print(standard)
-    # print(result_depend_on_prob)
-    # print(result_prob)
+    print(standard)
+    print(result)
     print(classification_report(standard, result, target_names=target_name))
 
-    for i in range(200):
-        if result[i] == standard[i] and result[i] == -1:
-            print(i, result_prob[i], result[i])
+    for i in range(400):
+        if result[i] != standard[i]:
+            print(i, result_prob[i], standard[i])
 
 
 def label_copora():
@@ -104,30 +92,22 @@ def label_copora():
     print("svm headline predict complete")
     output_file_p = open("./data/middle_copora_sentiment_p.txt", "w")
     output_file_n = open("./data/middle_copora_sentiment_n.txt", "w")
-    output_file_b = open("./data/middle_copora_sentiment_b.txt", "w")
     count_p = 0
     count_n = 0
-    count_b = 0
-    for i in range(300000):
-        if result_prob_article[i] > 0.1 and result_prob_headline[i] > 0.1:
-            output_file_p.writelines(
-                str(i) + " " + str(result_headline[i]) + " " + str(result_prob_headline[i]) + " " + str(
-                    result_prob_article[i]) + "\n")
-            count_p += 1
-        elif result_prob_article[i] < -2.5 and result_prob_headline[i] < -2.5:
+    for i in range(1000000):
+        if result_prob_article[i][0] > 0.8 and result_prob_headline[i][0] > 0.8:
             output_file_n.writelines(
                 str(i) + " " + str(result_headline[i]) + " " + str(result_prob_headline[i]) + " " + str(
                     result_prob_article[i]) + "\n")
             count_n += 1
-        elif 0.1 > result_prob_article[i] > -0.1 and 0.1 > result_prob_headline[i] > -0.1:
-            output_file_b.writelines(
+        elif result_prob_article[i] < 0.2 and result_prob_headline[i] < 0.2:
+            output_file_p.writelines(
                 str(i) + " " + str(result_headline[i]) + " " + str(result_prob_headline[i]) + " " + str(
                     result_prob_article[i]) + "\n")
-            count_b += 1
+            count_p += 1
 
     print("%d positive sentence addded" % count_p)
     print("%d negative sentence addded" % count_n)
-    print("%d neutral sentence addded" % count_b)
 
 
 def train_Doc2Vec_Middle_Copora(file_name):
@@ -159,8 +139,8 @@ def train_Doc2Vec():
     output_together.close()
     input_file_n.close()
     input_file_p.close()
-
     print("p/n copora added")
+
     input_file = open("./data/together.txt", "r")
     sentence = gensim.models.doc2vec.TaggedLineDocument(input_file)
     model = gensim.models.Doc2Vec(sentence, vector_size=100, window=5)
@@ -170,21 +150,23 @@ def train_Doc2Vec():
     input_file.close()
 
     output_file = open("./data/article_middle_vec.txt", "w")
-    for i in range(300000):
+    for i in range(1000000):
         for j in range(100):
             output_file.write(str(model.docvecs[i][j]) + ' ')
         output_file.write('\n')
     output_file.close()
+    print("article_middle_vec output completed")
 
     output_file = open("./data/headline_middle_vec.txt", "w")
-    for i in range(300000, 600000):
+    for i in range(1000000, 2000000):
         for j in range(100):
             output_file.write(str(model.docvecs[i][j]) + ' ')
         output_file.write('\n')
     output_file.close()
+    print("headline_middle_vec output completed")
 
     output_file = open("./data/doc_vector_np.txt", "w")
-    for i in range(600000, 620000):
+    for i in range(2000000, 2020000):
         if i % 2 == 0:
             output_file.write('1 ')
         else:
@@ -192,16 +174,16 @@ def train_Doc2Vec():
         for j in range(100):
             output_file.write(str(model.docvecs[i][j]) + ' ')
         output_file.write('\n')
-    print('vector output completed')
+    print('sentiment vector output completed')
     output_file.close()
 
     test_file = open("./data/doc_vector_np_test.txt", "w")
-    for i in range(620000, 620200):
+    for i in range(2020000, 2020400):
         for j in range(100):
             test_file.write(str(model.docvecs[i][j]) + ' ')
         test_file.write('\n')
     test_file.close()
-    print('vector test output completed')
+    print('sentiment vector test output completed')
 
 
 # file_preprocessing("positive")
@@ -209,9 +191,9 @@ def train_Doc2Vec():
 
 # train_Doc2Vec()
 
-# train_SVM()
+train_SVM()
 
 # train_Doc2Vec_Middle_Copora("headline")
 # train_Doc2Vec_Middle_Copora("article")
 
-label_copora()
+# label_copora()

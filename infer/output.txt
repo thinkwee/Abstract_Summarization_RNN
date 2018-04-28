@@ -1,224 +1,224 @@
 - group 1
      - infer headline: 
-        _UNK _UNK says he _UNK _UNK to be _UNK _UNK _EOS 
+        _UNK president _UNK belarus _UNK _EOS 
      - train headline: 
-        _UNK says new _UNK in on _UNK could _UNK _UNK _EOS _UNK _EOS _EOS _EOS _EOS _EOS 
+        _UNK president _UNK belarus in voters _EOS _UNK _EOS _EOS _EOS _EOS 
      - targets: 
-        _UNK says new _UNK rules on _UNK could _UNK _UNK _EOS 
+        osce president _UNK _UNK belarus compromise _EOS 
 - group 2
      - infer headline: 
-        bushs _UNK on arafats death _EOS 
+        italian _UNK vows to _UNK _UNK s death _EOS 
      - train headline: 
-        _UNK _UNK on arafats death _EOS _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        italian vows italian italian vows _UNK italian italian _UNK _EOS _EOS _EOS 
      - targets: 
-        bushs _UNK on arafats death _EOS 
+        _UNK with _UNK _UNK to fight on _EOS 
 - group 3
      - infer headline: 
-        yasser arafats _UNK may _UNK for funeral _EOS 
+        _UNK _UNK _UNK s _UNK _EOS 
      - train headline: 
-        _UNK arafats _UNK to _UNK to the _UNK and peace _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK rejects over _UNK s _EOS _EOS _UNK _EOS _EOS _EOS _EOS 
      - targets: 
-        yasser arafats _UNK opens _UNK to both _UNK and peace _EOS 
+        _UNK _UNK rejects un unk proposals _EOS 
 - group 4
      - infer headline: 
-        _UNK _UNK to _UNK in _UNK for _UNK _EOS 
+        london stocks up half a percent on day _EOS 
      - train headline: 
-        _UNK _UNK to be in _UNK for 2005 _EOS _EOS _UNK _EOS _EOS _EOS _EOS _EOS _EOS 
+        london stocks up half in _UNK in _UNK _UNK _UNK _UNK _EOS 
      - targets: 
-        _UNK _UNK to launch in _UNK for gay _UNK _EOS 
+        london stocks up sharply _EOS 
 - group 5
      - infer headline: 
-        judge will yasser arafat _UNK _UNK _UNK from prison _EOS 
+        new indian pm _UNK _UNK _UNK of _UNK _EOS 
      - train headline: 
-        palestinian will judge yasser arafat _UNK australian prime minister says _EOS _UNK _UNK _EOS _EOS _EOS _EOS 
+        indian _UNK urges _UNK _UNK members _UNK _UNK premier _EOS _UNK _EOS 
      - targets: 
-        history will judge yasser arafat _UNK australian prime minister says _EOS 
+        congress chief _UNK three _UNK of embattled former pm _EOS 
 - group 6
      - infer headline: 
-        _UNK _UNK says arafats death _UNK to _UNK peace _UNK _EOS 
+        russia says it is nt _UNK on north korean nuclear program _EOS 
      - train headline: 
-        _UNK says arafats death _UNK peace to palestinians urges _UNK in _UNK for independent state _EOS says 
+        russia _UNK russian russian russia russia russia russian _EOS _EOS _EOS _EOS 
      - targets: 
-        _UNK says arafats death _UNK loss to palestinians urges _UNK in _UNK for independent state _EOS 
+        belarus says all _UNK _UNK from its territory _EOS 
 - group 7
      - infer headline: 
-        _UNK president says he _UNK for _UNK _UNK to _UNK _UNK _UNK _EOS 
+        frankfurt stocks up percent on day _EOS 
      - train headline: 
-        _UNK president says he will _UNK _UNK for _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS 
+        frankfurt stocks off percent _EOS _UNK _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
-        _UNK president says he would _UNK _UNK for _UNK _UNK _UNK _EOS 
+        frankfurt stocks slip percent _EOS 
 - group 8
      - infer headline: 
-        _UNK on yasser arafat _EOS 
+        _UNK atlantic crew as turkish ship begins _UNK _EOS 
      - train headline: 
-        _UNK on yasser arafat _EOS life _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK air flight _UNK _UNK _UNK _UNK s _UNK _EOS _EOS _EOS 
      - targets: 
-        _UNK on yasser arafat _EOS 
+        british airways in missile _UNK over turkey _EOS 
 - group 9
      - infer headline: 
-        reports china _UNK of its _UNK _UNK amid world cup dispute _EOS 
+        police accused of _UNK _UNK _EOS 
      - train headline: 
-        reports china _UNK of chief chief says _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        police police warn of _UNK graft _UNK case case _EOS _EOS _EOS 
      - targets: 
-        reports china _UNK soccer association chief amid _UNK _UNK _EOS 
+        belgian police accused of _UNK in _UNK murder gang _EOS 
 - group 10
      - infer headline: 
-        _UNK woman who guilty in _UNK case of their _UNK death _UNK from _UNK _EOS 
+        us _UNK inquiry into law demands aids order _EOS 
      - train headline: 
-        _UNK _UNK marine major guilty of _UNK charges in death of iraqi _UNK _EOS _EOS _EOS _EOS 
+        us _UNK sets inquiry _UNK will inquiry _UNK of _UNK _EOS _UNK 
      - targets: 
-        jury _UNK marine major guilty of _UNK charges in death of iraqi _UNK _EOS 
+        kenyan deputy demands that law allow unk because of aids _EOS 
 - group 11
      - infer headline: 
-        _UNK of thousands of palestinians _UNK into _UNK in _UNK of _UNK _EOS 
+        _UNK president to return to us _EOS 
      - train headline: 
-        _UNK of thousands of palestinians _UNK into _UNK in _UNK arafats of _UNK over arafat arafat _EOS 
+        _UNK president to to to to _UNK _EOS _EOS _EOS _EOS _EOS 
      - targets: 
-        _UNK of thousands of palestinians _UNK into _UNK in _UNK show of _UNK over yasser arafat _EOS 
+        croatian president due back saturday _EOS 
 - group 12
      - infer headline: 
-        palestinian leader yasser arafat dead at _UNK _EOS 
+        _UNK of rwandan refugees head into tanzania _EOS 
      - train headline: 
-        palestinian leader yasser arafat dead at his _EOS _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK _UNK rwandan rwandan leaders leaders _EOS border _EOS _UNK _EOS _EOS 
      - targets: 
-        palestinian leader yasser arafat dead at _UNK _EOS 
+        refugees reach _UNK as _UNK continues over those still in zaire _EOS 
 - group 13
      - infer headline: 
-        _UNK _UNK a yasser arafat _EOS 
+        students _UNK in _UNK election _EOS 
      - train headline: 
-        _UNK _UNK death of yasser arafat _EOS _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        students chinese students _UNK despite belgrade _EOS protest _EOS _EOS _EOS _EOS 
      - targets: 
-        palestinians _UNK death of yasser arafat _EOS 
+        two _UNK students _UNK in belgrade _EOS 
 - group 14
      - infer headline: 
-        stocks lower at close in tokyo _EOS 
+        child belgian child sex abuse _UNK in brussels _EOS 
      - train headline: 
-        stocks lower at close in tokyo _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        child child child to child child child child _EOS _EOS _UNK _EOS 
      - targets: 
-        stocks lower at close in tokyo _EOS 
+        _UNK _UNK linked to _UNK _UNK says child unk _EOS 
 - group 15
      - infer headline: 
-        _UNK says arafats death _UNK calls for palestinians to _UNK _UNK _EOS 
+        _UNK goes to the hospital for _UNK _EOS 
      - train headline: 
-        _UNK says arafats death _UNK his to palestinians urges _UNK in _UNK for independent state _EOS _UNK 
+        mother of in in heart trouble of no _EOS _UNK _EOS _EOS 
      - targets: 
-        _UNK says arafats death _UNK loss to palestinians urges _UNK in _UNK for independent state _EOS 
+        mother _UNK _UNK with heart failure but stable _EOS 
 - group 16
      - infer headline: 
-        _UNK on yasser arafat _EOS 
+        _UNK wins _UNK open _EOS 
      - train headline: 
-        _UNK on yasser arafat _EOS yasser _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK _UNK _UNK open open open _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
-        _UNK on yasser arafat _EOS 
+        _UNK finally _UNK good _EOS 
 - group 17
      - infer headline: 
-        _UNK seeks _UNK _UNK on _UNK to _UNK _EOS 
+        rome puts _UNK on strike _EOS 
      - train headline: 
-        _UNK _UNK on on _UNK to hong kong to take _UNK _EOS _EOS _EOS _EOS _EOS _EOS 
+        rome traffic _UNK _UNK airport airport airport airport at at _EOS _EOS 
      - targets: 
-        official _UNK chinese women _UNK to hong kong to give _UNK _EOS 
+        air traffic is _UNK over rome _EOS 
 - group 18
      - infer headline: 
-        _UNK _UNK _UNK _UNK arafat death _UNK to _UNK for _UNK _UNK _EOS 
+        bush _UNK new _UNK for _UNK _EOS 
      - train headline: 
-        palestinians _UNK death of _UNK arafat _EOS _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        bush _UNK tribute _UNK _UNK _UNK _EOS _UNK _EOS _EOS _EOS _EOS 
      - targets: 
-        palestinians _UNK death of _UNK leader _EOS 
+        bush _UNK _UNK weekly _EOS 
 - group 19
      - infer headline: 
-        _UNK board _UNK _UNK says _UNK is _UNK its _UNK _EOS 
+        six ministers _UNK in nepal following helicopter incident _EOS 
      - train headline: 
-        _UNK board again _UNK says says _UNK by a _UNK its opposition _EOS _EOS _EOS _EOS _EOS 
+        six ministers ministers to in forces _UNK _UNK _EOS _EOS _EOS _EOS 
      - targets: 
-        _UNK board again _UNK _UNK says _UNK vote wont _UNK its opposition _EOS 
+        six cabinet ministers resign join opposition _EOS 
 - group 20
      - infer headline: 
-        _UNK _UNK _UNK of _UNK _UNK _EOS 
+        nato chiefs no date set for _UNK expansion _EOS 
      - train headline: 
-        _UNK _UNK _UNK of _UNK of _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        nato chiefs chiefs _UNK _UNK _EOS _EOS expansion _EOS _EOS _EOS _EOS 
      - targets: 
-        _UNK _UNK _UNK as _UNK of death _UNK _EOS 
+        nato members meet over _UNK stronger european role _EOS 
 - group 21
      - infer headline: 
-        palestinians _UNK _UNK death of _UNK in gaza _EOS 
+        bomb blast _UNK _UNK _UNK _EOS 
      - train headline: 
-        palestinians _UNK west bank and gaza _UNK in _UNK to arafats death _EOS _UNK _UNK _EOS _EOS 
+        bomb bomb in bomb blast blast _EOS _UNK in _EOS _EOS _EOS 
      - targets: 
-        israel _UNK west bank and gaza _UNK in _UNK to arafats death _EOS 
+        seven hurt in _UNK bomb blast _EOS 
 - group 22
      - infer headline: 
-        _UNK _UNK _UNK for bush victory _UNK as bush _UNK _EOS 
+        opposition demands ukraine votes to _UNK _UNK _EOS 
      - train headline: 
-        _UNK _UNK for for us _UNK _UNK his _UNK _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        opposition demands new polls vote amid _UNK _EOS _EOS _EOS _EOS _EOS 
      - targets: 
-        _UNK _UNK planned for bushs _UNK _UNK his _UNK _UNK _EOS 
+        opposition demands early presidential vote _EOS 
 - group 23
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK in _UNK to _UNK percent on _UNK growth _EOS 
+        _UNK vote for second round of voting _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK in _UNK to _UNK up _UNK growth _EOS _UNK _EOS _EOS _EOS 
+        _UNK party wins _UNK _UNK person of voting vote _EOS _EOS _EOS 
      - targets: 
-        _UNK _UNK _UNK _UNK _UNK in _UNK to _UNK interest _UNK again _EOS 
+        ruling party _UNK as second round of senate vote starts _EOS 
 - group 24
      - infer headline: 
-        _UNK of _UNK _UNK mexican _EOS 
+        _UNK plans to cut jobs _EOS 
      - train headline: 
-        _UNK of _UNK _UNK from _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK plans cuts set _UNK _UNK pct _EOS output _EOS _EOS _EOS 
      - targets: 
-        _UNK of _UNK _UNK _EOS 
+        _UNK car unit in turkey _UNK percent of _UNK _EOS 
 - group 25
      - infer headline: 
-        palestinians _UNK _UNK for arafat _UNK of _UNK _EOS 
+        yeltsin says he is not _UNK says russian president _EOS 
      - train headline: 
-        palestinian parliament to _UNK for palestinian _UNK to _UNK new new palestinian _UNK president _EOS _UNK _EOS 
+        yeltsin says not _UNK _UNK _UNK at belarus sanctions _UNK _EOS _EOS 
      - targets: 
-        palestinian parliament to _UNK for emergency _UNK to _UNK in new palestinian _UNK president _EOS 
+        yeltsin can not allow constitutional crisis in belarus _EOS 
 - group 26
      - infer headline: 
-        _UNK calls for _UNK _UNK to road _UNK _EOS 
+        _UNK _UNK up rwandan refugees _EOS 
      - train headline: 
-        _UNK _UNK for _UNK _UNK to road _UNK _EOS palestinian _UNK _EOS _EOS _EOS _EOS _EOS _EOS 
+        _UNK _UNK on _UNK rwandan _UNK _EOS rwanda _EOS _EOS _EOS _EOS 
      - targets: 
-        _UNK calls for _UNK _UNK to road _UNK _EOS 
+        _UNK _UNK up for refugee _UNK at unk _EOS 
 - group 27
      - infer headline: 
-        us _UNK iraqi _UNK _UNK of fallujah iraqi national guard _UNK in the city _EOS 
+        _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
      - train headline: 
-        us _UNK want un _UNK in fallujah to be _UNK on _UNK of fallujah _EOS guantanamo _UNK 
+        _UNK _UNK _UNK _UNK _UNK _UNK in _UNK africa for _UNK _EOS 
      - targets: 
-        us _UNK want its campaign in fallujah to be lost on _UNK or internet _EOS 
+        _UNK _UNK _UNK find new homes in s africa _EOS 
 - group 28
      - infer headline: 
-        united states new _UNK contract _UNK million _UNK against us dollar _EOS 
+        _UNK activists protest against israeli invasion _EOS 
      - train headline: 
-        _UNK _UNK calls calls for _UNK _UNK to _UNK billion _UNK of _UNK _EOS _EOS _EOS _EOS 
+        _UNK protest outside offensive rights _EOS _UNK _EOS _EOS _EOS _EOS _EOS 
      - targets: 
-        taiwan _UNK giant calls for strong _UNK to _UNK rising _UNK of _UNK development _EOS 
+        _UNK protest israeli tv _UNK _EOS 
 - group 29
      - infer headline: 
-        palestinian _UNK _UNK parliament to new _UNK for _UNK of _UNK _EOS 
+        indian supreme court _UNK _UNK of _UNK _UNK _EOS 
      - train headline: 
-        _UNK _UNK _UNK in _UNK in new palestinian _UNK president _EOS parliament _EOS _EOS _EOS _EOS _EOS 
+        indian court court _UNK _UNK _UNK state of _UNK world _UNK _UNK 
      - targets: 
-        parliament _UNK thursday to _UNK in new palestinian _UNK president _EOS 
+        indian supreme court _UNK to the rescue of miss world _EOS 
 - group 30
      - infer headline: 
-        putin cabinet minister says arafats death on _UNK _UNK _EOS 
+        tokyo stocks rise in line with major most trading _EOS 
      - train headline: 
-        putin calls on death for _UNK loss for palestinians _EOS _UNK _UNK _EOS _EOS _EOS _EOS _EOS 
+        tokyo stocks rise through _UNK _EOS technology rise _EOS _UNK _EOS _EOS 
      - targets: 
-        putin calls arafats death a heavy loss for palestinians _EOS 
+        tokyo stocks rally during week on _UNK hunting _EOS 
 - group 31
      - infer headline: 
-        _UNK of _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        indonesian president s family _UNK to _UNK _UNK _EOS 
      - train headline: 
-        _UNK of the training _UNK _UNK _UNK _UNK _UNK _UNK _UNK _UNK _EOS _EOS _EOS _EOS _EOS 
+        _UNK _UNK _UNK _UNK s s s _UNK _EOS _UNK _EOS _EOS 
      - targets: 
-        _UNK of _UNK training _UNK _UNK _UNK south _UNK _UNK _UNK _UNK _EOS 
+        _UNK _UNK to clinton _UNK now under _UNK _EOS 
 - group 32
      - infer headline: 
-        palestinians _UNK death of _UNK arafat _EOS 
+        italian _UNK arrive in shanghai _EOS 
      - train headline: 
-        _UNK _UNK death of _UNK arafat _EOS _UNK _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        two _UNK shanghai arrives _UNK in off shanghai _EOS _UNK _EOS _EOS 
      - targets: 
-        palestinians _UNK death of yasser arafat _EOS 
+        two italian _UNK make port call in shanghai _EOS 

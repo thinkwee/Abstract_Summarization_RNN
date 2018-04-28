@@ -17,16 +17,16 @@ logger.addHandler(handler)
 logger.setLevel(logging.DEBUG)
 
 """Hyper Parameters(Seq2Seq train)"""
-VOCAB_SIZE = 1500
+VOCAB_SIZE = 3000
 EMBED_SIZE = 256
-ENCODER_HIDEEN_UNITS = 256
-DECODER_HIDDEN_UNITS = 512
+ENCODER_HIDEEN_UNITS = 512
+DECODER_HIDDEN_UNITS = 1024
 LEARNING_RATE_INITIAL = 0.1
 BATCH_SIZE = 32
 RNN_LAYERS = 2
 EPOCH = 1000
-NUM_TRAIN_STEPS = 215
-SKIP_STEPS = 50
+NUM_TRAIN_STEPS = 3120
+SKIP_STEPS = 200
 KEEP_PROB = 0.5
 CONTINUE_TRAIN = 0
 GRAD_CLIP = 1.0
@@ -84,7 +84,7 @@ def load_embed_matrix():
     return embed_matrix, one_hot_dictionary, one_hot_dictionary_index
 
 
-def train(embed_matrix, one_hot_dictionary, continue_train, start_token_id, end_token_id):
+def train(embed_matrix, one_hot_dictionary, start_token_id, end_token_id):
     print("train mode")
 
     single_generate = one_hot_generate(one_hot_dictionary=one_hot_dictionary,
@@ -121,7 +121,7 @@ def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index, start_token
     print("infer mode")
     single_generate = one_hot_generate(one_hot_dictionary,
                                        epoch=EPOCH_INFER,
-                                       is_train=1)
+                                       is_train=0)
     batches = get_batch(batch_size=BATCH_SIZE_INFER,
                         iterator=single_generate)
     logger.debug("batch generated")
@@ -180,7 +180,7 @@ def main():
         logger.debug("w2v restored")
         start_token_id = one_hot_dictionary['_GO']
         end_token_id = one_hot_dictionary['_EOS']
-        train(embed_matrix=embed_matrix, one_hot_dictionary=one_hot_dictionary, continue_train=CONTINUE_TRAIN,
+        train(embed_matrix=embed_matrix, one_hot_dictionary=one_hot_dictionary,
               start_token_id=start_token_id, end_token_id=end_token_id)
     elif option == "-test":
         embed_matrix, one_hot_dictionary, one_hot_dictionary_index = load_embed_matrix()
