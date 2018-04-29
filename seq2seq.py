@@ -129,7 +129,7 @@ class Seq2seqModel:
                                                                      )
 
     def _create_bgru_seq2seq(self):
-        # single layer bgru encoder
+        # multi layer bgru encoder
         with tf.variable_scope('encoder', reuse=tf.AUTO_REUSE):
             inputs = self.encoder_inputs_embedded
             cells_fw = []
