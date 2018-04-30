@@ -1,7 +1,8 @@
 from word2vec.w2v import w2v
 import logging.config
 from seq2seq import Seq2seqModel
-from pre_process import *
+import pre_process as pre
+import pre_process_senti as pre_senti
 from numpy import *
 import sys
 import pickle
@@ -25,7 +26,7 @@ LEARNING_RATE_INITIAL = 0.1
 BATCH_SIZE = 32
 RNN_LAYERS = 2
 EPOCH = 1000
-NUM_TRAIN_STEPS = 3120
+NUM_TRAIN_STEPS = 1850
 SKIP_STEPS = 200
 KEEP_PROB = 0.5
 CONTINUE_TRAIN = 0
@@ -87,11 +88,11 @@ def load_embed_matrix():
 def train(embed_matrix, one_hot_dictionary, start_token_id, end_token_id):
     print("train mode")
 
-    single_generate = one_hot_generate(one_hot_dictionary=one_hot_dictionary,
-                                       epoch=EPOCH,
-                                       is_train=1)
-    batches = get_batch(batch_size=BATCH_SIZE,
-                        iterator=single_generate)
+    single_generate = pre_senti.one_hot_generate(one_hot_dictionary=one_hot_dictionary,
+                                                 epoch=EPOCH,
+                                                 is_train=1)
+    batches = pre_senti.get_batch(batch_size=BATCH_SIZE,
+                                  iterator=single_generate)
     logger.debug("batch generated")
 
     seq2seq_train = Seq2seqModel(vocab_size=VOCAB_SIZE,
@@ -119,11 +120,11 @@ def train(embed_matrix, one_hot_dictionary, start_token_id, end_token_id):
 
 def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index, start_token_id, end_token_id):
     print("infer mode")
-    single_generate = one_hot_generate(one_hot_dictionary,
-                                       epoch=EPOCH_INFER,
-                                       is_train=0)
-    batches = get_batch(batch_size=BATCH_SIZE_INFER,
-                        iterator=single_generate)
+    single_generate = pre_senti.one_hot_generate(one_hot_dictionary,
+                                                 epoch=EPOCH_INFER,
+                                                 is_train=0)
+    batches = pre_senti.get_batch(batch_size=BATCH_SIZE_INFER,
+                                  iterator=single_generate)
     logger.debug("batch generated")
 
     seq2seq_infer = Seq2seqModel(vocab_size=VOCAB_SIZE,
@@ -149,13 +150,13 @@ def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index, start_token
 
 
 def batch_test(test_batch_num, one_hot_dictionary):
-    single_generate = one_hot_generate(one_hot_dictionary=one_hot_dictionary,
-                                       epoch=1,
-                                       is_train=1)
-    batches = get_batch(batch_size=32,
-                        iterator=single_generate)
+    single_generate = pre_senti.one_hot_generate(one_hot_dictionary=one_hot_dictionary,
+                                                 epoch=1,
+                                                 is_train=1)
+    batches = pre_senti.get_batch(batch_size=32,
+                                  iterator=single_generate)
     for i in range(test_batch_num):
-        encoder_batch, decoder_batch, target_batch, bucket_encoder_length, bucket_decoder_length, decode_max_iter = next(
+        encoder_batch, decoder_batch, target_batch, bucket_encoder_length, bucket_decoder_length, decode_max_iter, senti_batch = next(
             batches)
         print(i)
         print(encoder_batch)
@@ -164,6 +165,7 @@ def batch_test(test_batch_num, one_hot_dictionary):
         print(bucket_encoder_length)
         print(bucket_decoder_length)
         print(decode_max_iter)
+        print(senti_batch)
 
 
 def main():

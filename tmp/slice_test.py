@@ -6,3 +6,8 @@ c = np.hstack((a[:4], a[5:]))
 print(c)
 print(b)
 print(np.max(a))
+print(a[:5])
+d = []
+for i in range(0, len(a), 3):
+    d.append(a[i:i + 3])
+print(d)
