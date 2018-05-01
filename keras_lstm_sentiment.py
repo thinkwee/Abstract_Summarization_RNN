@@ -11,33 +11,32 @@ import numpy as np
 from keras.callbacks import ModelCheckpoint
 from keras.models import load_model
 
+MAX_FEATURES = 5000
+MAX_SENTENCE_LENGTH = 60
 
-# MAX_FEATURES = 5000
-# MAX_SENTENCE_LENGTH = 60
-#
-# maxlen = 0  # 句子最大长度
-# word_freqs = collections.Counter()  # 词频
-# num_recs = 0  # 样本数
-# totallen = 0
-# with open('./data/keras_pn_train.txt', 'r+') as f:
-#     for line in f:
-#         label, sentence = line.strip().split("-!-!-!")
-#         words = nltk.word_tokenize(sentence.lower())
-#         totallen += len(words)
-#         if len(words) > maxlen:
-#             maxlen = len(words)
-#         for word in words:
-#             word_freqs[word] += 1
-#         num_recs += 1
-# print("avg_len ", totallen / 20000)
-# print('max_len ', maxlen)
-# print('nb_words ', len(word_freqs))
-#
-# vocab_size = min(MAX_FEATURES, len(word_freqs)) + 2
-# word2index = {x[0]: i + 2 for i, x in enumerate(word_freqs.most_common(MAX_FEATURES))}
-# word2index["PAD"] = 0
-# word2index["UNK"] = 1
-# index2word = {v: k for k, v in word2index.items()}
+maxlen = 0  # 句子最大长度
+word_freqs = collections.Counter()  # 词频
+num_recs = 0  # 样本数
+totallen = 0
+with open('./data/keras_pn_train.txt', 'r+') as f:
+    for line in f:
+        label, sentence = line.strip().split("-!-!-!")
+        words = nltk.word_tokenize(sentence.lower())
+        totallen += len(words)
+        if len(words) > maxlen:
+            maxlen = len(words)
+        for word in words:
+            word_freqs[word] += 1
+        num_recs += 1
+print("avg_len ", totallen / 20000)
+print('max_len ', maxlen)
+print('nb_words ', len(word_freqs))
+
+vocab_size = min(MAX_FEATURES, len(word_freqs)) + 2
+word2index = {x[0]: i + 2 for i, x in enumerate(word_freqs.most_common(MAX_FEATURES))}
+word2index["PAD"] = 0
+word2index["UNK"] = 1
+index2word = {v: k for k, v in word2index.items()}
 
 
 def train():
@@ -212,7 +211,6 @@ def remake_middle_copora():
 
     print(count_p, count_n, count_n + count_p)
 
-
 # predict("article")
 # train()
-remake_middle_copora()
+# remake_middle_copora()

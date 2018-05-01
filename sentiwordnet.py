@@ -2,7 +2,7 @@ from __future__ import division
 import nltk
 
 
-# 1.     CC      Coordinating conjunction
+# 1.      CC      Coordinating conjunction
 # 2.     CD     Cardinal number
 # 3.     DT     Determiner
 # 4.     EX     Existential there
@@ -112,7 +112,7 @@ def make_np_vector(np_dict, pos_info):
     vector = []
 
     for i in range(count_total):
-        pos = 'e'  # empty
+        pos = 'n'
         if pos_info[i][1] in noun_set:
             pos = 'n'
             n_total += 1
@@ -134,36 +134,49 @@ def make_np_vector(np_dict, pos_info):
             elif count < 0:
                 neg_total += count
                 neg_count += 1
-
-    if pos_count != 0:
+    if pos_count > 0:
         vector.append(pos_total / pos_count)
     else:
-        vector.append(0.0)
+        vector.append(0)
 
-    if neg_count != 0:
+    if neg_count > 0:
         vector.append(neg_total / neg_count)
     else:
-        vector.append(0.0)
+        vector.append(0)
 
-    if count_total == 0:
-        for _ in range(4):
-            vector.append(0.0)
-    else:
+    if count_total > 0:
         vector.append(n_total / count_total)
         vector.append(a_total / count_total)
         vector.append(v_total / count_total)
         vector.append(r_total / count_total)
+    else:
+        for _ in range(4):
+            vector.append(0)
 
     return vector
 
 
 if __name__ == '__main__':
     net_path = "./data/SentiWordNet.txt"
-    np_dict = SentiWordNet(net_path)
-    np_dict.infoextract()
-    sentence = "I had no reason to believe that this set wouldn't play on my up-to-date, new DVD player!  Imagine my " \
-               "disappointment when my excited grandson opened this gift, only to find out that it was UNPLAYABLE!!!  " \
-               "Nothing on the ad denoted any limitations in the playing/viewing of this set.  Basically, I bought a " \
-               "very expensive SET OF COASTERS!! "
+    swn = SentiWordNet(net_path)
+    swn.infoextract()
+    sentence = "Don't buy this unless you are willing to pay twice as much for the product you need. Turbo Tax has " \
+               "lowered themselves to deceptive advertizing as far as I see it. "
     text = nltk.word_tokenize(sentence)
     pos_info = nltk.pos_tag(text)
+    print(check_np(swn, pos_info))
+
+# print("good#a " + str(swn.getscore('good', 'a')))
+# print("good#n " + str(swn.getscore('good', 'n')))
+# print("good#r " + str(swn.getscore('good', 'r')))
+# print("good#v " + str(swn.getscore('good', 'v')))
+#
+# print("bad#a " + str(swn.getscore('bad', 'a')))
+# print("bad#n " + str(swn.getscore('bad', 'n')))
+# print("bad#r " + str(swn.getscore('bad', 'r')))
+# print("bad#v " + str(swn.getscore('bad', 'v')))
+#
+# print("happy#a " + str(swn.getscore('happy', 'a')))
+# print("happy#n " + str(swn.getscore('happy', 'n')))
+# print("happy#r " + str(swn.getscore('happy', 'r')))
+# print("happy#v " + str(swn.getscore('happy', 'v')))

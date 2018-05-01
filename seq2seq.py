@@ -129,7 +129,7 @@ class Seq2seqModel:
                                                                      )
 
     def _create_bgru_seq2seq(self):
-        # multi layer bgru encoder
+        # single layer bgru encoder
         with tf.variable_scope('encoder', reuse=tf.AUTO_REUSE):
             inputs = self.encoder_inputs_embedded
             cells_fw = []
@@ -409,6 +409,7 @@ class Seq2seqModel:
             writer = tf.summary.FileWriter('./graphs/seq2seq', sess.graph)
 
             for i in range(epoch_total):
+                shuffle.shuffle_train_data()
                 total_loss = 0.0
                 epoch_index, lr = sess.run([self.add_global_epoch, self.learning_rate])
                 self.logger.debug("at epoch {} the learning rate is {}".format(epoch_index, lr))
@@ -455,7 +456,6 @@ class Seq2seqModel:
                             print('loss at epoch %d batch %d : %9.9f' % (epoch_index, index + 1,
                                                                          total_loss / skip_steps))
                             total_loss = 0.0
-                    shuffle.shuffle_train_data()
 
     def test(self, epoch, num_train_steps, batches, one_hot):
         saver = tf.train.Saver()

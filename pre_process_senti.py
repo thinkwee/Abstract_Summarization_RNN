@@ -1,5 +1,11 @@
 import numpy as np
 import collections
+import sentiwordnet
+import nltk
+
+net_path = "./data/SentiWordNet.txt"
+np_dict = sentiwordnet.SentiWordNet(net_path)
+np_dict.infoextract()
 
 
 def get_words(file_name, n):
@@ -95,9 +101,10 @@ def get_batch(batch_size, iterator):
         encoder_length_batch = []
         decoder_length_batch = []
         label_batch = []
+        sen_vec_batch = []
 
         for index in range(batch_size):
-            encoder_input_single, decoder_input_single, target_single, encoder_length_single_real, decoder_length_single_real, label_single = next(
+            encoder_input_single, decoder_input_single, target_single, encoder_length_single_real, decoder_length_single_real, label_single, article_sen_vec = next(
                 iterator)
 
             encoder_batch.append(encoder_input_single)
@@ -106,10 +113,11 @@ def get_batch(batch_size, iterator):
             encoder_length_batch.append(encoder_length_single_real)
             decoder_length_batch.append(decoder_length_single_real)
             label_batch.append(label_single)
+            sen_vec_batch.append(article_sen_vec)
 
         decoder_max_iter = np.max(decoder_length_batch)
 
-        yield encoder_batch, decoder_batch, target_batch, encoder_length_batch, decoder_length_batch, decoder_max_iter, label_batch
+        yield encoder_batch, decoder_batch, target_batch, encoder_length_batch, decoder_length_batch, decoder_max_iter, label_batch, sen_vec_batch
 
 
 def one_hot_generate(one_hot_dictionary, epoch, is_train):
@@ -131,7 +139,7 @@ def one_hot_generate(one_hot_dictionary, epoch, is_train):
 
         count = 0
         while sentence_article and sentence_headline:
-            label_single = senti_label[count]
+            label_single = int(senti_label[count])
             words_article = []
             words_headline = []
             count_headline = 0
@@ -170,8 +178,19 @@ def one_hot_generate(one_hot_dictionary, epoch, is_train):
             # resize the length
             count_headline_real -= 1
 
+            # compute the sentence senti vector
+            text = nltk.word_tokenize(sentence_article)
+            pos_info = nltk.pos_tag(text)
+
+            temp = sentiwordnet.make_np_vector(np_dict, pos_info)
+            article_sen_vec = np.zeros([6], dtype=float)
+            for i in range(6):
+                article_sen_vec[i] = temp[i]
+
+            # select next senti label
             count += 1
-            yield one_hot_article, one_hot_headline_input, one_hot_headline_target, count_article_real, count_headline_real, label_single
+
+            yield one_hot_article, one_hot_headline_input, one_hot_headline_target, count_article_real, count_headline_real, label_single, article_sen_vec
             sentence_article = bytes.decode(file_article.readline())
             sentence_headline = bytes.decode(file_headline.readline())
 

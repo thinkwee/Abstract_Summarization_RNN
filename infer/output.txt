@@ -1,224 +1,224 @@
 - group 1
      - infer headline: 
-        _UNK president _UNK belarus _UNK _EOS 
+        unk _UNK _UNK _UNK _EOS 
      - train headline: 
-        _UNK president _UNK belarus in voters _EOS _UNK _EOS _EOS _EOS _EOS 
+        unk gives _UNK than million dollars in _UNK _EOS _EOS _EOS _EOS 
      - targets: 
-        osce president _UNK _UNK belarus compromise _EOS 
+        woman _UNK more than million dollars at _UNK s _EOS 
 - group 2
      - infer headline: 
-        italian _UNK vows to _UNK _UNK s death _EOS 
+        un _UNK refugee camp in eastern zaire _EOS 
      - train headline: 
-        italian vows italian italian vows _UNK italian italian _UNK _EOS _EOS _EOS 
+        un refugee in to zaire in in _UNK _EOS _EOS _EOS _EOS 
      - targets: 
-        _UNK with _UNK _UNK to fight on _EOS 
+        un team allowed into _UNK _UNK _EOS 
 - group 3
      - infer headline: 
-        _UNK _UNK _UNK s _UNK _EOS 
+        _UNK and _UNK _UNK on billion dollars _EOS 
      - train headline: 
-        _UNK rejects over _UNK s _EOS _EOS _UNK _EOS _EOS _EOS _EOS 
+        _UNK _UNK _UNK _UNK deal _EOS _UNK _EOS _EOS _EOS _EOS _EOS 
      - targets: 
-        _UNK _UNK rejects un unk proposals _EOS 
+        donors give palestinians investment _UNK _EOS 
 - group 4
      - infer headline: 
-        london stocks up half a percent on day _EOS 
+        _UNK _UNK slightly in _UNK trading _EOS 
      - train headline: 
-        london stocks up half in _UNK in _UNK _UNK _UNK _UNK _EOS 
+        _UNK _UNK _UNK _UNK _UNK _UNK dollar quarter of _UNK _EOS _EOS 
      - targets: 
-        london stocks up sharply _EOS 
+        chinese currency _UNK to _UNK in fourth quarter _EOS 
 - group 5
      - infer headline: 
-        new indian pm _UNK _UNK _UNK of _UNK _EOS 
+        rand marginally firmer _EOS 
      - train headline: 
-        indian _UNK urges _UNK _UNK members _UNK _UNK premier _EOS _UNK _EOS 
+        rand _UNK firmer _EOS _UNK _EOS _EOS _UNK _EOS _EOS _EOS _EOS 
      - targets: 
-        congress chief _UNK three _UNK of embattled former pm _EOS 
+        rand marginally firmer in early trade _EOS 
 - group 6
      - infer headline: 
-        russia says it is nt _UNK on north korean nuclear program _EOS 
+        arab _UNK to _UNK _UNK _UNK _EOS 
      - train headline: 
-        russia _UNK russian russian russia russia russia russian _EOS _EOS _EOS _EOS 
+        arab _UNK _UNK million to _UNK _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
-        belarus says all _UNK _UNK from its territory _EOS 
+        kuwaiti _UNK _UNK dollars for racing _UNK _EOS 
 - group 7
      - infer headline: 
-        frankfurt stocks up percent on day _EOS 
+        three more _UNK _UNK condemned to death in _UNK murder _EOS 
      - train headline: 
-        frankfurt stocks off percent _EOS _UNK _EOS _EOS _EOS _EOS _EOS _EOS 
+        three years condemned death condemned murder murder of _UNK _EOS _UNK _UNK 
      - targets: 
-        frankfurt stocks slip percent _EOS 
+        three _UNK to _UNK for _UNK killing _EOS 
 - group 8
      - infer headline: 
-        _UNK atlantic crew as turkish ship begins _UNK _EOS 
+        south africa rate _UNK to percent _EOS 
      - train headline: 
-        _UNK air flight _UNK _UNK _UNK _UNK s _UNK _EOS _EOS _EOS 
+        south african inflation _UNK _UNK score _UNK _UNK _UNK _EOS _EOS _EOS 
      - targets: 
-        british airways in missile _UNK over turkey _EOS 
+        south african banks raise rates on rand s _UNK _EOS 
 - group 9
      - infer headline: 
-        police accused of _UNK _UNK _EOS 
+        hong kong shares drop percent on profittaking _EOS 
      - train headline: 
-        police police warn of _UNK graft _UNK case case _EOS _EOS _EOS 
+        hong kong shares drop due due _UNK _EOS canada _UNK _EOS _UNK 
      - targets: 
-        belgian police accused of _UNK in _UNK murder gang _EOS 
+        hong kong shares drop percent on profittaking from recent gains _EOS 
 - group 10
      - infer headline: 
-        us _UNK inquiry into law demands aids order _EOS 
+        bomb blast _UNK _UNK of _UNK in pakistan no terrorist link _EOS 
      - train headline: 
-        us _UNK sets inquiry _UNK will inquiry _UNK of _UNK _EOS _UNK 
+        bomb bomb missile blast _UNK _UNK _UNK to air _EOS _EOS _EOS 
      - targets: 
-        kenyan deputy demands that law allow unk because of aids _EOS 
+        _UNK says bomb or missile less likely in _UNK _UNK _EOS 
 - group 11
      - infer headline: 
-        _UNK president to return to us _EOS 
+        shanghai share prices close percent lower _EOS 
      - train headline: 
-        _UNK president to to to to _UNK _EOS _EOS _EOS _EOS _EOS 
+        shanghai share prices close percent _UNK _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
-        croatian president due back saturday _EOS 
+        shanghai share prices fell _EOS 
 - group 12
      - infer headline: 
-        _UNK of rwandan refugees head into tanzania _EOS 
+        seoul shares close percent higher _EOS 
      - train headline: 
-        _UNK _UNK rwandan rwandan leaders leaders _EOS border _EOS _UNK _EOS _EOS 
+        seoul shares close percent higher _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
-        refugees reach _UNK as _UNK continues over those still in zaire _EOS 
+        seoul shares close percent higher _EOS 
 - group 13
      - infer headline: 
-        students _UNK in _UNK election _EOS 
+        dollar slightly higher in tokyo _EOS 
      - train headline: 
-        students chinese students _UNK despite belgrade _EOS protest _EOS _EOS _EOS _EOS 
+        dollar slightly higher against tokyo trade _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
-        two _UNK students _UNK in belgrade _EOS 
+        dollar holds firm in tokyo trading _EOS 
 - group 14
      - infer headline: 
-        child belgian child sex abuse _UNK in brussels _EOS 
+        christopher welcomes chinese success as treasury secretary _EOS 
      - train headline: 
-        child child child to child child child child _EOS _EOS _UNK _EOS 
+        christopher to to good as _UNK _EOS _UNK _EOS _EOS _EOS _EOS 
      - targets: 
-        _UNK _UNK linked to _UNK _UNK says child unk _EOS 
+        christopher visit a success says china _EOS 
 - group 15
      - infer headline: 
-        _UNK goes to the hospital for _UNK _EOS 
+        seoul shares close percent higher _EOS 
      - train headline: 
-        mother of in in heart trouble of no _EOS _UNK _EOS _EOS 
+        seoul shares close percent higher _EOS _UNK _EOS _EOS _EOS _EOS _EOS 
      - targets: 
-        mother _UNK _UNK with heart failure but stable _EOS 
+        seoul shares close percent higher _EOS 
 - group 16
      - infer headline: 
-        _UNK wins _UNK open _EOS 
+        _UNK killed in bus crash in iran _EOS 
      - train headline: 
-        _UNK _UNK _UNK open open open _EOS _EOS _EOS _EOS _EOS _EOS 
+        killed in bus crash in iran _EOS _UNK _EOS _EOS _EOS _EOS 
      - targets: 
-        _UNK finally _UNK good _EOS 
+        killed in road accident in iran _EOS 
 - group 17
      - infer headline: 
-        rome puts _UNK on strike _EOS 
+        new zealand loses test to take over zimbabwe _EOS 
      - train headline: 
-        rome traffic _UNK _UNK airport airport airport airport at at _EOS _EOS 
+        _UNK zealand zealand pakistan for pakistan test opener pakistan _EOS _EOS _EOS 
      - targets: 
-        air traffic is _UNK over rome _EOS 
+        new _UNK in trouble in first test against pakistan _EOS 
 - group 18
      - infer headline: 
-        bush _UNK new _UNK for _UNK _EOS 
+        new zealand _UNK as pakistan _UNK _UNK lunch _EOS 
      - train headline: 
-        bush _UNK tribute _UNK _UNK _UNK _EOS _UNK _EOS _EOS _EOS _EOS 
+        new zealand _UNK pakistan against pakistan _EOS _EOS _EOS _UNK _EOS _EOS 
      - targets: 
-        bush _UNK _UNK weekly _EOS 
+        new zealand at lunch in test _UNK pakistan _EOS 
 - group 19
      - infer headline: 
-        six ministers _UNK in nepal following helicopter incident _EOS 
+        court _UNK _UNK _UNK claim of _UNK _UNK _UNK _EOS 
      - train headline: 
-        six ministers ministers to in forces _UNK _UNK _EOS _EOS _EOS _EOS 
+        court court _UNK _UNK _UNK _UNK detention _EOS _UNK _EOS _EOS _EOS 
      - targets: 
-        six cabinet ministers resign join opposition _EOS 
+        vietnamese court _UNK government _UNK s sentence _EOS 
 - group 20
      - infer headline: 
-        nato chiefs no date set for _UNK expansion _EOS 
+        _UNK _UNK _UNK in new cabinet sworn in _EOS 
      - train headline: 
-        nato chiefs chiefs _UNK _UNK _EOS _EOS expansion _EOS _EOS _EOS _EOS 
+        _UNK _UNK in _UNK sworn in after first president _EOS _UNK _EOS 
      - targets: 
-        nato members meet over _UNK stronger european role _EOS 
+        _UNK due to be sworn in for new term in zambia _EOS 
 - group 21
      - infer headline: 
-        bomb blast _UNK _UNK _UNK _EOS 
+        malaysia s key stock index ends percent higher _EOS 
      - train headline: 
-        bomb bomb in bomb blast blast _EOS _UNK in _EOS _EOS _EOS 
+        malaysia stock key stock index ends percent higher _EOS _EOS _EOS _EOS 
      - targets: 
-        seven hurt in _UNK bomb blast _EOS 
+        malaysia s key stock index ends percent higher _EOS 
 - group 22
      - infer headline: 
-        opposition demands ukraine votes to _UNK _UNK _EOS 
+        thai share prices close percent firmer _EOS 
      - train headline: 
-        opposition demands new polls vote amid _UNK _EOS _EOS _EOS _EOS _EOS 
+        thai stocks close close percent percent _EOS _UNK _EOS _EOS _EOS _EOS 
      - targets: 
-        opposition demands early presidential vote _EOS 
+        thai shares prices close down percent _EOS 
 - group 23
      - infer headline: 
-        _UNK vote for second round of voting _EOS 
+        israel has _UNK talks without _UNK progress _EOS 
      - train headline: 
-        _UNK party wins _UNK _UNK person of voting vote _EOS _EOS _EOS 
+        israel says there should us over go _UNK _UNK _EOS _EOS _EOS 
      - targets: 
-        ruling party _UNK as second round of senate vote starts _EOS 
+        netanyahu says talks with syria could resume within weeks _EOS 
 - group 24
      - infer headline: 
-        _UNK plans to cut jobs _EOS 
+        british third quarter growth at percent _EOS 
      - train headline: 
-        _UNK plans cuts set _UNK _UNK pct _EOS output _EOS _EOS _EOS 
+        third third third third in percent _EOS third quarter _EOS _EOS _EOS 
      - targets: 
-        _UNK car unit in turkey _UNK percent of _UNK _EOS 
+        british annual gdp growth at percent in third quarter _EOS 
 - group 25
      - infer headline: 
-        yeltsin says he is not _UNK says russian president _EOS 
+        nigerian _UNK _UNK air disaster over oil prices _EOS 
      - train headline: 
-        yeltsin says not _UNK _UNK _UNK at belarus sanctions _UNK _EOS _EOS 
+        nigeria air _UNK _UNK _UNK to _UNK _EOS _UNK _EOS _EOS _EOS 
      - targets: 
-        yeltsin can not allow constitutional crisis in belarus _EOS 
+        another air disaster _UNK _UNK in nigeria _EOS 
 - group 26
      - infer headline: 
-        _UNK _UNK up rwandan refugees _EOS 
+        taiwan to _UNK its _UNK on us arms sales to policy _EOS 
      - train headline: 
-        _UNK _UNK on _UNK rwandan _UNK _EOS rwanda _EOS _EOS _EOS _EOS 
+        taiwan to _UNK its to after get its its its arms taiwan 
      - targets: 
-        _UNK _UNK up for refugee _UNK at unk _EOS 
+        taiwan to _UNK arms _UNK to reduce _UNK on us _EOS 
 - group 27
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
+        police in search of search for _UNK of _UNK _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK in _UNK africa for _UNK _EOS 
+        police _UNK _UNK _UNK in in _UNK _EOS _EOS _EOS _EOS _EOS 
      - targets: 
-        _UNK _UNK _UNK find new homes in s africa _EOS 
+        search after plane blast reported over _UNK _EOS 
 - group 28
      - infer headline: 
-        _UNK activists protest against israeli invasion _EOS 
+        malaysia stock market closes marginally higher _EOS 
      - train headline: 
-        _UNK protest outside offensive rights _EOS _UNK _EOS _EOS _EOS _EOS _EOS 
+        malaysia s key stock index ends percent higher _EOS _EOS _EOS _EOS 
      - targets: 
-        _UNK protest israeli tv _UNK _EOS 
+        malaysia s key stock index ends percent higher _EOS 
 - group 29
      - infer headline: 
-        indian supreme court _UNK _UNK of _UNK _UNK _EOS 
+        thai share prices close percent firmer _EOS 
      - train headline: 
-        indian court court _UNK _UNK _UNK state of _UNK world _UNK _UNK 
+        thai share prices close percent percent _EOS _UNK _EOS _EOS _EOS _EOS 
      - targets: 
-        indian supreme court _UNK to the rescue of miss world _EOS 
+        thai shares prices close down percent _EOS 
 - group 30
      - infer headline: 
-        tokyo stocks rise in line with major most trading _EOS 
+        authorities close down independent radio radio radio station says _EOS 
      - train headline: 
-        tokyo stocks rise through _UNK _EOS technology rise _EOS _UNK _EOS _EOS 
+        authorities radio _UNK _UNK public radio radio radio radio _EOS fall _EOS 
      - targets: 
-        tokyo stocks rally during week on _UNK hunting _EOS 
+        croatian decision to close independent radio _UNK heavy fire _EOS 
 - group 31
      - infer headline: 
-        indonesian president s family _UNK to _UNK _UNK _EOS 
+        _UNK refuses to _UNK out on sales of popular israeli _UNK _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK s s s _UNK _EOS _UNK _EOS _EOS 
+        _UNK doubt after out after safety after _EOS _EOS _EOS _EOS _EOS 
      - targets: 
-        _UNK _UNK to clinton _UNK now under _UNK _EOS 
+        no _UNK ruled out over _UNK blaze _EOS 
 - group 32
      - infer headline: 
-        italian _UNK arrive in shanghai _EOS 
+        rubber futures prices higher on _UNK volumes _EOS 
      - train headline: 
-        two _UNK shanghai arrives _UNK in off shanghai _EOS _UNK _EOS _EOS 
+        _UNK futures close close on _UNK _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
-        two italian _UNK make port call in shanghai _EOS 
+        rubber futures prices firmer _EOS 

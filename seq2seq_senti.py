@@ -36,6 +36,8 @@ class Seq2seqModel:
             self.decoder_length = tf.placeholder(shape=(None,), dtype=tf.int32, name='decoder_length')
             self.encoder_length = tf.placeholder(shape=(None,), dtype=tf.int32, name='encoder_length')
             self.decoder_max_iter = tf.placeholder(shape=(), dtype=tf.int32, name='encoder_length')
+            self.label = tf.placeholder(shape=(self.batch_size,), dtype=tf.int32, name='sentiment_label')
+            self.sen_vec = tf.placeholder(shape=(self.batch_size, None), dtype=tf.float32, name="sentiment_vector")
 
     def _create_embedding(self):
         # self.embeddings_encoder = tf.Variable(tf.random_uniform([self.vocab_size, self.embed_size]))
@@ -129,7 +131,7 @@ class Seq2seqModel:
                                                                      )
 
     def _create_bgru_seq2seq(self):
-        # multi layer bgru encoder
+        # single layer bgru encoder
         with tf.variable_scope('encoder', reuse=tf.AUTO_REUSE):
             inputs = self.encoder_inputs_embedded
             cells_fw = []
@@ -149,6 +151,8 @@ class Seq2seqModel:
                 parallel_iterations=32)
             self.encoder_final_state = tf.concat(axis=1, values=[encoder_final_state_fw[self.num_layers - 1],
                                                                  encoder_final_state_bw[self.num_layers - 1]])
+
+            self.encoder_final_state = tf.concat(axis=1, values=[self.encoder_final_state, self.sen_vec])
 
         # basic gru Decoder for train and infer
         with tf.variable_scope('decoder', reuse=tf.AUTO_REUSE):
@@ -409,6 +413,7 @@ class Seq2seqModel:
             writer = tf.summary.FileWriter('./graphs/seq2seq', sess.graph)
 
             for i in range(epoch_total):
+                shuffle.shuffle_senti_data()
                 total_loss = 0.0
                 epoch_index, lr = sess.run([self.add_global_epoch, self.learning_rate])
                 self.logger.debug("at epoch {} the learning rate is {}".format(epoch_index, lr))
@@ -418,7 +423,7 @@ class Seq2seqModel:
                 # save last batch in each epoch for validation
                 for index in range(num_train_steps):
                     self.global_step = sess.run(self.add_global_step)
-                    encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length, decoder_max_iter = next(
+                    encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length, decoder_max_iter, label, sen_vec = next(
                         batches)
                     feed_dict = {
                         self.decoder_targets: decoder_targets,
@@ -426,7 +431,9 @@ class Seq2seqModel:
                         self.encoder_inputs: encoder_inputs,
                         self.decoder_inputs: decoder_inputs,
                         self.encoder_length: encoder_length,
-                        self.decoder_max_iter: decoder_max_iter
+                        self.decoder_max_iter: decoder_max_iter,
+                        self.label: label,
+                        self.sen_vec: sen_vec
                     }
                     if index == num_train_steps - 1:
                         loss_batch_validate, = sess.run([self.loss],
@@ -455,7 +462,6 @@ class Seq2seqModel:
                             print('loss at epoch %d batch %d : %9.9f' % (epoch_index, index + 1,
                                                                          total_loss / skip_steps))
                             total_loss = 0.0
-                    shuffle.shuffle_train_data()
 
     def test(self, epoch, num_train_steps, batches, one_hot):
         saver = tf.train.Saver()
@@ -466,7 +472,7 @@ class Seq2seqModel:
                 print("the model has been successfully restored")
                 for _ in range(epoch):
                     for _ in range(num_train_steps):
-                        encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length, decoder_max_iter = next(
+                        encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length, decoder_max_iter, label, sen_vec = next(
                             batches)
 
                         feed_dict = {
@@ -475,7 +481,9 @@ class Seq2seqModel:
                             self.encoder_inputs: encoder_inputs,
                             self.decoder_inputs: decoder_inputs,
                             self.encoder_length: encoder_length,
-                            self.decoder_max_iter: decoder_max_iter
+                            self.decoder_max_iter: decoder_max_iter,
+                            self.label: label,
+                            self.sen_vec: sen_vec
                         }
 
                         infer_output = sess.run(self.decoder_infer_output, feed_dict=feed_dict)

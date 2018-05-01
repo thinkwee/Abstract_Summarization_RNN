@@ -1,8 +1,9 @@
 from word2vec.w2v import w2v
 import logging.config
-from seq2seq import Seq2seqModel
-import pre_process as pre
-import pre_process_senti as pre_senti
+# from seq2seq import Seq2seqModel
+# from pre_process import *
+from seq2seq_senti import Seq2seqModel
+from pre_process_senti import *
 from numpy import *
 import sys
 import pickle
@@ -21,7 +22,7 @@ logger.setLevel(logging.DEBUG)
 VOCAB_SIZE = 3000
 EMBED_SIZE = 256
 ENCODER_HIDEEN_UNITS = 512
-DECODER_HIDDEN_UNITS = 1024
+DECODER_HIDDEN_UNITS = 1030
 LEARNING_RATE_INITIAL = 0.1
 BATCH_SIZE = 32
 RNN_LAYERS = 2
@@ -88,11 +89,11 @@ def load_embed_matrix():
 def train(embed_matrix, one_hot_dictionary, start_token_id, end_token_id):
     print("train mode")
 
-    single_generate = pre_senti.one_hot_generate(one_hot_dictionary=one_hot_dictionary,
-                                                 epoch=EPOCH,
-                                                 is_train=1)
-    batches = pre_senti.get_batch(batch_size=BATCH_SIZE,
-                                  iterator=single_generate)
+    single_generate = one_hot_generate(one_hot_dictionary=one_hot_dictionary,
+                                       epoch=EPOCH,
+                                       is_train=1)
+    batches = get_batch(batch_size=BATCH_SIZE,
+                        iterator=single_generate)
     logger.debug("batch generated")
 
     seq2seq_train = Seq2seqModel(vocab_size=VOCAB_SIZE,
@@ -103,7 +104,7 @@ def train(embed_matrix, one_hot_dictionary, start_token_id, end_token_id):
                                  embed_matrix_init=embed_matrix,
                                  learning_rate_initial=LEARNING_RATE_INITIAL,
                                  keep_prob=KEEP_PROB,
-                                 rnn_core="bgru_attetion",
+                                 rnn_core="bgru",
                                  start_token_id=start_token_id,
                                  end_token_id=end_token_id,
                                  num_layers=RNN_LAYERS,
@@ -120,11 +121,11 @@ def train(embed_matrix, one_hot_dictionary, start_token_id, end_token_id):
 
 def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index, start_token_id, end_token_id):
     print("infer mode")
-    single_generate = pre_senti.one_hot_generate(one_hot_dictionary,
-                                                 epoch=EPOCH_INFER,
-                                                 is_train=0)
-    batches = pre_senti.get_batch(batch_size=BATCH_SIZE_INFER,
-                                  iterator=single_generate)
+    single_generate = one_hot_generate(one_hot_dictionary,
+                                       epoch=EPOCH_INFER,
+                                       is_train=0)
+    batches = get_batch(batch_size=BATCH_SIZE_INFER,
+                        iterator=single_generate)
     logger.debug("batch generated")
 
     seq2seq_infer = Seq2seqModel(vocab_size=VOCAB_SIZE,
@@ -135,7 +136,7 @@ def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index, start_token
                                  learning_rate_initial=LEARNING_RATE_INITIAL,
                                  embed_matrix_init=embed_matrix,
                                  keep_prob=KEEP_PROB,
-                                 rnn_core="bgru_attetion",
+                                 rnn_core="bgru",
                                  start_token_id=start_token_id,
                                  end_token_id=end_token_id,
                                  num_layers=RNN_LAYERS,
@@ -150,13 +151,13 @@ def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index, start_token
 
 
 def batch_test(test_batch_num, one_hot_dictionary):
-    single_generate = pre_senti.one_hot_generate(one_hot_dictionary=one_hot_dictionary,
-                                                 epoch=1,
-                                                 is_train=1)
-    batches = pre_senti.get_batch(batch_size=32,
-                                  iterator=single_generate)
+    single_generate = one_hot_generate(one_hot_dictionary=one_hot_dictionary,
+                                       epoch=1,
+                                       is_train=1)
+    batches = get_batch(batch_size=32,
+                        iterator=single_generate)
     for i in range(test_batch_num):
-        encoder_batch, decoder_batch, target_batch, bucket_encoder_length, bucket_decoder_length, decode_max_iter, senti_batch = next(
+        encoder_batch, decoder_batch, target_batch, bucket_encoder_length, bucket_decoder_length, decode_max_iter, label, sen_vec = next(
             batches)
         print(i)
         print(encoder_batch)
@@ -165,7 +166,8 @@ def batch_test(test_batch_num, one_hot_dictionary):
         print(bucket_encoder_length)
         print(bucket_decoder_length)
         print(decode_max_iter)
-        print(senti_batch)
+        print(label)
+        print(sen_vec)
 
 
 def main():
