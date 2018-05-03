@@ -27,6 +27,18 @@ def make_dedup_file(file_name):
     print(file_name + " output complete")
 
 
+def make_dedup_index():
+    file = open('./data/sen_index_raw.txt', 'r')
+    index_sen = file.read().split()
+    file.close()
+    file = open('./data/sen_index_raw_dedup.txt', 'w')
+    for index in dup_index:
+        file.write(index_sen[index] + ' ')
+    print('dedup sen index output complete')
+
+
 init()
-print(len(dup_index))
-make_dedup_file('headline')
+# print(len(dup_index))
+# make_dedup_file('headline')
+# make_dedup_file('article')
+make_dedup_index()

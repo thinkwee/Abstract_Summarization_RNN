@@ -11,32 +11,32 @@ import numpy as np
 from keras.callbacks import ModelCheckpoint
 from keras.models import load_model
 
-MAX_FEATURES = 5000
-MAX_SENTENCE_LENGTH = 60
-
-maxlen = 0  # 句子最大长度
-word_freqs = collections.Counter()  # 词频
-num_recs = 0  # 样本数
-totallen = 0
-with open('./data/keras_pn_train.txt', 'r+') as f:
-    for line in f:
-        label, sentence = line.strip().split("-!-!-!")
-        words = nltk.word_tokenize(sentence.lower())
-        totallen += len(words)
-        if len(words) > maxlen:
-            maxlen = len(words)
-        for word in words:
-            word_freqs[word] += 1
-        num_recs += 1
-print("avg_len ", totallen / 20000)
-print('max_len ', maxlen)
-print('nb_words ', len(word_freqs))
-
-vocab_size = min(MAX_FEATURES, len(word_freqs)) + 2
-word2index = {x[0]: i + 2 for i, x in enumerate(word_freqs.most_common(MAX_FEATURES))}
-word2index["PAD"] = 0
-word2index["UNK"] = 1
-index2word = {v: k for k, v in word2index.items()}
+# MAX_FEATURES = 5000
+# MAX_SENTENCE_LENGTH = 60
+#
+# maxlen = 0  # 句子最大长度
+# word_freqs = collections.Counter()  # 词频
+# num_recs = 0  # 样本数
+# totallen = 0
+# with open('./data/keras_pn_train.txt', 'r+') as f:
+#     for line in f:
+#         label, sentence = line.strip().split("-!-!-!")
+#         words = nltk.word_tokenize(sentence.lower())
+#         totallen += len(words)
+#         if len(words) > maxlen:
+#             maxlen = len(words)
+#         for word in words:
+#             word_freqs[word] += 1
+#         num_recs += 1
+# print("avg_len ", totallen / 20000)
+# print('max_len ', maxlen)
+# print('nb_words ', len(word_freqs))
+#
+# vocab_size = min(MAX_FEATURES, len(word_freqs)) + 2
+# word2index = {x[0]: i + 2 for i, x in enumerate(word_freqs.most_common(MAX_FEATURES))}
+# word2index["PAD"] = 0
+# word2index["UNK"] = 1
+# index2word = {v: k for k, v in word2index.items()}
 
 
 def train():
@@ -138,7 +138,8 @@ def train():
 
 
 def predict(file_name):
-    num_recs = 100000
+    # output the index of sentiment sentence in middle copora to middle_sen.txt
+    num_recs = 300000
     X = np.empty(num_recs, dtype=list)
     i = 0
     with open('./data/' + file_name + '_middle.txt', 'r+') as f:
@@ -152,31 +153,29 @@ def predict(file_name):
                     seqs.append(word2index["UNK"])
             X[i] = seqs
             i += 1
-            if i == 100000:
+            if i == 300000:
                 break
     X = sequence.pad_sequences(X, maxlen=MAX_SENTENCE_LENGTH)
     print("word2index completed")
 
     model = load_model("./keras_model/weights-improvement-04-0.74100.hdf5")
-    output_file = open("./data/keras_lstm_sen_" + file_name + ".txt", "w")
-    for i in range(100000):
-        if i % 1000 == 0:
-            print("%d/100  completed" % (i / 1000))
+    output_file = open("./data/sen_" + file_name + "_index.txt", "w")
+    for i in range(300000):
+        if i % 3000 == 0:
+            print("%d/100  completed" % (i / 3000))
         x = X[i].reshape(1, MAX_SENTENCE_LENGTH)
         ypred = int(round(model.predict(x)[0][0]))
-        output_file.writelines(str(ypred) + "\n")
+        output_file.write(str(ypred) + " ")
     print("output completed")
 
 
 def remake_middle_copora():
-    file_article = open("./data/keras_lstm_sen_article.txt", "r")
-    file_headline = open("./data/keras_lstm_sen_headline.txt", "r")
-    article_np = []
-    headline_np = []
-    for line in file_article:
-        article_np.append(int(line))
-    for line in file_headline:
-        headline_np.append(int(line))
+    # change the index in middle_sen to real sentence
+    file_article = open("./data/sen_article_index.txt", "r")
+    file_headline = open("./data/sen_headline_index.txt", "r")
+    article_np = file_article.read().split()
+    headline_np = file_headline.read().split()
+
     file_article.close()
     file_headline.close()
 
@@ -196,21 +195,25 @@ def remake_middle_copora():
 
     file_article_output = open("./data/article_middle_sen.txt", "w")
     file_headline_output = open("./data/headline_middle_sen.txt", "w")
-    file_sen_output = open("./data/middle_sen.txt", "w")
+    file_sen_output = open("./data/sen_index_raw.txt", "w")
     count_p = 0
     count_n = 0
-    for i in range(100000):
+    for i in range(300000):
         if article_np[i] == headline_np[i]:
             file_article_output.writelines(article[i])
             file_headline_output.writelines(headline[i])
-            if article_np[i] == 1:
+            if article_np[i] == '1':
                 count_p += 1
-            elif article_np[i] == 0:
+            elif article_np[i] == '0':
                 count_n += 1
             file_sen_output.write(str(article_np[i]) + " ")
 
     print(count_p, count_n, count_n + count_p)
+    file_sen_output.close()
+    file_article_output.close()
+    file_headline_output.close()
 
-# predict("article")
+
+# predict("headline")
 # train()
-# remake_middle_copora()
+remake_middle_copora()

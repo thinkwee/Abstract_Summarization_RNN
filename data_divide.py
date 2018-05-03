@@ -25,14 +25,16 @@ def divide():
     # little:6880(32*215)
     # mid:99840(32*3120)
     # mid_sen:59200(32*1850)
-    line_test = 59200
+    # midplus_sen:176000(32*5500)
+    # midplus_sen_dedup:153600(32*4800)
+    line_test = 153600
 
     file_article_test = open('./data/article_middle_sen_test.txt', 'w')
     file_headline_test = open('./data/headline_middle_sen_test.txt', 'w')
     file_article_train = open('./data/article_middle_sen_train.txt', 'w')
     file_headline_train = open('./data/headline_middle_sen_train.txt', 'w')
-    file_article = open('./data/article_middle_sen_processed.txt', 'rb')
-    file_headline = open('./data/headline_middle_sen_processed.txt', 'rb')
+    file_article = open('./data/article_middle_sen_dedup.txt', 'rb')
+    file_headline = open('./data/headline_middle_sen_dedup.txt', 'rb')
     file_w2v_train = open('./data/traintext.txt', 'w')
 
     sentence_headline = bytes.decode(file_headline.readline())
@@ -101,7 +103,7 @@ def large2mid(file_name):
         output_file.write(line)
         output_file_together.write(line)
         count += 1
-        if count == 100000:
+        if count == 300000:
             break
     print(file_name + "_large to middle complete")
 
