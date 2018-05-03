@@ -409,7 +409,7 @@ class Seq2seqModel:
             writer = tf.summary.FileWriter('./graphs/seq2seq', sess.graph)
 
             for i in range(epoch_total):
-                shuffle.shuffle_train_data()
+                shuffle.shuffle_senti_data()
                 total_loss = 0.0
                 epoch_index, lr = sess.run([self.add_global_epoch, self.learning_rate])
                 self.logger.debug("at epoch {} the learning rate is {}".format(epoch_index, lr))

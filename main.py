@@ -1,9 +1,9 @@
 from word2vec.w2v import w2v
 import logging.config
-# from seq2seq import Seq2seqModel
-# from pre_process import *
-from seq2seq_senti import Seq2seqModel
-from pre_process_senti import *
+from seq2seq import Seq2seqModel
+from pre_process import *
+# from seq2seq_senti import Seq2seqModel
+# from pre_process_senti import *
 from numpy import *
 import sys
 import pickle
@@ -22,7 +22,7 @@ logger.setLevel(logging.DEBUG)
 VOCAB_SIZE = 3000
 EMBED_SIZE = 256
 ENCODER_HIDEEN_UNITS = 512
-DECODER_HIDDEN_UNITS = 1030
+DECODER_HIDDEN_UNITS = 1024
 LEARNING_RATE_INITIAL = 0.1
 BATCH_SIZE = 32
 RNN_LAYERS = 2
