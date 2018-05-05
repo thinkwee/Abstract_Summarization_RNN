@@ -322,8 +322,10 @@ class Seq2seqModel:
             if ckpt and ckpt.model_checkpoint_path:
                 saver.restore(sess, ckpt.model_checkpoint_path)
                 print("the model has been successfully restored")
+                file_senti_test = open("./infer/senti_test.txt", "w")
+
                 for _ in range(epoch):
-                    for _ in range(num_train_steps):
+                    for index_num in range(num_train_steps):
                         encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length, decoder_max_iter, article_sen_vec, headline_sen_vec = next(
                             batches)
 
@@ -346,8 +348,6 @@ class Seq2seqModel:
 
                         targets = sess.run(self.decoder_targets, feed_dict=feed_dict)
 
-                        file_senti_test = open("./infer/senti_test.txt", "w")
-
                         file = open("./infer/output.txt", "w")
                         for index in range(self.batch_size):
 
@@ -364,7 +364,8 @@ class Seq2seqModel:
                             file.write("\n")
                             file_senti_test.write(output)
                             file_senti_test.write("\n")
-                            file_create = open("./ROUGE/models/test" + str(index) + ".txt", "w")
+                            file_create = open(
+                                "./ROUGE/models/test" + str(index + index_num * self.batch_size) + ".txt", "w")
                             file_create.writelines(output)
                             file_create.close()
 
@@ -389,11 +390,10 @@ class Seq2seqModel:
                                     output += " "
                             file.write(output)
                             file.write("\n")
-                            print("output %d finished" % index)
+                            print("output %d finished" % (index + index_num * self.batch_size))
 
                         file.close()
-                        file_senti_test.close()
-                        print("infer file updated")
+                        # file_senti_test.close()
             else:
                 print("model restored failed")
                 pass

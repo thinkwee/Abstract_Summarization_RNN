@@ -214,8 +214,8 @@ def remake_middle_copora():
     file_headline_output.close()
 
 
-def test_sentiment():
-    num_recs = 64
+def test_sentiment(size):
+    num_recs = size
     X = np.empty(num_recs, dtype=list)
     i = 0
     with open('./infer/senti_test.txt', 'r+') as f:
@@ -229,21 +229,27 @@ def test_sentiment():
                     seqs.append(word2index["UNK"])
             X[i] = seqs
             i += 1
-            if i == 64:
+            if i == size:
                 break
     X = sequence.pad_sequences(X, maxlen=MAX_SENTENCE_LENGTH)
     print("word2index completed")
 
     model = load_model("./keras_model/weights-improvement-04-0.74100.hdf5")
-    for i in range(64):
+
+    senti_ans = []
+    for i in range(size):
         x = X[i].reshape(1, MAX_SENTENCE_LENGTH)
         ypred = int(round(model.predict(x)[0][0]))
-        print(str(ypred) + ' ', end='')
-        if i == 31:
-            print('\n', end='')
-    print("output completed")
+        senti_ans.append(ypred)
+    count = 0
+    for i in range(int(size / 2)):
+        if senti_ans[i] == senti_ans[i + int(size / 2)]:
+            count += 1
+    print("%d/%d" % (count, size / 2))
+    print(count / size * 2)
+
 
 # predict("headline")
 # train()
 # remake_middle_copora()
-test_sentiment()
+test_sentiment(640)

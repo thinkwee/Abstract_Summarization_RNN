@@ -33,7 +33,8 @@
 - [x] save each test result
 - [ ] fix unk problems
 - [x] train sentiment classification svm
-- [ ] add sentiment-blended word embeddings
+- [x] add sentiment-blended word embeddings
+- [x] test sentiment classify
 - [X] use larger corpus
 
 # current effect
