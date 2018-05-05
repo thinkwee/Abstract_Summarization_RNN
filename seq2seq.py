@@ -9,7 +9,7 @@ import shuffle
 class Seq2seqModel:
     def __init__(self, vocab_size, embed_size, encoder_hidden_units, decoder_hidden_units, batch_size,
                  embed_matrix_init, learning_rate_initial, keep_prob, rnn_core, start_token_id,
-                 end_token_id, num_layers, grad_clip, is_continue):
+                 end_token_id, num_layers, grad_clip, is_continue, one_hot):
         self.vocab_size = vocab_size
         self.embed_size = embed_size
         self.encoder_hidden_units = encoder_hidden_units
@@ -27,6 +27,7 @@ class Seq2seqModel:
         self.grad_clip = grad_clip
         self.is_continue = is_continue
         self.num_layers = num_layers
+        self.one_hot = one_hot
 
     def _create_placeholder(self):
         with tf.name_scope("data_seq2seq"):
@@ -457,7 +458,7 @@ class Seq2seqModel:
                                                                          total_loss / skip_steps))
                             total_loss = 0.0
 
-    def test(self, epoch, num_train_steps, batches, one_hot):
+    def test(self, epoch, num_train_steps, batches):
         saver = tf.train.Saver()
         ckpt = tf.train.get_checkpoint_state(self.MODEL_FILE)
         with tf.Session() as sess:
@@ -493,7 +494,7 @@ class Seq2seqModel:
 
                             file.write("     - infer headline: \n")
                             prediction_infer_single = prediction_infer[index]
-                            answer = [one_hot[i] for i in prediction_infer_single]
+                            answer = [self.one_hot[i] for i in prediction_infer_single]
                             output = "        "
                             for i in answer:
                                 if i != 'UNK' and i != '_PAD':
@@ -507,7 +508,7 @@ class Seq2seqModel:
 
                             file.write("     - train headline: \n")
                             prediction_train_single = prediction_train[index]
-                            answer = [one_hot[i] for i in prediction_train_single]
+                            answer = [self.one_hot[i] for i in prediction_train_single]
                             output = "        "
                             for i in answer:
                                 if i != 'UNK' and i != '_PAD':
@@ -518,7 +519,7 @@ class Seq2seqModel:
 
                             file.write("     - targets: \n")
                             targets_single = targets[index]
-                            answer = [one_hot[i] for i in targets_single]
+                            answer = [self.one_hot[i] for i in targets_single]
                             output = "        "
                             for i in answer:
                                 if i != 'UNK' and i != '_PAD':

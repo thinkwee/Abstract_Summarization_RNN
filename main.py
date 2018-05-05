@@ -1,9 +1,9 @@
 from word2vec.w2v import w2v
 import logging.config
-from seq2seq import Seq2seqModel
-from pre_process import *
-# from seq2seq_senti import Seq2seqModel
-# from pre_process_senti import *
+# from seq2seq import Seq2seqModel
+# from pre_process import *
+from seq2seq_senti import Seq2seqModel
+from pre_process_senti import *
 from numpy import *
 import sys
 import pickle
@@ -22,13 +22,13 @@ logger.setLevel(logging.DEBUG)
 VOCAB_SIZE = 3000
 EMBED_SIZE = 256
 ENCODER_HIDEEN_UNITS = 512
-DECODER_HIDDEN_UNITS = 1024
+DECODER_HIDDEN_UNITS = 1030
 LEARNING_RATE_INITIAL = 0.1
 BATCH_SIZE = 32
 RNN_LAYERS = 2
 EPOCH = 1000
-NUM_TRAIN_STEPS = 1850
-SKIP_STEPS = 200
+NUM_TRAIN_STEPS = 4800
+SKIP_STEPS = 400
 KEEP_PROB = 0.5
 CONTINUE_TRAIN = 0
 GRAD_CLIP = 1.0
@@ -86,7 +86,7 @@ def load_embed_matrix():
     return embed_matrix, one_hot_dictionary, one_hot_dictionary_index
 
 
-def train(embed_matrix, one_hot_dictionary, start_token_id, end_token_id):
+def train(embed_matrix, one_hot_dictionary, one_hot_dictionary_index, start_token_id, end_token_id):
     print("train mode")
 
     single_generate = one_hot_generate(one_hot_dictionary=one_hot_dictionary,
@@ -109,7 +109,8 @@ def train(embed_matrix, one_hot_dictionary, start_token_id, end_token_id):
                                  end_token_id=end_token_id,
                                  num_layers=RNN_LAYERS,
                                  grad_clip=GRAD_CLIP,
-                                 is_continue=CONTINUE_TRAIN)
+                                 is_continue=CONTINUE_TRAIN,
+                                 one_hot=one_hot_dictionary_index)
     seq2seq_train.build_graph()
     print("the model has been built")
 
@@ -141,12 +142,12 @@ def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index, start_token
                                  end_token_id=end_token_id,
                                  num_layers=RNN_LAYERS,
                                  grad_clip=GRAD_CLIP,
-                                 is_continue=0)
+                                 is_continue=0,
+                                 one_hot=one_hot_dictionary_index)
     seq2seq_infer.build_graph()
     seq2seq_infer.test(epoch=EPOCH_INFER,
                        num_train_steps=NUM_TRAIN_STEPS_INFER,
-                       batches=batches,
-                       one_hot=one_hot_dictionary_index)
+                       batches=batches)
     logger.debug("seq2seq model tested")
 
 
@@ -157,17 +158,16 @@ def batch_test(test_batch_num, one_hot_dictionary):
     batches = get_batch(batch_size=32,
                         iterator=single_generate)
     for i in range(test_batch_num):
-        encoder_batch, decoder_batch, target_batch, bucket_encoder_length, bucket_decoder_length, decode_max_iter, label, sen_vec = next(
+        encoder_batch, decoder_batch, target_batch, bucket_encoder_length, bucket_decoder_length, decode_max_iter, article_sen_vec, headline_sen_vec = next(
             batches)
-        print(i)
         print(encoder_batch)
         print(decoder_batch)
         print(target_batch)
         print(bucket_encoder_length)
         print(bucket_decoder_length)
         print(decode_max_iter)
-        print(label)
-        print(sen_vec)
+        print(article_sen_vec)
+        print(headline_sen_vec)
 
 
 def main():
@@ -185,6 +185,7 @@ def main():
         start_token_id = one_hot_dictionary['_GO']
         end_token_id = one_hot_dictionary['_EOS']
         train(embed_matrix=embed_matrix, one_hot_dictionary=one_hot_dictionary,
+              one_hot_dictionary_index=one_hot_dictionary_index,
               start_token_id=start_token_id, end_token_id=end_token_id)
     elif option == "-test":
         embed_matrix, one_hot_dictionary, one_hot_dictionary_index = load_embed_matrix()

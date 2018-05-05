@@ -33,8 +33,8 @@ def divide():
     file_headline_test = open('./data/headline_middle_sen_test.txt', 'w')
     file_article_train = open('./data/article_middle_sen_train.txt', 'w')
     file_headline_train = open('./data/headline_middle_sen_train.txt', 'w')
-    file_article = open('./data/article_middle_sen_dedup.txt', 'rb')
-    file_headline = open('./data/headline_middle_sen_dedup.txt', 'rb')
+    file_article = open('./data/article_middle_sen_dedup_processed.txt', 'rb')
+    file_headline = open('./data/headline_middle_sen_dedup_processed.txt', 'rb')
     file_w2v_train = open('./data/traintext.txt', 'w')
 
     sentence_headline = bytes.decode(file_headline.readline())

@@ -2,14 +2,21 @@ import tensorflow as tf
 import logging.config
 import tensorflow.contrib.seq2seq as s2s
 import tensorflow.contrib as contrib
-import tensorflow.contrib.rnn as rnn
 import shuffle
+import sentiwordnet
+import nltk
+import numpy as np
+
+
+# net_path = "./data/SentiWordNet.txt"
+# np_dict = sentiwordnet.SentiWordNet(net_path)
+# np_dict.infoextract()
 
 
 class Seq2seqModel:
     def __init__(self, vocab_size, embed_size, encoder_hidden_units, decoder_hidden_units, batch_size,
                  embed_matrix_init, learning_rate_initial, keep_prob, rnn_core, start_token_id,
-                 end_token_id, num_layers, grad_clip, is_continue):
+                 end_token_id, num_layers, grad_clip, is_continue, one_hot):
         self.vocab_size = vocab_size
         self.embed_size = embed_size
         self.encoder_hidden_units = encoder_hidden_units
@@ -27,6 +34,7 @@ class Seq2seqModel:
         self.grad_clip = grad_clip
         self.is_continue = is_continue
         self.num_layers = num_layers
+        self.one_hot = one_hot
 
     def _create_placeholder(self):
         with tf.name_scope("data_seq2seq"):
@@ -36,8 +44,11 @@ class Seq2seqModel:
             self.decoder_length = tf.placeholder(shape=(None,), dtype=tf.int32, name='decoder_length')
             self.encoder_length = tf.placeholder(shape=(None,), dtype=tf.int32, name='encoder_length')
             self.decoder_max_iter = tf.placeholder(shape=(), dtype=tf.int32, name='encoder_length')
-            self.label = tf.placeholder(shape=(self.batch_size,), dtype=tf.int32, name='sentiment_label')
-            self.sen_vec = tf.placeholder(shape=(self.batch_size, None), dtype=tf.float32, name="sentiment_vector")
+            # self.label = tf.placeholder(shape=(self.batch_size,), dtype=tf.int32, name='sentiment_label')
+            self.article_sen_vec = tf.placeholder(shape=(self.batch_size, None), dtype=tf.float32,
+                                                  name="article_sentiment_vector")
+            self.headline_sen_vec = tf.placeholder(shape=(self.batch_size, None), dtype=tf.float32,
+                                                   name="headline_sentiment_vector")
 
     def _create_embedding(self):
         # self.embeddings_encoder = tf.Variable(tf.random_uniform([self.vocab_size, self.embed_size]))
@@ -46,21 +57,6 @@ class Seq2seqModel:
         self.embeddings_decoder = tf.Variable(initial_value=self.embed_matrix_init, trainable=True)
         self.encoder_inputs_embedded = tf.nn.embedding_lookup(self.embeddings_encoder, self.encoder_inputs)
         self.decoder_inputs_embedded = tf.nn.embedding_lookup(self.embeddings_decoder, self.decoder_inputs)
-
-    def _create_blstmcell(self):
-        with tf.variable_scope('lstm_layer', reuse=tf.AUTO_REUSE):
-            cell_fw = rnn.LSTMCell(
-                num_units=self.encoder_hidden_units,
-                initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=114),
-                state_is_tuple=True)
-            cell_bw = rnn.LSTMCell(
-                num_units=self.encoder_hidden_units,
-                initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=133),
-                state_is_tuple=True)
-
-            cell_fw = rnn.DropoutWrapper(cell=cell_fw, output_keep_prob=self.keep_prob)
-            cell_bw = rnn.DropoutWrapper(cell=cell_bw, output_keep_prob=self.keep_prob)
-        return cell_fw, cell_bw
 
     def _create_bgrucell(self):
         with tf.variable_scope("bgru_layer"):
@@ -73,62 +69,6 @@ class Seq2seqModel:
                 kernel_initializer=tf.truncated_normal_initializer(mean=0.0,
                                                                    stddev=0.1))
         return cell_fw, cell_bw
-
-    def _create_grucell(self):
-        cell = contrib.cudnn_rnn.CudnnCompatibleGRUCell(num_units=self.encoder_hidden_units,
-                                                        kernel_initializer=tf.truncated_normal_initializer(mean=0.0,
-                                                                                                           stddev=0.1))
-        return cell
-
-    def _create_blstm_seq2seq(self):
-        # BiLSTM Encoder
-        with tf.variable_scope('encoder', reuse=tf.AUTO_REUSE):
-            cell_fw, cell_bw = self._create_blstmcell()
-            (self.encoder_inputs_embedded, self.encoder_final_state) = tf.nn.bidirectional_dynamic_rnn(
-                cell_fw=cell_fw,
-                cell_bw=cell_bw,
-                inputs=self.encoder_inputs_embedded,
-                dtype=tf.float32)
-            self.encoder_inputs_embedded = tf.add_n(self.encoder_inputs_embedded)
-
-            self.encoder_final_state_c = tf.concat(
-                (self.encoder_final_state[0].c, self.encoder_final_state[1].c), 1)
-            self.encoder_final_state_h = tf.concat(
-                (self.encoder_final_state[0].h, self.encoder_final_state[1].h), 1)
-            self.encoder_final_state = contrib.rnn.LSTMStateTuple(
-                c=self.encoder_final_state_c,
-                h=self.encoder_final_state_h)
-
-        # Basic LSTM Decoder(train and infer)
-        with tf.variable_scope('decoder', reuse=tf.AUTO_REUSE):
-            self.decoder_cell = tf.nn.rnn_cell.LSTMCell(num_units=self.decoder_hidden_units,
-                                                        state_is_tuple=True)
-            self.fc_layer = tf.layers.Dense(self.vocab_size, name='dense_layer')
-
-            # for train
-            with tf.variable_scope('decoder_train', reuse=tf.AUTO_REUSE):
-                self.helper_train = contrib.seq2seq.TrainingHelper(inputs=self.decoder_inputs_embedded,
-                                                                   sequence_length=self.decoder_length)
-                self.decoder_train = contrib.seq2seq.BasicDecoder(cell=self.attn_cell,
-                                                                  initial_state=self.decoder_initial_state,
-                                                                  helper=self.helper_train,
-                                                                  output_layer=self.fc_layer
-                                                                  )
-                self.decoder_train_logits, _, _ = s2s.dynamic_decode(decoder=self.decoder_train
-                                                                     )
-            # for infer
-            with tf.variable_scope('decoder_infer', reuse=tf.AUTO_REUSE):
-                self.start_tokens = tf.tile([self.start_token_id], [self.batch_size])
-                self.helper_infer = contrib.seq2seq.GreedyEmbeddingHelper(embedding=self.embeddings_decoder,
-                                                                          start_tokens=self.start_tokens,
-                                                                          end_token=self.end_token_id)
-                self.decoder_infer = contrib.seq2seq.BasicDecoder(cell=self.attn_cell,
-                                                                  initial_state=self.decoder_initial_state,
-                                                                  helper=self.helper_infer,
-                                                                  output_layer=self.fc_layer)
-                self.decoder_infer_logits, _, _ = s2s.dynamic_decode(decoder=self.decoder_infer,
-                                                                     maximum_iterations=self.decoder_max_iter
-                                                                     )
 
     def _create_bgru_seq2seq(self):
         # single layer bgru encoder
@@ -152,7 +92,7 @@ class Seq2seqModel:
             self.encoder_final_state = tf.concat(axis=1, values=[encoder_final_state_fw[self.num_layers - 1],
                                                                  encoder_final_state_bw[self.num_layers - 1]])
 
-            self.encoder_final_state = tf.concat(axis=1, values=[self.encoder_final_state, self.sen_vec])
+            self.encoder_final_state = tf.concat(axis=1, values=[self.encoder_final_state, self.article_sen_vec])
 
         # basic gru Decoder for train and infer
         with tf.variable_scope('decoder', reuse=tf.AUTO_REUSE):
@@ -192,137 +132,48 @@ class Seq2seqModel:
                                                                      maximum_iterations=self.decoder_max_iter
                                                                      )
 
-    def _create_gru_seq2seq(self):
-        # multilayers gru encoder
-        with tf.variable_scope('encoder', reuse=tf.AUTO_REUSE):
-            inputs = self.encoder_inputs_embedded
-            encoder_cell = contrib.rnn.MultiRNNCell([self._create_grucell() for _ in range(self.num_layers)])
-            (output, self.encoder_final_state) = tf.nn.dynamic_rnn(
-                cell=encoder_cell,
-                inputs=inputs,
-                dtype=tf.float32,
-                sequence_length=self.encoder_length,
-                parallel_iterations=32)
-
-        # multilayers gru Decoder for train and infer with same num_layers in encoder
-        with tf.variable_scope('decoder', reuse=tf.AUTO_REUSE):
-            decoder_cell = contrib.rnn.MultiRNNCell([self._create_grucell() for _ in range(self.num_layers)])
-
-            self.fc_layer = tf.layers.Dense(self.vocab_size,
-                                            kernel_initializer=tf.truncated_normal_initializer(mean=0.0,
-                                                                                               stddev=0.1),
-                                            name='dense_layer')
-
-            with tf.variable_scope('decoder_train', reuse=tf.AUTO_REUSE):
-                # for train
-                self.helper_train = contrib.seq2seq.TrainingHelper(inputs=self.decoder_inputs_embedded,
-                                                                   sequence_length=self.decoder_length)
-                self.decoder_train = contrib.seq2seq.BasicDecoder(cell=decoder_cell,
-                                                                  initial_state=self.encoder_final_state,
-                                                                  helper=self.helper_train,
-                                                                  output_layer=self.fc_layer
-                                                                  )
-                self.decoder_train_output, _, _ = s2s.dynamic_decode(decoder=self.decoder_train,
-                                                                     maximum_iterations=self.decoder_max_iter)
-
-            with tf.variable_scope('decoder_infer', reuse=tf.AUTO_REUSE):
-                # for infer
-                self.start_tokens = tf.fill([self.batch_size], self.start_token_id)
-                self.helper_infer = contrib.seq2seq.GreedyEmbeddingHelper(embedding=self.embeddings_decoder,
-                                                                          start_tokens=self.start_tokens,
-                                                                          end_token=self.end_token_id)
-                self.decoder_infer = contrib.seq2seq.BasicDecoder(cell=decoder_cell,
-                                                                  initial_state=self.encoder_final_state,
-                                                                  helper=self.helper_infer,
-                                                                  output_layer=self.fc_layer)
-                self.decoder_infer_output, _, _ = s2s.dynamic_decode(self.decoder_infer,
-                                                                     impute_finished=True,
-                                                                     maximum_iterations=self.decoder_max_iter
-                                                                     )
-
-    def _create_attention_seq2seq(self):
-        # single layer bgru encoder
-        with tf.variable_scope('encoder', reuse=tf.AUTO_REUSE):
-            inputs = self.encoder_inputs_embedded
-            cell_fw, cell_bw = self._create_bgrucell()
-            with tf.variable_scope(None, default_name="encoder"):
-                (output, self.encoder_final_state) = tf.nn.bidirectional_dynamic_rnn(
-                    cell_fw=cell_fw,
-                    cell_bw=cell_bw,
-                    inputs=inputs,
-                    dtype=tf.float32,
-                    sequence_length=self.encoder_length,
-                    parallel_iterations=32)
-
-            self.encoder_final_state = tf.concat(self.encoder_final_state, 1)
-
-        # basic gru Decoder for train and infer
-        with tf.variable_scope('decoder', reuse=tf.AUTO_REUSE):
-            self.decoder_cell = tf.nn.rnn_cell.GRUCell(num_units=self.decoder_hidden_units,
-                                                       name='decoder_cell')
-            self.attention_state = self.encoder_inputs_embedded
-            self.attention_mechanism = contrib.seq2seq.LuongAttention(num_units=self.decoder_hidden_units,
-                                                                      memory=self.attention_state,
-                                                                      memory_sequence_length=self.encoder_length)
-            self.attn_cell = contrib.seq2seq.AttentionWrapper(cell=self.decoder_cell,
-                                                              attention_mechanism=self.attention_mechanism,
-                                                              name="decoder_attention_cell",
-                                                              alignment_history=False
-                                                              )
-            self.fc_layer = tf.layers.Dense(self.vocab_size, name='dense_layer')
-
-            with tf.variable_scope('decoder_train', reuse=tf.AUTO_REUSE):
-                # for train
-                self.helper_train = contrib.seq2seq.TrainingHelper(inputs=self.decoder_inputs_embedded,
-                                                                   sequence_length=self.decoder_length)
-                self.decoder_initial_state = self.attn_cell.zero_state(self.batch_size, dtype=tf.float32).clone(
-                    cell_state=self.encoder_final_state)
-                self.decoder_train = contrib.seq2seq.BasicDecoder(cell=self.attn_cell,
-                                                                  initial_state=self.decoder_initial_state,
-                                                                  helper=self.helper_train,
-                                                                  output_layer=self.fc_layer
-                                                                  )
-                self.decoder_train_output, _, _ = s2s.dynamic_decode(decoder=self.decoder_train
-                                                                     )
-            with tf.variable_scope('decoder_infer', reuse=tf.AUTO_REUSE):
-                # for infer
-                self.start_tokens = tf.fill([self.batch_size], self.start_token_id)
-                self.helper_infer = contrib.seq2seq.GreedyEmbeddingHelper(embedding=self.embeddings_decoder,
-                                                                          start_tokens=self.start_tokens,
-                                                                          end_token=self.end_token_id)
-                self.decoder_infer = contrib.seq2seq.BasicDecoder(cell=self.attn_cell,
-                                                                  initial_state=self.decoder_initial_state,
-                                                                  helper=self.helper_infer,
-                                                                  output_layer=self.fc_layer)
-                self.decoder_infer_output, _, _ = s2s.dynamic_decode(self.decoder_infer,
-                                                                     maximum_iterations=self.decoder_max_iter
-                                                                     )
-
     def _create_seq2seq(self):
 
-        if self.core == "blstm":
-            self._create_blstm_seq2seq()
-
-        elif self.core == "bgru":
+        if self.core == "bgru":
             self._create_bgru_seq2seq()
-
-        elif self.core == "bgru_attetion":
-            self._create_attention_seq2seq()
-
-        elif self.core == "gru":
-            self._create_gru_seq2seq()
+        else:
+            print("only senti_bgru is provided")
 
     def _create_loss(self):
         with tf.name_scope("loss"):
             self.targets = tf.identity(self.decoder_targets)
             self.logits_train = tf.identity(self.decoder_train_output.rnn_output, 'training_logits')
+            self.sample_id_train = tf.identity(self.decoder_train_output.sample_id, 'training_sample_id')
             self.logits_infer = tf.identity(self.decoder_infer_output.rnn_output, 'infer_logits')
+            self.sentence_infer = tf.identity(self.decoder_infer_output.sample_id, 'infering_sample_id')
+
+            # change the sample id to words
+            # self.sentence_train = []
+            # for i in range(self.batch_size):
+            #     print(self.sample_id_train[i])
+            #     temp = tf.map_fn(fn=lambda x: self.one_hot[x], elems=self.sample_id_train[i])
+            #     self.sentence_train.append(temp)
+
+            # calculate the sentiment vector of output sentence
+            # self.infer_sen_vec = []
+            # for i in range(self.batch_size):
+            #     text = nltk.word_tokenize(self.sentence_train[i])
+            #     pos_info = nltk.pos_tag(text)
+            #     temp = sentiwordnet.make_np_vector(np_dict, pos_info)
+            #     sen_vec = np.zeros([6], dtype=float)
+            #     for j in range(6):
+            #         sen_vec[j] = temp[j]
+            #     self.infer_sen_vec.append(sen_vec)
+
+            # calculate the sentiment loss(regular)
+            # self.loss_seniment = tf.reduce_mean(tf.square(self.infer_sen_vec - self.headline_sen_vec))
 
             # use mask to achieve dynamic loss calculate,but first you should make targets be padded
             masks_train = tf.sequence_mask(self.decoder_length, self.decoder_max_iter, dtype=tf.float32, name='masks')
             self.loss = s2s.sequence_loss(targets=self.targets,
                                           logits=self.logits_train,
                                           weights=masks_train)
+            # self.loss += self.loss_seniment
 
     def _create_optimizer(self):
         with tf.name_scope("optimizer"):
@@ -330,14 +181,14 @@ class Seq2seqModel:
             train_variable = tf.trainable_variables()
             grads, _ = tf.clip_by_global_norm(tf.gradients(self.loss, train_variable), self.grad_clip)
 
-            # exponential_decay learning  rate
+            # exponential_decay learning rate
             # self.learning_rate = tf.train.exponential_decay(self.learning_rate_initial,
             #                                                 global_step=self.global_epoch,
             #                                                 decay_steps=1000, decay_rate=0.995)
 
             # sin learning rate
-            sinvalue = tf.sin(tf.multiply(3.14 / 5.0, self.global_epoch))
-            self.learning_rate = tf.add(tf.multiply(0.1, sinvalue), 0.11)
+            sin_value = tf.sin(tf.multiply(3.14 / 5.0, self.global_epoch))
+            self.learning_rate = tf.add(tf.multiply(0.1, sin_value), 0.11)
 
             self.add_global_epoch = self.global_epoch.assign_add(1.0)
             self.add_global_step = self.global_step.assign_add(self.batch_size)
@@ -406,7 +257,7 @@ class Seq2seqModel:
                 saver.restore(sess, ckpt.model_checkpoint_path)
                 print("continue training seq2seq model in [%s] mode" % self.core)
             else:
-                saver = tf.train.Saver(max_to_keep=1)
+                saver = tf.train.Saver(max_to_keep=3)
                 sess.run(tf.global_variables_initializer())
                 print("start training seq2seq model in [%s] mode" % self.core)
 
@@ -423,7 +274,7 @@ class Seq2seqModel:
                 # save last batch in each epoch for validation
                 for index in range(num_train_steps):
                     self.global_step = sess.run(self.add_global_step)
-                    encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length, decoder_max_iter, label, sen_vec = next(
+                    encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length, decoder_max_iter, article_sen_vec, headline_sen_vec = next(
                         batches)
                     feed_dict = {
                         self.decoder_targets: decoder_targets,
@@ -432,8 +283,8 @@ class Seq2seqModel:
                         self.decoder_inputs: decoder_inputs,
                         self.encoder_length: encoder_length,
                         self.decoder_max_iter: decoder_max_iter,
-                        self.label: label,
-                        self.sen_vec: sen_vec
+                        self.article_sen_vec: article_sen_vec,
+                        self.headline_sen_vec: headline_sen_vec
                     }
                     if index == num_train_steps - 1:
                         loss_batch_validate, = sess.run([self.loss],
@@ -444,13 +295,14 @@ class Seq2seqModel:
                         # save 5 minimum validate loss model
                         # if min_validate_loss > loss_batch_validate:
                         #     min_validate_loss = loss_batch_validate
-                        saver.save(sess=sess,
-                                   save_path=self.MODEL_FILE + 'model.ckpt',
-                                   global_step=self.global_step,
-                                   write_meta_graph=True)
-                        self.logger.debug(
-                            "seq2seq trained,model saved at epoch {},validate loss is {}\n".format(epoch_index,
-                                                                                                   min_validate_loss))
+                        if epoch_index % 10 == 0:
+                            saver.save(sess=sess,
+                                       save_path=self.MODEL_FILE + 'model.ckpt',
+                                       global_step=self.global_step,
+                                       write_meta_graph=True)
+                            self.logger.debug(
+                                "seq2seq trained,model saved at epoch {},validate loss is {}\n".format(epoch_index,
+                                                                                                       min_validate_loss))
                     else:
                         loss_batch, _, summary = sess.run([self.loss, self.train_op, self.summary_op],
                                                           feed_dict=feed_dict)
@@ -463,7 +315,7 @@ class Seq2seqModel:
                                                                          total_loss / skip_steps))
                             total_loss = 0.0
 
-    def test(self, epoch, num_train_steps, batches, one_hot):
+    def test(self, epoch, num_train_steps, batches):
         saver = tf.train.Saver()
         ckpt = tf.train.get_checkpoint_state(self.MODEL_FILE)
         with tf.Session() as sess:
@@ -472,7 +324,7 @@ class Seq2seqModel:
                 print("the model has been successfully restored")
                 for _ in range(epoch):
                     for _ in range(num_train_steps):
-                        encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length, decoder_max_iter, label, sen_vec = next(
+                        encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length, decoder_max_iter, article_sen_vec, headline_sen_vec = next(
                             batches)
 
                         feed_dict = {
@@ -482,8 +334,8 @@ class Seq2seqModel:
                             self.decoder_inputs: decoder_inputs,
                             self.encoder_length: encoder_length,
                             self.decoder_max_iter: decoder_max_iter,
-                            self.label: label,
-                            self.sen_vec: sen_vec
+                            self.article_sen_vec: article_sen_vec,
+                            self.headline_sen_vec: headline_sen_vec
                         }
 
                         infer_output = sess.run(self.decoder_infer_output, feed_dict=feed_dict)
@@ -498,10 +350,9 @@ class Seq2seqModel:
                         for index in range(self.batch_size):
 
                             file.write("- group %d\n" % (index + 1))
-
                             file.write("     - infer headline: \n")
                             prediction_infer_single = prediction_infer[index]
-                            answer = [one_hot[i] for i in prediction_infer_single]
+                            answer = [self.one_hot[i] for i in prediction_infer_single]
                             output = "        "
                             for i in answer:
                                 if i != 'UNK' and i != '_PAD':
@@ -515,7 +366,7 @@ class Seq2seqModel:
 
                             file.write("     - train headline: \n")
                             prediction_train_single = prediction_train[index]
-                            answer = [one_hot[i] for i in prediction_train_single]
+                            answer = [self.one_hot[i] for i in prediction_train_single]
                             output = "        "
                             for i in answer:
                                 if i != 'UNK' and i != '_PAD':
@@ -526,7 +377,7 @@ class Seq2seqModel:
 
                             file.write("     - targets: \n")
                             targets_single = targets[index]
-                            answer = [one_hot[i] for i in targets_single]
+                            answer = [self.one_hot[i] for i in targets_single]
                             output = "        "
                             for i in answer:
                                 if i != 'UNK' and i != '_PAD':

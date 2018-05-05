@@ -48,7 +48,6 @@ class SentiWordNet():
     def infoextract(self):
         tempdict = {}
         f = open(self.netpath, "r")
-        print('start extracting.......')
         # Example line:
         # POS     ID     PosS  NegS SynsetTerm#sensenumber Desc
         # a   00009618  0.5    0.25  spartan#4 austere#3 ascetical#2  ……
@@ -156,7 +155,7 @@ def make_np_vector(np_dict, pos_info):
     return vector
 
 
-if __name__ == '__main__':
+def test():
     net_path = "./data/SentiWordNet.txt"
     swn = SentiWordNet(net_path)
     swn.infoextract()
@@ -164,19 +163,23 @@ if __name__ == '__main__':
                "lowered themselves to deceptive advertizing as far as I see it. "
     text = nltk.word_tokenize(sentence)
     pos_info = nltk.pos_tag(text)
-    print(check_np(swn, pos_info))
+    return make_np_vector(swn, pos_info)
 
-# print("good#a " + str(swn.getscore('good', 'a')))
-# print("good#n " + str(swn.getscore('good', 'n')))
-# print("good#r " + str(swn.getscore('good', 'r')))
-# print("good#v " + str(swn.getscore('good', 'v')))
-#
-# print("bad#a " + str(swn.getscore('bad', 'a')))
-# print("bad#n " + str(swn.getscore('bad', 'n')))
-# print("bad#r " + str(swn.getscore('bad', 'r')))
-# print("bad#v " + str(swn.getscore('bad', 'v')))
-#
-# print("happy#a " + str(swn.getscore('happy', 'a')))
-# print("happy#n " + str(swn.getscore('happy', 'n')))
-# print("happy#r " + str(swn.getscore('happy', 'r')))
-# print("happy#v " + str(swn.getscore('happy', 'v')))
+
+if __name__ == '__main__':
+    test()
+
+    # print("good#a " + str(swn.getscore('good', 'a')))
+    # print("good#n " + str(swn.getscore('good', 'n')))
+    # print("good#r " + str(swn.getscore('good', 'r')))
+    # print("good#v " + str(swn.getscore('good', 'v')))
+    #
+    # print("bad#a " + str(swn.getscore('bad', 'a')))
+    # print("bad#n " + str(swn.getscore('bad', 'n')))
+    # print("bad#r " + str(swn.getscore('bad', 'r')))
+    # print("bad#v " + str(swn.getscore('bad', 'v')))
+    #
+    # print("happy#a " + str(swn.getscore('happy', 'a')))
+    # print("happy#n " + str(swn.getscore('happy', 'n')))
+    # print("happy#r " + str(swn.getscore('happy', 'r')))
+    # print("happy#v " + str(swn.getscore('happy', 'v')))
