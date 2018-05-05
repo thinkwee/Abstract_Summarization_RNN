@@ -346,6 +346,8 @@ class Seq2seqModel:
 
                         targets = sess.run(self.decoder_targets, feed_dict=feed_dict)
 
+                        file_senti_test = open("./infer/senti_test.txt", "w")
+
                         file = open("./infer/output.txt", "w")
                         for index in range(self.batch_size):
 
@@ -360,6 +362,8 @@ class Seq2seqModel:
                                     output += " "
                             file.write(output)
                             file.write("\n")
+                            file_senti_test.write(output)
+                            file_senti_test.write("\n")
                             file_create = open("./ROUGE/models/test" + str(index) + ".txt", "w")
                             file_create.writelines(output)
                             file_create.close()
@@ -388,6 +392,7 @@ class Seq2seqModel:
                             print("output %d finished" % index)
 
                         file.close()
+                        file_senti_test.close()
                         print("infer file updated")
             else:
                 print("model restored failed")

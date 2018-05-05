@@ -1,224 +1,224 @@
 - group 1
      - infer headline: 
-        georgian president threatens opposition boycott _EOS 
+        georgian opposition _UNK election _EOS 
      - train headline: 
-        georgia opposition leader poll of final _UNK _UNK _UNK _EOS _UNK _EOS 
+        georgian s threatens to of _UNK _UNK takes _UNK _EOS _EOS _EOS 
      - targets: 
         georgia opposition threatens boycott as ruling party wins vote _EOS 
 - group 2
      - infer headline: 
-        boat people in _UNK boat _UNK _EOS 
+        at least dead in _UNK boat off coast _EOS 
      - train headline: 
-        boat for for boat _UNK boat _UNK _EOS _UNK _EOS _EOS _EOS 
+        _UNK for for _UNK _UNK _UNK _UNK off _UNK _EOS _EOS _EOS 
      - targets: 
         hope _UNK for missing after boat _UNK in _UNK _UNK _EOS 
 - group 3
      - infer headline: 
-        france rejected _UNK rejected as _UNK meeting canceled _EOS 
+        french court rejects _UNK to delay _UNK union meeting _EOS 
      - train headline: 
-        france rejects france to request france court in _UNK deal talks deal 
+        court _UNK french to _UNK france _UNK as france france _EOS _EOS 
      - targets: 
         court rejects bid to delay key step in _UNK merger _EOS 
 - group 4
      - infer headline: 
-        serbia _UNK serbia s _UNK to itself from kosovo _EOS 
+        serbia _UNK kosovo envoy to _UNK _EOS 
      - train headline: 
-        serbia thanks serbia for for _UNK _UNK ecuador _EOS _UNK _EOS _EOS 
+        serbia _UNK _UNK s to _UNK s kosovo brief _EOS _EOS _EOS 
      - targets: 
         serbia _UNK prague envoy after _UNK of kosovo _EOS 
 - group 5
      - infer headline: 
-        two jailed for _UNK _UNK _UNK _EOS 
+        greek court _UNK jailed _UNK _UNK _EOS 
      - train headline: 
-        greek _UNK jailed for _UNK for _UNK _UNK jews _UNK _EOS _EOS 
+        greek greek court for _UNK for _UNK _UNK _EOS _EOS _EOS _EOS 
      - targets: 
         _UNK romanian jailed for years for _UNK smuggling _EOS 
 - group 6
      - infer headline: 
-        georgian minister says _UNK to stay in _UNK _EOS 
+        georgia fm says no _UNK pledges not _UNK _EOS 
      - train headline: 
-        georgian pledges _UNK _UNK says _UNK _EOS _UNK _EOS _EOS _EOS _EOS 
+        georgia pledges pledges pledges pledges pledges s _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         georgia elections not _UNK admits minister _EOS 
 - group 7
      - infer headline: 
-        british fm threatens to help african mining _UNK _EOS 
+        malawi sends foreign observers to _UNK concern _EOS 
      - train headline: 
-        african for in african in african african violence _EOS _UNK _EOS _EOS 
+        malawi to foreigners foreign to indonesia african violence _EOS _EOS _EOS _EOS 
      - targets: 
         concern _UNK across _UNK at south african violence _EOS 
 - group 8
      - infer headline: 
-        slovakia delays _UNK _UNK for nuclear power plant _EOS 
+        slovakia to delay nuclear plant _EOS 
      - train headline: 
-        slovakia delays for to to delay to _UNK plant _EOS _EOS _EOS 
+        slovakia to for nuclear to nuclear in end power _EOS _EOS _EOS 
      - targets: 
         slovakia calls on brussels for delay to nuclear _UNK closure _EOS 
 - group 9
      - infer headline: 
-        hezbollah _UNK deal as _UNK _UNK its _UNK _EOS 
+        lebanon welcomes deal between important political crisis _EOS 
      - train headline: 
-        hezbollah chief deal deal _EOS _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        lebanon welcomes deal deal a _UNK _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         hezbollah welcomes lebanon deal _EOS 
 - group 10
      - infer headline: 
-        european companies _UNK for _UNK to _UNK _UNK _EOS 
+        european parliament calls for _UNK _UNK _UNK _EOS 
      - train headline: 
-        european firms firm _UNK for _UNK _UNK for _UNK nuclear _UNK _EOS 
+        european parliament union _UNK for _UNK _UNK for _UNK _UNK _UNK _EOS 
      - targets: 
         european power firms call for clear rules on new nuclear plants _EOS 
 - group 11
      - infer headline: 
-        india to deal with _UNK on pakistan border _EOS 
+        india to _UNK border _UNK with _UNK _UNK _EOS 
      - train headline: 
-        india _UNK to of kashmir on on kashmir deal _EOS _UNK _EOS 
+        india border to of _UNK _UNK _UNK border with _EOS _UNK _EOS 
      - targets: 
         indian president warns of firm _UNK on border violations _EOS 
 - group 12
      - infer headline: 
-        us envoy to visit north korea russia _EOS 
+        us envoy to visit moscow next week _EOS 
      - train headline: 
-        us envoy to visit north _EOS trip talks nuclear talks _EOS _EOS 
+        us envoy to visit moscow _EOS on second _EOS deal _EOS _EOS 
      - targets: 
         us envoy to visit beijing moscow for nkorea nuclear talks _EOS 
 - group 13
      - infer headline: 
-        philippine activists slam us call for new _UNK to foreigners _EOS 
+        cuba calls for new us military _UNK slam signs _EOS 
      - train headline: 
-        cuba slams us push for own to _UNK _EOS _EOS _EOS _EOS 
+        cuba calls new _UNK _UNK _UNK slam _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         cuba demands us _UNK its diplomats _UNK dissidents _EOS 
 - group 14
      - infer headline: 
-        irish customs seize million euros from _UNK _EOS 
+        irish customs seize million euros from storm _UNK _EOS 
      - train headline: 
-        irish customs seize million euros _UNK _EOS _EOS _EOS _EOS _EOS _EOS 
+        irish customs seize million _UNK _UNK _EOS _UNK _EOS _EOS _EOS _EOS 
      - targets: 
         irish customs seize million _UNK _UNK _EOS 
 - group 15
      - infer headline: 
-        pakistan sends quake survivors to china _EOS 
+        pakistan _UNK _UNK over quake _UNK china s _UNK _EOS 
      - train headline: 
-        pakistan sends _UNK to quake quake quake quake quake quake _EOS _EOS 
+        pakistan _UNK strong to _UNK to china china quake quake _EOS _EOS 
      - targets: 
         pakistan sending thousands of _UNK to _UNK china _EOS 
 - group 16
      - infer headline: 
-        unhcr concerned about _UNK of attacks on foreigners _EOS 
+        un concerned about _UNK of attacks in peru _EOS 
      - train headline: 
-        un refugee about _UNK of of _EOS foreigners _EOS _EOS _EOS _EOS 
+        un concerned at fighting of in in in in in _EOS _EOS 
      - targets: 
         un concerned about _UNK _UNK violence _EOS 
 - group 17
      - infer headline: 
-        pakistan shares slump after another record _EOS 
+        pakistan shares slump percent _EOS 
      - train headline: 
-        pakistan shares slump after another rate cut _UNK _UNK _EOS _EOS _EOS 
+        pakistan shares slump on fed rate cut _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         pakistan stocks slump after interest rate hike _EOS 
 - group 18
      - infer headline: 
-        _UNK journalist _UNK _UNK in pakistan _EOS 
+        _UNK journalist shot dead in _UNK _EOS 
      - train headline: 
-        pakistani shot dead in pakistan jakarta tribal area _EOS _EOS _EOS _EOS 
+        _UNK s dead in northern journalist _UNK _UNK _EOS _UNK _EOS _EOS 
      - targets: 
         reporter shot dead in troubled pakistani tribal area _EOS 
 - group 19
      - infer headline: 
-        _UNK s _UNK _UNK his _UNK _EOS 
+        pope s man to _UNK president s brother house _EOS 
      - train headline: 
-        _UNK _UNK _UNK his s paul ii his his president _EOS _EOS 
+        pope thanks _UNK pope thanks paul _UNK leader president president _EOS _EOS 
      - targets: 
         man who shot pope john paul ii seeks polish _UNK _EOS 
 - group 20
      - infer headline: 
-        india s oil price firms _UNK back to fuel costs _EOS 
+        india s oil mining _UNK to _UNK low _EOS 
      - train headline: 
-        india s prices says fuel price hike _UNK prices _UNK _EOS _EOS 
+        india s says says fuel prices hike _EOS to _EOS _EOS _EOS 
      - targets: 
         india petroleum ministry says fuel price hike _UNK _EOS 
 - group 21
      - infer headline: 
         italian economy _UNK percent in first quarter _EOS 
      - train headline: 
-        italian economy slips in only see _UNK _EOS _EOS _EOS _EOS _EOS 
+        italian economy _UNK in _UNK _UNK _UNK _UNK _EOS in _UNK _EOS 
      - targets: 
         italian growth _UNK but analysts see storm _UNK ahead _EOS 
 - group 22
      - infer headline: 
-        eu wants to revive _UNK city of _UNK gas _EOS 
+        eu wants to come clean up to _UNK _UNK _EOS 
      - train headline: 
-        eu wants _UNK car after _UNK supplies accident _EOS price _EOS _UNK 
+        eu wants deal _UNK road road road in in _EOS _EOS _EOS 
      - targets: 
         eu eyes _UNK systems to cut road deaths fuel use _EOS 
 - group 23
      - infer headline: 
-        _UNK festival opens in rome _EOS 
+        _UNK _UNK _UNK _UNK _UNK _EOS 
      - train headline: 
-        italy s _UNK festival festival the the _EOS _UNK _UNK _UNK _EOS 
+        _UNK s _UNK _UNK face _UNK _UNK _EOS _UNK _EOS _EOS _EOS 
      - targets: 
         italy s cannes _UNK all about corruption and crime _EOS 
 - group 24
      - infer headline: 
-        nine wounded in grenade attack in _UNK _EOS 
+        nine hurt in _UNK grenade attack _EOS 
      - train headline: 
-        nine wounded in grenade grenade attack _EOS _EOS _EOS _EOS _EOS _EOS 
+        nine wounded in _UNK grenade attack _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         nine wounded in burundi grenade attacks _EOS 
 - group 25
      - infer headline: 
-        _UNK _UNK to _UNK china quake victims _EOS 
+        hong kong _UNK _UNK to _UNK quake victims _EOS 
      - train headline: 
-        _UNK seeks to to quake _EOS _EOS _EOS _EOS _EOS _EOS _EOS 
+        hong to to for bond charity _EOS _EOS _EOS _EOS _EOS _EOS 
      - targets: 
         _UNK _UNK plans chinese earthquake movie _EOS 
 - group 26
      - infer headline: 
-        un says myanmar too _UNK for _UNK or _UNK _EOS 
+        un chief says myanmar to _UNK disaster zone _EOS 
      - train headline: 
-        un un s going says says myanmar says myanmar myanmar _EOS _EOS 
+        un un s un un s _UNK says myanmar myanmar s _UNK 
      - targets: 
         the world is _UNK un s ban says in myanmar _EOS 
 - group 27
      - infer headline: 
-        french fishermen _UNK port ever _UNK _EOS 
+        french fishermen keep up _UNK over fuel _UNK _EOS 
      - train headline: 
-        french fishermen _UNK _UNK over allow hostage access _EOS _EOS _EOS _EOS 
+        french fishermen _UNK _UNK access _UNK fuel fuel _EOS _EOS _EOS _EOS 
      - targets: 
         french fishermen take protest to _UNK _UNK total _UNK _EOS 
 - group 28
      - infer headline: 
-        _UNK chief loses hong kong _UNK board _EOS 
+        _UNK loses property money for _UNK _EOS 
      - train headline: 
-        _UNK of hong kong watchdog watchdog _UNK _UNK _UNK _EOS _EOS _EOS 
+        _UNK of _UNK kong _UNK loses to legal battle _EOS _UNK _EOS 
      - targets: 
         chairman of hong kong property giant loses legal battle _EOS 
 - group 29
      - infer headline: 
-        rival cypriot leaders hold first talks to _UNK peace talks _EOS 
+        rival cypriot leaders to push for peace talks _EOS 
      - train headline: 
-        rival push push on new as launch peace drive _UNK _EOS _EOS 
+        rival agree new cyprus rivals sunday push peace talks _EOS _EOS _EOS 
      - targets: 
         leaders in divided cyprus meet to push peace _EOS 
 - group 30
      - infer headline: 
-        france _UNK lebanon election _EOS 
+        french foreign minister to step down after lebanon s new president _EOS 
      - train headline: 
-        french fm to visit lebanon after presidential weekend _EOS next _EOS _EOS 
+        french foreign to make lebanon next march election _EOS _EOS _EOS _EOS 
      - targets: 
         french fm to visit lebanon for presidential election _EOS 
 - group 31
      - infer headline: 
-        _UNK _UNK _UNK _UNK _UNK in cannes _EOS 
+        _UNK _UNK _UNK _UNK _UNK _UNK _EOS 
      - train headline: 
-        _UNK _UNK _UNK _UNK _UNK _UNK _EOS _UNK _EOS _UNK _EOS _EOS 
+        _UNK _UNK _UNK _UNK _UNK _UNK _EOS cannes _EOS _UNK _EOS _EOS 
      - targets: 
         _UNK hollywood writer makes _UNK debut at cannes _EOS 
 - group 32
      - infer headline: 
-        south africa s _UNK attacks _UNK world _UNK _EOS 
+        south africa s _UNK _UNK _UNK _UNK _EOS 
      - train headline: 
-        south slams _UNK attacks attacks attacks south south _EOS _EOS _EOS _EOS 
+        south condemns rugby condemns condemns world _EOS world _EOS _EOS _EOS _EOS 
      - targets: 
         _UNK s _UNK _UNK _UNK attacks _EOS 

@@ -11,32 +11,32 @@ import numpy as np
 from keras.callbacks import ModelCheckpoint
 from keras.models import load_model
 
-# MAX_FEATURES = 5000
-# MAX_SENTENCE_LENGTH = 60
-#
-# maxlen = 0  # 句子最大长度
-# word_freqs = collections.Counter()  # 词频
-# num_recs = 0  # 样本数
-# totallen = 0
-# with open('./data/keras_pn_train.txt', 'r+') as f:
-#     for line in f:
-#         label, sentence = line.strip().split("-!-!-!")
-#         words = nltk.word_tokenize(sentence.lower())
-#         totallen += len(words)
-#         if len(words) > maxlen:
-#             maxlen = len(words)
-#         for word in words:
-#             word_freqs[word] += 1
-#         num_recs += 1
-# print("avg_len ", totallen / 20000)
-# print('max_len ', maxlen)
-# print('nb_words ', len(word_freqs))
-#
-# vocab_size = min(MAX_FEATURES, len(word_freqs)) + 2
-# word2index = {x[0]: i + 2 for i, x in enumerate(word_freqs.most_common(MAX_FEATURES))}
-# word2index["PAD"] = 0
-# word2index["UNK"] = 1
-# index2word = {v: k for k, v in word2index.items()}
+MAX_FEATURES = 5000
+MAX_SENTENCE_LENGTH = 60
+
+maxlen = 0  # 句子最大长度
+word_freqs = collections.Counter()  # 词频
+num_recs = 0  # 样本数
+totallen = 0
+with open('./data/keras_pn_train.txt', 'r+') as f:
+    for line in f:
+        label, sentence = line.strip().split("-!-!-!")
+        words = nltk.word_tokenize(sentence.lower())
+        totallen += len(words)
+        if len(words) > maxlen:
+            maxlen = len(words)
+        for word in words:
+            word_freqs[word] += 1
+        num_recs += 1
+print("avg_len ", totallen / 20000)
+print('max_len ', maxlen)
+print('nb_words ', len(word_freqs))
+
+vocab_size = min(MAX_FEATURES, len(word_freqs)) + 2
+word2index = {x[0]: i + 2 for i, x in enumerate(word_freqs.most_common(MAX_FEATURES))}
+word2index["PAD"] = 0
+word2index["UNK"] = 1
+index2word = {v: k for k, v in word2index.items()}
 
 
 def train():
@@ -214,6 +214,36 @@ def remake_middle_copora():
     file_headline_output.close()
 
 
+def test_sentiment():
+    num_recs = 64
+    X = np.empty(num_recs, dtype=list)
+    i = 0
+    with open('./infer/senti_test.txt', 'r+') as f:
+        for line in f:
+            words = nltk.word_tokenize(line.strip().lower())
+            seqs = []
+            for word in words:
+                if word in word2index:
+                    seqs.append(word2index[word])
+                else:
+                    seqs.append(word2index["UNK"])
+            X[i] = seqs
+            i += 1
+            if i == 64:
+                break
+    X = sequence.pad_sequences(X, maxlen=MAX_SENTENCE_LENGTH)
+    print("word2index completed")
+
+    model = load_model("./keras_model/weights-improvement-04-0.74100.hdf5")
+    for i in range(64):
+        x = X[i].reshape(1, MAX_SENTENCE_LENGTH)
+        ypred = int(round(model.predict(x)[0][0]))
+        print(str(ypred) + ' ', end='')
+        if i == 31:
+            print('\n', end='')
+    print("output completed")
+
 # predict("headline")
 # train()
-remake_middle_copora()
+# remake_middle_copora()
+test_sentiment()
