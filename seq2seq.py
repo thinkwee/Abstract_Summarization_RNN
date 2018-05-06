@@ -48,14 +48,10 @@ class Seq2seqModel:
 
     def _create_blstmcell(self):
         with tf.variable_scope('lstm_layer', reuse=tf.AUTO_REUSE):
-            cell_fw = rnn.LSTMCell(
-                num_units=self.encoder_hidden_units,
-                initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=114),
-                state_is_tuple=True)
-            cell_bw = rnn.LSTMCell(
-                num_units=self.encoder_hidden_units,
-                initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=133),
-                state_is_tuple=True)
+            cell_fw = contrib.cudnn_rnn.CudnnCompatibleLSTMCell(
+                num_units=self.encoder_hidden_units)
+            cell_bw = contrib.cudnn_rnn.CudnnCompatibleLSTMCell(
+                num_units=self.encoder_hidden_units)
 
             cell_fw = rnn.DropoutWrapper(cell=cell_fw, output_keep_prob=self.keep_prob)
             cell_bw = rnn.DropoutWrapper(cell=cell_bw, output_keep_prob=self.keep_prob)
@@ -264,7 +260,7 @@ class Seq2seqModel:
             self.attn_cell = contrib.seq2seq.AttentionWrapper(cell=self.decoder_cell,
                                                               attention_mechanism=self.attention_mechanism,
                                                               name="decoder_attention_cell",
-                                                              alignment_history=False
+                                                              alignment_history=True
                                                               )
             self.fc_layer = tf.layers.Dense(self.vocab_size, name='dense_layer')
 
@@ -439,13 +435,14 @@ class Seq2seqModel:
                         # save 5 minimum validate loss model
                         # if min_validate_loss > loss_batch_validate:
                         #     min_validate_loss = loss_batch_validate
-                        saver.save(sess=sess,
-                                   save_path=self.MODEL_FILE + 'model.ckpt',
-                                   global_step=self.global_step,
-                                   write_meta_graph=True)
-                        self.logger.debug(
-                            "seq2seq trained,model saved at epoch {},validate loss is {}\n".format(epoch_index,
-                                                                                                   min_validate_loss))
+                        if epoch_index % 10 == 0:
+                            saver.save(sess=sess,
+                                       save_path=self.MODEL_FILE + 'model.ckpt',
+                                       global_step=self.global_step,
+                                       write_meta_graph=True)
+                            self.logger.debug(
+                                "seq2seq trained,model saved at epoch {},validate loss is {}\n".format(epoch_index,
+                                                                                                       min_validate_loss))
                     else:
                         loss_batch, _, summary = sess.run([self.loss, self.train_op, self.summary_op],
                                                           feed_dict=feed_dict)
