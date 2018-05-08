@@ -39,8 +39,6 @@ class Seq2seqModel:
             self.decoder_max_iter = tf.placeholder(shape=(), dtype=tf.int32, name='encoder_length')
 
     def _create_embedding(self):
-        # self.embeddings_encoder = tf.Variable(tf.random_uniform([self.vocab_size, self.embed_size]))
-        # self.embeddings_decoder = tf.Variable(tf.random_uniform([self.vocab_size, self.embed_size]))
         self.embeddings_encoder = tf.Variable(initial_value=self.embed_matrix_init, trainable=True)
         self.embeddings_decoder = tf.Variable(initial_value=self.embed_matrix_init, trainable=True)
         self.encoder_inputs_embedded = tf.nn.embedding_lookup(self.embeddings_encoder, self.encoder_inputs)
@@ -435,7 +433,7 @@ class Seq2seqModel:
                         # save 5 minimum validate loss model
                         # if min_validate_loss > loss_batch_validate:
                         #     min_validate_loss = loss_batch_validate
-                        if epoch_index % 10 == 0:
+                        if epoch_index % 2 == 0:
                             saver.save(sess=sess,
                                        save_path=self.MODEL_FILE + 'model.ckpt',
                                        global_step=self.global_step,

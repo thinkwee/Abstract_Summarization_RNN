@@ -1,5 +1,5 @@
 def make_file_model():
-    with open('headline_test_32.txt') as f:
+    with open('headline_test.txt') as f:
         count = 0
         for line in f:
             file_create = open("./systems/test" + str(count) + ".txt", "w")

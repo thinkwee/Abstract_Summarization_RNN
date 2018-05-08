@@ -76,7 +76,7 @@ def train_SVM():
             print(i, result_prob[i], standard[i])
 
 
-def label_copora():
+def label_corpora():
     train_data = "./data/doc_vector_np.txt"
     test_data = "./data/article_middle_vec.txt"
     classifier_article = SVM(train_data, test_data)
@@ -90,8 +90,8 @@ def label_copora():
     classifier_headline.LoadModel()
     result_headline, result_prob_headline = classifier_headline.Predict()
     print("svm headline predict complete")
-    output_file_p = open("./data/middle_copora_sentiment_p.txt", "w")
-    output_file_n = open("./data/middle_copora_sentiment_n.txt", "w")
+    output_file_p = open("./data/middle_corpora_sentiment_p.txt", "w")
+    output_file_n = open("./data/middle_corpora_sentiment_n.txt", "w")
     count_p = 0
     count_n = 0
     for i in range(1000000):
@@ -110,7 +110,7 @@ def label_copora():
     print("%d negative sentence addded" % count_n)
 
 
-def train_Doc2Vec_Middle_Copora(file_name):
+def train_Doc2Vec_Middle_corpora(file_name):
     input_file = open("./data/" + file_name + "_middle.txt", "r")
     output_file = open("./data/" + file_name + "_middle_vec.txt", "w")
     sentence = gensim.models.doc2vec.TaggedLineDocument(input_file)
@@ -139,7 +139,7 @@ def train_Doc2Vec():
     output_together.close()
     input_file_n.close()
     input_file_p.close()
-    print("p/n copora added")
+    print("p/n corpora added")
 
     input_file = open("./data/together.txt", "r")
     sentence = gensim.models.doc2vec.TaggedLineDocument(input_file)
@@ -193,7 +193,7 @@ def train_Doc2Vec():
 
 train_SVM()
 
-# train_Doc2Vec_Middle_Copora("headline")
-# train_Doc2Vec_Middle_Copora("article")
+# train_Doc2Vec_Middle_corpora("headline")
+# train_Doc2Vec_Middle_corpora("article")
 
-# label_copora()
+# label_corpora()

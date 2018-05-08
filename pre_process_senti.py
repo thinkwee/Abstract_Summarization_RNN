@@ -101,10 +101,9 @@ def get_batch(batch_size, iterator):
         encoder_length_batch = []
         decoder_length_batch = []
         article_sen_vec_batch = []
-        headline_sen_vec_batch = []
 
         for index in range(batch_size):
-            encoder_input_single, decoder_input_single, target_single, encoder_length_single_real, decoder_length_single_real, article_sen_vec, headline_sen_vec = next(
+            encoder_input_single, decoder_input_single, target_single, encoder_length_single_real, decoder_length_single_real, article_sen_vec = next(
                 iterator)
 
             encoder_batch.append(encoder_input_single)
@@ -113,11 +112,10 @@ def get_batch(batch_size, iterator):
             encoder_length_batch.append(encoder_length_single_real)
             decoder_length_batch.append(decoder_length_single_real)
             article_sen_vec_batch.append(article_sen_vec)
-            headline_sen_vec_batch.append(headline_sen_vec)
 
         decoder_max_iter = np.max(decoder_length_batch)
 
-        yield encoder_batch, decoder_batch, target_batch, encoder_length_batch, decoder_length_batch, decoder_max_iter, article_sen_vec_batch, headline_sen_vec_batch
+        yield encoder_batch, decoder_batch, target_batch, encoder_length_batch, decoder_length_batch, decoder_max_iter, article_sen_vec_batch
 
 
 def one_hot_generate(one_hot_dictionary, epoch, is_train):
@@ -134,7 +132,6 @@ def one_hot_generate(one_hot_dictionary, epoch, is_train):
         sentence_article = bytes.decode(file_article.readline())
         sentence_headline = bytes.decode(file_headline.readline())
 
-        count = 0
         while sentence_article and sentence_headline:
             words_article = []
             words_headline = []
@@ -182,18 +179,7 @@ def one_hot_generate(one_hot_dictionary, epoch, is_train):
             for j in range(6):
                 article_sen_vec[j] = temp[j]
 
-            # compute the headline sentiment vector
-            text = nltk.word_tokenize(sentence_headline)
-            pos_info = nltk.pos_tag(text)
-            temp = sentiwordnet.make_np_vector(np_dict, pos_info)
-            headline_sen_vec = np.zeros([6], dtype=float)
-            for j in range(6):
-                headline_sen_vec[j] = temp[j]
-
-            # select next senti label
-            count += 1
-
-            yield one_hot_article, one_hot_headline_input, one_hot_headline_target, count_article_real, count_headline_real, article_sen_vec, headline_sen_vec
+            yield one_hot_article, one_hot_headline_input, one_hot_headline_target, count_article_real, count_headline_real, article_sen_vec
             sentence_article = bytes.decode(file_article.readline())
             sentence_headline = bytes.decode(file_headline.readline())
 

@@ -44,15 +44,10 @@ class Seq2seqModel:
             self.decoder_length = tf.placeholder(shape=(None,), dtype=tf.int32, name='decoder_length')
             self.encoder_length = tf.placeholder(shape=(None,), dtype=tf.int32, name='encoder_length')
             self.decoder_max_iter = tf.placeholder(shape=(), dtype=tf.int32, name='encoder_length')
-            # self.label = tf.placeholder(shape=(self.batch_size,), dtype=tf.int32, name='sentiment_label')
             self.article_sen_vec = tf.placeholder(shape=(self.batch_size, None), dtype=tf.float32,
                                                   name="article_sentiment_vector")
-            self.headline_sen_vec = tf.placeholder(shape=(self.batch_size, None), dtype=tf.float32,
-                                                   name="headline_sentiment_vector")
 
     def _create_embedding(self):
-        # self.embeddings_encoder = tf.Variable(tf.random_uniform([self.vocab_size, self.embed_size]))
-        # self.embeddings_decoder = tf.Variable(tf.random_uniform([self.vocab_size, self.embed_size]))
         self.embeddings_encoder = tf.Variable(initial_value=self.embed_matrix_init, trainable=True)
         self.embeddings_decoder = tf.Variable(initial_value=self.embed_matrix_init, trainable=True)
         self.encoder_inputs_embedded = tf.nn.embedding_lookup(self.embeddings_encoder, self.encoder_inputs)
@@ -143,37 +138,12 @@ class Seq2seqModel:
         with tf.name_scope("loss"):
             self.targets = tf.identity(self.decoder_targets)
             self.logits_train = tf.identity(self.decoder_train_output.rnn_output, 'training_logits')
-            self.sample_id_train = tf.identity(self.decoder_train_output.sample_id, 'training_sample_id')
-            self.logits_infer = tf.identity(self.decoder_infer_output.rnn_output, 'infer_logits')
-            self.sentence_infer = tf.identity(self.decoder_infer_output.sample_id, 'infering_sample_id')
-
-            # change the sample id to words
-            # self.sentence_train = []
-            # for i in range(self.batch_size):
-            #     print(self.sample_id_train[i])
-            #     temp = tf.map_fn(fn=lambda x: self.one_hot[x], elems=self.sample_id_train[i])
-            #     self.sentence_train.append(temp)
-
-            # calculate the sentiment vector of output sentence
-            # self.infer_sen_vec = []
-            # for i in range(self.batch_size):
-            #     text = nltk.word_tokenize(self.sentence_train[i])
-            #     pos_info = nltk.pos_tag(text)
-            #     temp = sentiwordnet.make_np_vector(np_dict, pos_info)
-            #     sen_vec = np.zeros([6], dtype=float)
-            #     for j in range(6):
-            #         sen_vec[j] = temp[j]
-            #     self.infer_sen_vec.append(sen_vec)
-
-            # calculate the sentiment loss(regular)
-            # self.loss_seniment = tf.reduce_mean(tf.square(self.infer_sen_vec - self.headline_sen_vec))
 
             # use mask to achieve dynamic loss calculate,but first you should make targets be padded
             masks_train = tf.sequence_mask(self.decoder_length, self.decoder_max_iter, dtype=tf.float32, name='masks')
             self.loss = s2s.sequence_loss(targets=self.targets,
                                           logits=self.logits_train,
                                           weights=masks_train)
-            # self.loss += self.loss_seniment
 
     def _create_optimizer(self):
         with tf.name_scope("optimizer"):
@@ -274,7 +244,7 @@ class Seq2seqModel:
                 # save last batch in each epoch for validation
                 for index in range(num_train_steps):
                     self.global_step = sess.run(self.add_global_step)
-                    encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length, decoder_max_iter, article_sen_vec, headline_sen_vec = next(
+                    encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length, decoder_max_iter = next(
                         batches)
                     feed_dict = {
                         self.decoder_targets: decoder_targets,
@@ -282,9 +252,7 @@ class Seq2seqModel:
                         self.encoder_inputs: encoder_inputs,
                         self.decoder_inputs: decoder_inputs,
                         self.encoder_length: encoder_length,
-                        self.decoder_max_iter: decoder_max_iter,
-                        self.article_sen_vec: article_sen_vec,
-                        self.headline_sen_vec: headline_sen_vec
+                        self.decoder_max_iter: decoder_max_iter
                     }
                     if index == num_train_steps - 1:
                         loss_batch_validate, = sess.run([self.loss],
@@ -295,7 +263,7 @@ class Seq2seqModel:
                         # save 5 minimum validate loss model
                         # if min_validate_loss > loss_batch_validate:
                         #     min_validate_loss = loss_batch_validate
-                        if epoch_index % 10 == 0:
+                        if epoch_index % 2 == 0:
                             saver.save(sess=sess,
                                        save_path=self.MODEL_FILE + 'model.ckpt',
                                        global_step=self.global_step,
@@ -326,7 +294,7 @@ class Seq2seqModel:
 
                 for _ in range(epoch):
                     for index_num in range(num_train_steps):
-                        encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length, decoder_max_iter, article_sen_vec, headline_sen_vec = next(
+                        encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length, decoder_max_iter, article_sen_vec = next(
                             batches)
 
                         feed_dict = {
@@ -336,8 +304,7 @@ class Seq2seqModel:
                             self.decoder_inputs: decoder_inputs,
                             self.encoder_length: encoder_length,
                             self.decoder_max_iter: decoder_max_iter,
-                            self.article_sen_vec: article_sen_vec,
-                            self.headline_sen_vec: headline_sen_vec
+                            self.article_sen_vec: article_sen_vec
                         }
 
                         infer_output = sess.run(self.decoder_infer_output, feed_dict=feed_dict)

@@ -56,7 +56,7 @@ def train():
     # output_together.close()
     # input_file_n.close()
     # input_file_p.close()
-    # print("p/n copora added")
+    # print("p/n corpora added")
     #
     X = np.empty(num_recs, dtype=list)
     y = np.zeros(num_recs)
@@ -138,7 +138,7 @@ def train():
 
 
 def predict(file_name):
-    # output the index of sentiment sentence in middle copora to middle_sen.txt
+    # output the index of sentiment sentence in middle corpora to middle_sen.txt
     num_recs = 300000
     X = np.empty(num_recs, dtype=list)
     i = 0
@@ -169,7 +169,7 @@ def predict(file_name):
     print("output completed")
 
 
-def remake_middle_copora():
+def remake_middle_corpora():
     # change the index in middle_sen to real sentence
     file_article = open("./data/sen_article_index.txt", "r")
     file_headline = open("./data/sen_headline_index.txt", "r")
@@ -251,5 +251,5 @@ def test_sentiment(size):
 
 # predict("headline")
 # train()
-# remake_middle_copora()
+# remake_middle_corpora()
 test_sentiment(640)

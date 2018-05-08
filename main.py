@@ -36,7 +36,7 @@ GRAD_CLIP = 1.0
 """Hyper Parameters(Seq2seq infer)"""
 BATCH_SIZE_INFER = 32
 EPOCH_INFER = 1
-NUM_TRAIN_STEPS_INFER = 10
+NUM_TRAIN_STEPS_INFER = 1
 
 """Hyper Parameters(Word2Vec)"""
 NUM_SAMPLED = 32
@@ -104,7 +104,7 @@ def train(embed_matrix, one_hot_dictionary, one_hot_dictionary_index, start_toke
                                  embed_matrix_init=embed_matrix,
                                  learning_rate_initial=LEARNING_RATE_INITIAL,
                                  keep_prob=KEEP_PROB,
-                                 rnn_core="bgru_attetion",
+                                 rnn_core="bgru",
                                  start_token_id=start_token_id,
                                  end_token_id=end_token_id,
                                  num_layers=RNN_LAYERS,
@@ -137,12 +137,12 @@ def test(embed_matrix, one_hot_dictionary, one_hot_dictionary_index, start_token
                                  learning_rate_initial=LEARNING_RATE_INITIAL,
                                  embed_matrix_init=embed_matrix,
                                  keep_prob=KEEP_PROB,
-                                 rnn_core="bgru_attetion",
+                                 rnn_core="bgru",
                                  start_token_id=start_token_id,
                                  end_token_id=end_token_id,
                                  num_layers=RNN_LAYERS,
                                  grad_clip=GRAD_CLIP,
-                                 is_continue=0,
+                                 is_continue=CONTINUE_TRAIN,
                                  one_hot=one_hot_dictionary_index)
     seq2seq_infer.build_graph()
     seq2seq_infer.test(epoch=EPOCH_INFER,
