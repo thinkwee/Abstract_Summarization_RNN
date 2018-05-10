@@ -31,7 +31,7 @@
 - [x] divide infer and train into two graphs
 - [x] use rouge to value model
 - [x] save each test result
-~~- [ ] fix unk problems~~
+- [ ] ~~fix unk problems~~
 - [x] train sentiment classification svm
 - [x] add sentiment-blended word embeddings
 - [x] test sentiment classify
