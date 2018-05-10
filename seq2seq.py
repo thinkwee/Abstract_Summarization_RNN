@@ -102,12 +102,12 @@ class Seq2seqModel:
             with tf.variable_scope('decoder_train', reuse=tf.AUTO_REUSE):
                 self.helper_train = contrib.seq2seq.TrainingHelper(inputs=self.decoder_inputs_embedded,
                                                                    sequence_length=self.decoder_length)
-                self.decoder_train = contrib.seq2seq.BasicDecoder(cell=self.attn_cell,
-                                                                  initial_state=self.decoder_initial_state,
+                self.decoder_train = contrib.seq2seq.BasicDecoder(cell=self.decoder_cell,
+                                                                  initial_state=self.encoder_final_state,
                                                                   helper=self.helper_train,
                                                                   output_layer=self.fc_layer
                                                                   )
-                self.decoder_train_logits, _, _ = s2s.dynamic_decode(decoder=self.decoder_train
+                self.decoder_train_output, _, _ = s2s.dynamic_decode(decoder=self.decoder_train
                                                                      )
             # for infer
             with tf.variable_scope('decoder_infer', reuse=tf.AUTO_REUSE):
@@ -115,11 +115,11 @@ class Seq2seqModel:
                 self.helper_infer = contrib.seq2seq.GreedyEmbeddingHelper(embedding=self.embeddings_decoder,
                                                                           start_tokens=self.start_tokens,
                                                                           end_token=self.end_token_id)
-                self.decoder_infer = contrib.seq2seq.BasicDecoder(cell=self.attn_cell,
-                                                                  initial_state=self.decoder_initial_state,
+                self.decoder_infer = contrib.seq2seq.BasicDecoder(cell=self.decoder_cell,
+                                                                  initial_state=self.encoder_final_state,
                                                                   helper=self.helper_infer,
                                                                   output_layer=self.fc_layer)
-                self.decoder_infer_logits, _, _ = s2s.dynamic_decode(decoder=self.decoder_infer,
+                self.decoder_infer_output, _, _ = s2s.dynamic_decode(decoder=self.decoder_infer,
                                                                      maximum_iterations=self.decoder_max_iter
                                                                      )
 
@@ -397,7 +397,7 @@ class Seq2seqModel:
                 saver.restore(sess, ckpt.model_checkpoint_path)
                 print("continue training seq2seq model in [%s] mode" % self.core)
             else:
-                saver = tf.train.Saver(max_to_keep=1)
+                saver = tf.train.Saver(max_to_keep=5)
                 sess.run(tf.global_variables_initializer())
                 print("start training seq2seq model in [%s] mode" % self.core)
 

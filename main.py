@@ -36,7 +36,7 @@ GRAD_CLIP = 1.0
 """Hyper Parameters(Seq2seq infer)"""
 BATCH_SIZE_INFER = 32
 EPOCH_INFER = 1
-NUM_TRAIN_STEPS_INFER = 1
+NUM_TRAIN_STEPS_INFER = 10
 
 """Hyper Parameters(Word2Vec)"""
 NUM_SAMPLED = 32

@@ -201,11 +201,11 @@ def simple_word_count(file_name):
 def main():
     vocab_size = 3000
     batch_size = 32
-    most_n_words = get_words('traintext_raw', vocab_size)
+    # most_n_words = get_words('traintext_raw', vocab_size)
     # changetext(batch_size, 'article', most_n_words)
     # changetext(batch_size, 'headline', most_n_words)
-    changetext(batch_size, 'article_middle_sen', most_n_words)
-    changetext(batch_size, 'headline_middle_sen', most_n_words)
+    # changetext(batch_size, 'article_middle_sen', most_n_words)
+    # changetext(batch_size, 'headline_middle_sen', most_n_words)
     # simple_word_count('article_train')
 
 
