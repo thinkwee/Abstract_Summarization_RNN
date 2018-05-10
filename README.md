@@ -25,17 +25,18 @@
 - [x] test attention decoder(luong attention)
 - [x] choose last batch in each epoch as the validation set
 - [x] learning rate decay:gradient descent,low init value,decay=0.995
-- [x] cut vocab size to 1000,replace unusual word to unk
+- [x] cut vocab size to 3000,replace unusual word to unk
 - [x] enlarge rnn hidden units size
 - [x] fix word embedding matrix and try to load model
 - [x] divide infer and train into two graphs
 - [x] use rouge to value model
 - [x] save each test result
-- [ ] fix unk problems
+~~- [ ] fix unk problems~~
 - [x] train sentiment classification svm
 - [x] add sentiment-blended word embeddings
 - [x] test sentiment classify
 - [X] use larger corpus
+- [x] collect ROUGE
 
 # current effect
-- test output can been seen under "./infer/output.txt"
+- ROUGE files collected in the './ROUGE_ANSWER'
