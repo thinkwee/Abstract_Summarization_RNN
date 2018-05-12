@@ -115,11 +115,11 @@ def one_hot_generate(one_hot_dictionary, epoch, is_train):
 
     for i in range(epoch):
         if is_train:
-            file_headline = open('./data/headline_middle_train.txt', 'rb')
-            file_article = open('./data/article_middle_train.txt', 'rb')
+            file_headline = open('./data/headline_middle_sen_train.txt', 'rb')
+            file_article = open('./data/article_middle_sen_train.txt', 'rb')
         else:
-            file_headline = open('./data/headline_middle_test.txt', 'rb')
-            file_article = open('./data/article_middle_test.txt', 'rb')
+            file_headline = open('./data/headline_middle_sen_test.txt', 'rb')
+            file_article = open('./data/article_middle_sen_test.txt', 'rb')
 
         sentence_article = bytes.decode(file_article.readline())
         sentence_headline = bytes.decode(file_headline.readline())
