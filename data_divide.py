@@ -27,36 +27,39 @@ def divide():
     # mid_sen:59200(32*1850)
     # midplus_sen:176000(32*5500)
     # midplus_sen_dedup:153600(32*4800)
-    line_test = 153600
+    line_test = 176000
 
-    file_article_test = open('./data/article_middle_sen_test.txt', 'w')
-    file_headline_test = open('./data/headline_middle_sen_test.txt', 'w')
-    file_article_train = open('./data/article_middle_sen_train.txt', 'w')
-    file_headline_train = open('./data/headline_middle_sen_train.txt', 'w')
-    file_article = open('./data/article_middle_sen_dedup_processed.txt', 'rb')
-    file_headline = open('./data/headline_middle_sen_dedup_processed.txt', 'rb')
-    file_w2v_train = open('./data/traintext.txt', 'w')
-
-    # file_article_test = open('./data/article_middle_test.txt', 'w')
-    # file_headline_test = open('./data/headline_middle_test.txt', 'w')
-    # file_article_train = open('./data/article_middle_train.txt', 'w')
-    # file_headline_train = open('./data/headline_middle_train.txt', 'w')
-    # file_article = open('./data/article_middle_processed.txt', 'rb')
-    # file_headline = open('./data/headline_middle_processed.txt', 'rb')
+    # file_article_test = open('./data/article_middle_sen_test.txt', 'w')
+    # file_headline_test = open('./data/headline_middle_sen_test.txt', 'w')
+    # file_article_train = open('./data/article_middle_sen_train.txt', 'w')
+    # file_headline_train = open('./data/headline_middle_sen_train.txt', 'w')
+    # file_article = open('./data/article_middle_sen_dedup_processed.txt', 'rb')
+    # file_headline = open('./data/headline_middle_sen_dedup_processed.txt', 'rb')
     # file_w2v_train = open('./data/traintext.txt', 'w')
+
+    file_article_test = open('./data/article_middle_test.txt', 'w')
+    file_headline_test = open('./data/headline_middle_test.txt', 'w')
+    file_article_train = open('./data/article_middle_train.txt', 'w')
+    file_headline_train = open('./data/headline_middle_train.txt', 'w')
+    file_article = open('./data/article_middle_processed.txt', 'rb')
+    file_headline = open('./data/headline_middle_processed.txt', 'rb')
+    file_w2v_train = open('./data/traintext.txt', 'w')
 
     sentence_headline = bytes.decode(file_headline.readline())
     sentence_article = bytes.decode(file_article.readline())
 
     while sentence_article and sentence_headline:
-        if count > line_test:
+        if count > line_test and count <= 180000:
             file_article_test.writelines(sentence_article)
             file_headline_test.writelines(sentence_headline)
-        else:
+            file_w2v_train.writelines(sentence_headline)
+            file_w2v_train.writelines(sentence_article)
+        elif count <= line_test:
             file_article_train.writelines(sentence_article)
             file_headline_train.writelines(sentence_headline)
-        file_w2v_train.writelines(sentence_headline)
-        file_w2v_train.writelines(sentence_article)
+            file_w2v_train.writelines(sentence_headline)
+            file_w2v_train.writelines(sentence_article)
+
         sentence_article = bytes.decode(file_article.readline())
         sentence_headline = bytes.decode(file_headline.readline())
         count += 1
@@ -117,9 +120,9 @@ def large2mid(file_name):
 
 
 def main():
-    # statistics("./data/headline_middle.txt")
+    statistics("./data/article_middle.txt")
     # print(check_count())
-    divide()
+    # divide()
     # large2mid("article")
     # large2mid("headline")
 

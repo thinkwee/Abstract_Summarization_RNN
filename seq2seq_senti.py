@@ -244,7 +244,7 @@ class Seq2seqModel:
                 # save last batch in each epoch for validation
                 for index in range(num_train_steps):
                     self.global_step = sess.run(self.add_global_step)
-                    encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length, decoder_max_iter = next(
+                    encoder_inputs, decoder_inputs, decoder_targets, encoder_length, decoder_length, decoder_max_iter, article_sen_vec = next(
                         batches)
                     feed_dict = {
                         self.decoder_targets: decoder_targets,
@@ -252,7 +252,8 @@ class Seq2seqModel:
                         self.encoder_inputs: encoder_inputs,
                         self.decoder_inputs: decoder_inputs,
                         self.encoder_length: encoder_length,
-                        self.decoder_max_iter: decoder_max_iter
+                        self.decoder_max_iter: decoder_max_iter,
+                        self.article_sen_vec: article_sen_vec
                     }
                     if index == num_train_steps - 1:
                         loss_batch_validate, = sess.run([self.loss],

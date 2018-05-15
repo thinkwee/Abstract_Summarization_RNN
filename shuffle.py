@@ -62,9 +62,9 @@ def shuffle_senti_data():
     # mid_sen:59200(32*1850)
     # midplus_sen:176000(32*5500)
     # midplus_sen_dedup:153600(32*4800)
-    size = 4799
-    file_name_headline = "./data/headline_middle_sen_train.txt"
-    file_name_article = "./data/article_middle_sen_train.txt"
+    size = 5499
+    file_name_headline = "./data/headline_middle_train.txt"
+    file_name_article = "./data/article_middle_train.txt"
     # file_name_senti = "./data/middle_sen.txt"
     batch_size = 32
 
