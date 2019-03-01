@@ -81,8 +81,8 @@ class SentiWordNet():
             for wordlist in tempdict.get(key):
                 score += wordlist[1] / wordlist[0]
                 ssum += 1.0 / wordlist[0]
-                score /= ssum
-                self.dictionary.update({key: score})
+            score /= ssum
+            self.dictionary.update({key: score})
 
     def getscore(self, word, pos):
         return self.dictionary.get(word + "#" + pos)
