@@ -11,6 +11,14 @@
 - cudnn 7.1.2
 - rouge
 
+# run
+- This work use Gigaword dataset which is not for public. You need fetch the data yourself.
+- The SentiWordNet 3.0 dataset can be found here :[SentiWordNet3.0](https://drive.google.com/open?id=0B0ChLbwT19XcOVZFdm5wNXA5ODg)
+- The codes are written in an early version of tensorflow. I do not recommend run this code directly. Just for reference.
+- run ```python main.py -help``` for help.
+- run ```python main.py -w2v``` to train the wordvector from Gigaword dataset using Word2Vec，then run ```python main.py -train``` to train the model and ```python main.py -test```to test the model(just get the output of testset).
+- you need install ROUGE to test the output. All the results are collected in the original PERL version of ROUGE. Using PyRouge make cause the result a little bit higher.
+
 # progress
 - [x] finish word embedding matrix
 - [x] build seq2seq model
