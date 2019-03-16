@@ -1,3 +1,5 @@
+*Note: this code is no longer actively maintained.*
+
 # introduction
 - attention based summarization on tensorflow using seq2seq model
 - my graduation project code
